@@ -13,13 +13,13 @@ module.exports = {
     port: 8989,
     open: false,
     overlay: {
-      warnings: true,
+      warnings: false,
       errors: true
     }
   },
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src'))
-    config.resolve.alias.set('@/_c', resolve('src/components'))
+    config.resolve.alias.set('@c', resolve('src/components'))
 
   }
 }

@@ -3,12 +3,36 @@ import type { App } from 'vue'
 import Home from '../views/Home.vue'
 import {AppRouteRecordRaw} from "@/router/types";
 
+
+const Layout=() => import('../layout/index.vue')
+
 export const constantRouterMap: Array<AppRouteRecordRaw> = [
+  {
+    path: "/redirect",
+    component: Layout,
+    meta: {},
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@c/Redirect/index.vue'),
+        meta: {}
+      }
+    ]
+  },
   {
     path: '/',
     name: 'Home',
-    component: Home,
-    meta: {}
+    component: Layout,
+    redirect: '/home',
+    meta: {},
+    children: [
+      {
+        path: 'home',
+        name: 'Home',
+        component: Home,
+        meta: {}
+      }
+    ]
   },
   {
     path: '/about',
