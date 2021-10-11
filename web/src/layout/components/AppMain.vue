@@ -3,7 +3,7 @@
     <router-view v-slot="{ Component, route}">
       <transition name="fade" mode="out-in" appear>
         <keep-alive>
-          <component :is="Comment" :key="route.fullPath" />
+          <component :is="Component" :key="route.fullPath" />
         </keep-alive>
       </transition>
     </router-view>
@@ -16,11 +16,13 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "AppMain",
   setup() {
-
+    return {}
   }
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.app-main {
+  padding: 20px
+}
 </style>

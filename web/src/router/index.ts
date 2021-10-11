@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import {AppRouteRecordRaw} from "@/router/types";
 
 
-const Layout=() => import('../layout/index.vue')
+const Layout = () => import('../layout/index.vue')
 
 export const constantRouterMap: Array<AppRouteRecordRaw> = [
   {

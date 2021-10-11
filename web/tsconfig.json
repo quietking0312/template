@@ -13,11 +13,15 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "node",
       "webpack-env"
     ],
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@c/*": [
+        "src/components/*"
       ]
     },
     "lib": [
@@ -35,6 +39,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

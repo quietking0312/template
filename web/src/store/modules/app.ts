@@ -6,7 +6,7 @@ export interface AppState {
     collapsed: boolean // 菜单栏是否缩放
     lang: string // 多语言
     layout: string // layout 布局
-
+    showLogo: boolean // 是否显示logo
 }
 
 @Module({ dynamic: true, namespaced: true, store, name: 'app'})
@@ -14,6 +14,7 @@ class App extends VuexModule implements AppState {
     public collapsed = false
     public lang = wsCache.get(cacheKey.lang)? wsCache.get(cacheKey.lang): 'zh_cn'
     public layout = 'Classic'
+    public showLogo = false
 
     @Mutation
     private SET_COLLAPSED(collapsed: boolean): void {
