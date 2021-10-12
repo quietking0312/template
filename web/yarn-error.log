@@ -1,0 +1,44 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\wangjing\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files\VanDyke Software\Clients\;C:\Program Files\PlasticSCM5\server;C:\Program Files\PlasticSCM5\client;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\nodejs\;C:\Program Files\Graphviz\bin;C:\Users\wangjing\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\wangjing\AppData\Local\Programs\Python\Python39\;C:\Users\wangjing\AppData\Local\Microsoft\WindowsApps;C:\Users\wangjing\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\IntelliJ IDEA 2021.1.2\bin;C:\Python27;C:\Python27\Scripts;C:\Users\wangjing\AppData\Roaming\npm;C:\Program Files\JetBrains\CLion 2021.1.2\bin;C:\Users\wangjing\g;C:\Users\wangjing\.g\go\bin;
+
+Yarn version: 
+  1.22.11
+
+Node version: 
+  16.3.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: connect ECONNREFUSED 61.184.215.189:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1133:16)
+
+npm manifest: 
+  {
+    "name": "web",
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "vue-tsc --noEmit && vite build",
+      "serve": "vite preview"
+    },
+    "dependencies": {
+      "vue": "^3.2.16"
+    },
+    "devDependencies": {
+      "@vitejs/plugin-vue": "^1.9.3",
+      "typescript": "^4.4.3",
+      "vite": "^2.6.4",
+      "vue-tsc": "^0.3.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

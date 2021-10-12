@@ -1,17 +1,15 @@
 <template>
-  <router-view class="app"/>
+  <router-view class="app" />
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
-
 export default defineComponent({
-  name: 'App',
+  name:"App",
   setup() {
     return {}
   }
 })
-
 </script>
 
 <style lang="less">
@@ -22,19 +20,19 @@ export default defineComponent({
 }
 html,body {
   .size;
-  margin: 0;
-  padding: 0;
-}
+    margin: 0;
+    padding: 0;
+  }
 #app {
   .size;
-  background: @appBg;
-}
+    background: @appBg;
+  }
 .grey__mode {
-  -webkit-filter: grayscale(100%);
-  -moz-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
-}
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+  }
 </style>

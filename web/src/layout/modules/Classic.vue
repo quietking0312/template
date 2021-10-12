@@ -1,18 +1,10 @@
 <template>
-  <div :class="classObj" class="app__wrap">
-    <div id="sidebar__wrap" class="sidebar__wrap" :class="{'sidebar__wrap--collapsed': collapsed}">
-      <!--侧边栏-->
-      <sider :layout="layout" mode="vertical" />
+  <div>
+    <div id="sidebar__wrap" class="sidebar__wrap">
     </div>
-    <div class="main__wrap" :class="{'main__wrap--collapsed': collapsed}">
-      <el-scrollbar class="main__wrap--content" :class="{'main__wrap--fixed--all': true, 'main__wrap--fixed--nav': true, 'main__wrap--fixed-tags': true}">
-        <div class="hear__wrap">
-          <!--head-->
-          <div class="navbar__wrap">
-          </div>
-          <div class="tags__wrap">
-            <!-- tags -->
-          </div>
+    <div class="main__wrap">
+      <el-scrollbar class="main__wrap--content">
+        <div class="header__wrap">
         </div>
         <app-main />
       </el-scrollbar>
@@ -21,34 +13,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import {appStore} from "@/store/modules/app";
-import AppMain from "@/layout/components/AppMain.vue";
-import Sider from '@c/Sider/index.vue'
+import {defineComponent} from "vue";
+import {appStore} from "../../store/modules/app";
+import AppMain from "../components/AppMain.vue";
 
 export default defineComponent({
   name: "Classic",
-  components: { AppMain, Sider },
+  components: {AppMain},
   setup() {
     const layout = computed(() => appStore.layout)
-    const collapsed = computed(() => appStore.collapsed)
-    const showLogo = computed(() => appStore.showLogo)
-    const classObj = computed(() => {
-      const obj: {[key: string]: boolean} = {}
-      obj[`app__wrap--${layout.value}`] = true
-      return obj
-    })
-
     return {
-      classObj,
-      layout,
-      collapsed,
-      showLogo
+      layout
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-@import "./style.less";
+@import "style";
 </style>

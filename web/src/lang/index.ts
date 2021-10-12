@@ -1,19 +1,20 @@
 import type {App} from "vue";
-import { createI18n } from "vue-i18n";
-import wsCache, {cacheKey} from "@/cache";
-import elementZHLocale from 'element-plus/lib/locale/lang/zh-cn'
-import zh_cnLocale from "@/lang/zh_cn";
+import {createI18n} from "vue-i18n";
+
+import elementZHCNLocale from 'element-plus/lib/locale/lang/zh-cn'
+import zh_cn from "./zh_cn";
+import wsCache, {cacheKey} from "../cache";
 
 const messages = {
     zh_cn: {
-        el: elementZHLocale.el,
-        ...zh_cnLocale
+        el: elementZHCNLocale.el,
+        ...zh_cn
     }
 }
 
 export function getLanguage(): string {
-    const lang = wsCache.get(cacheKey.lang)
-    if (lang) return lang
+    const chooseLanguage = wsCache.get(cacheKey.lang)
+    if (chooseLanguage) return chooseLanguage
     return 'zh_cn'
 }
 

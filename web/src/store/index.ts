@@ -1,12 +1,12 @@
-import { createStore } from 'vuex'
-import type { App } from 'vue'
+import type { App } from "vue";
+import { createStore } from "vuex";
 
 const store = createStore({
-  modules: {}
+    modules: {}
 })
 
-export function setupStore(app: App<Element>): void {
-  app.use(store)
+export function setupStore(app: App<Element>) {
+    app.use(store)
 }
 
 export default store

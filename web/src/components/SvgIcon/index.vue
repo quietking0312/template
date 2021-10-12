@@ -5,10 +5,9 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from "vue";
-
+import {defineComponent, computed} from "vue";
 interface Props {
-  iconClass: string
+  iconClass: string,
   className: string
 }
 
@@ -25,7 +24,7 @@ export default defineComponent({
     }
   },
   setup(props: Props) {
-    const iconName = computed( (): string => `#icon-${props.iconClass}`)
+    const iconName = computed(():string =>`#icon-${props.iconClass}`)
     const svgClass = computed((): string => {
       if (props.className) {
         return 'svg-icon ' + props.className
