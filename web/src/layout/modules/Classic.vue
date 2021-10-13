@@ -16,6 +16,7 @@
             <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
             <div v-if="showScreenfull|| showUserInfo" class="navbar__wrap--right">
               <screenfull v-if="showScreenfull" class="hover-containeer screenfull-container" />
+              <user-info v-if="showUserInfo" class="hover-container user-container" />
             </div>
           </div>
         </div>
@@ -34,9 +35,10 @@ import Breadcrumb from "@/components/Breadcrumb/index.vue";
 import Hamburger from '@/components/Hamburger/index.vue';
 import Screenfull from "@/components/Screenfull/index.vue";
 import Logo from "@/components/Logo/index.vue";
+import UserInfo from "@/components/UserInfo/index.vue";
 export default defineComponent({
   name: "Classic",
-  components: {Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
+  components: {UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)

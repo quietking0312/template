@@ -1,0 +1,71 @@
+<template>
+  <el-dropdown class="avatar-container" trigger="hover">
+    <div id="user-container">
+      <div class="avatar-wrapper">
+        <img :src="getUserImg()" class="user-avatar">
+        <span class="name-item">管理员</span>
+      </div>
+    </div>
+    <template #dropdown>
+      <el-dropdown-item key="1">
+        <span style="display: block;" @click="toHome">首页</span>
+      </el-dropdown-item>
+      <el-dropdown-item key="2">
+        <span style="display: block;" @click="loginOut">退出登录</span>
+      </el-dropdown-item>
+    </template>
+  </el-dropdown>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+import {useRouter} from "vue-router";
+import wsCache, {cacheKey} from "../../cache";
+import {resetRouter} from "@/router";
+
+export default defineComponent({
+  name: "UserInfo",
+  setup() {
+    const { replace, push } = useRouter()
+    async function loginOut(): Promise<void> {
+      wsCache.delete(cacheKey.userInfo)
+      await resetRouter()
+    }
+    function toHome() {
+      push('/')
+    }
+    function getUserImg() {
+      return new URL('../../assets/avatar.png', import.meta.url).href
+    }
+    return {
+      loginOut,
+      toHome,
+      getUserImg
+    }
+  }
+})
+</script>
+
+<style lang="less" scoped>
+.avatar-container {
+  margin-right: 30px;
+  padding: 0 10px;
+  .avatar-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+    }
+    .name-item {
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+}
+</style>
