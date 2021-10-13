@@ -13,12 +13,7 @@
       <template #title>
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
-      <sider-item
-          v-for="child in item.children"
-          :key="child.path"
-          :is-nest="true"
-          :item="child"
-          :layout="layout"
+      <sider-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :layout="layout"
           :base-path="resolvePath(child.path)"
       />
     </el-sub-menu>

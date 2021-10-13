@@ -4,8 +4,19 @@
       <sider :layout="layout" mode="vertical" />
     </div>
     <div class="main__wrap" :class="{'main__wrap--collapsed': collapsed}">
-      <el-scrollbar class="main__wrap--content">
-        <div class="header__wrap">
+      <el-scrollbar class="main__wrap--content"
+                    :class="{'main__wrap--fixed--all': fixedHeader && showNavbar && showTags,
+                    'main__wrap--fixed--nav': fixedHeader && showNavbar && !showTags,
+                    'main__wrap--fixed--tags': fixedHeader && !showNavbar && showTags}">
+        <div class="header__wrap" :class="{'header__wrap--fixed': fixedHeader,
+        'header__wrap--collapsed': fixedHeader && collapsed}">
+          <div v-if="showNavbar" class="navbar__wrap">
+            <hamburger v-if="showHamburger" id="hamburger-container" :collapsed="collapsed" class="hover-container" @toggleClick="setCollapsed" />
+            <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
+            <div class="navbar__wrap--right">
+
+            </div>
+          </div>
         </div>
         <app-main />
       </el-scrollbar>
@@ -18,16 +29,22 @@ import {defineComponent, computed} from "vue";
 import {appStore} from "@/store/modules/app";
 import AppMain from "@/layout/components/AppMain.vue";
 import Sider from "@/components/Sider/index.vue";
-
+import Breadcrumb from "@/components/Breadcrumb/index.vue";
+import Hamburger from '@/components/Hamburger/index.vue';
 export default defineComponent({
   name: "Classic",
-  components: {Sider, AppMain},
+  components: {Breadcrumb, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)
     const showLogo = computed(() => appStore.showLogo)
     const showTags = computed(() => appStore.showTags)
-
+    const showBreadcrumb = computed(() => appStore.showBreadcrumb)
+    const showHamburger = computed(() => appStore.showHamburger)
+    const showScreenfull = computed(() => appStore.showScreenfull)
+    const showUserInfo = computed(() => appStore.showUserInfo)
+    const showNavbar = computed(() => appStore.showNavbar)
+    const fixedHeader = computed(() => appStore.fixedHeader)
     const classObj = computed(() => {
       const obj = {}
       obj[`app__wrap--${layout.value}`] = true
@@ -44,6 +61,12 @@ export default defineComponent({
       collapsed,
       showLogo,
       showTags,
+      showBreadcrumb,
+      showHamburger,
+      showScreenfull,
+      showUserInfo,
+      showNavbar,
+      fixedHeader,
       setCollapsed
     }
   }
