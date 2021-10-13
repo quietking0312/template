@@ -1,6 +1,7 @@
 <template>
   <div :class="classObj" class="app__wrap">
     <div id="sidebar__wrap" class="sidebar__wrap" :class="{'sidebar__wrap--collapsed': collapsed}">
+      <logo v-if="showLogo && layout === 'Classic'" :collapsed="collapsed" />
       <sider :layout="layout" mode="vertical" />
     </div>
     <div class="main__wrap" :class="{'main__wrap--collapsed': collapsed}">
@@ -13,8 +14,8 @@
           <div v-if="showNavbar" class="navbar__wrap">
             <hamburger v-if="showHamburger" id="hamburger-container" :collapsed="collapsed" class="hover-container" @toggleClick="setCollapsed" />
             <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
-            <div class="navbar__wrap--right">
-
+            <div v-if="showScreenfull|| showUserInfo" class="navbar__wrap--right">
+              <screenfull v-if="showScreenfull" class="hover-containeer screenfull-container" />
             </div>
           </div>
         </div>
@@ -31,9 +32,11 @@ import AppMain from "@/layout/components/AppMain.vue";
 import Sider from "@/components/Sider/index.vue";
 import Breadcrumb from "@/components/Breadcrumb/index.vue";
 import Hamburger from '@/components/Hamburger/index.vue';
+import Screenfull from "@/components/Screenfull/index.vue";
+import Logo from "@/components/Logo/index.vue";
 export default defineComponent({
   name: "Classic",
-  components: {Breadcrumb, Sider, AppMain, Hamburger},
+  components: {Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)
