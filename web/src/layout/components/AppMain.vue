@@ -20,6 +20,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.app-main {
+// overflow: hidden;
+  padding: 20px;
+}
 </style>

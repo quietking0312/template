@@ -1,6 +1,8 @@
 <template>
-  <div>hello world</div>
-  <svg-icon iconClass="dashboard" />
+  <div>
+    <div>hello world</div>
+    <svg-icon iconClass="dashboard" />
+  </div>
 </template>
 
 <script lang="ts">

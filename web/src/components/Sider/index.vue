@@ -22,6 +22,8 @@ import SiderItem from "@/components/Sider/SiderItem.vue";
 import {RouteRecordRaw, useRouter} from "vue-router";
 import {permissionStore} from "@/store/modules/permission";
 import {appStore} from "@/store/modules/app";
+import {isExternal} from "@/utils/validate";
+
 export default defineComponent({
   name: "Sider",
   components: { SiderItem },

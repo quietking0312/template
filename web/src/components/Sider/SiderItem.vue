@@ -29,7 +29,6 @@
 import {defineComponent, PropType, ref} from "vue";
 import {RouteRecordRaw} from "vue-router";
 import {isExternal} from "@/utils/validate";
-import path from 'path'
 import Item from "@/components/Sider/Item.vue";
 export default defineComponent({
   name: "SiderItem",
@@ -83,7 +82,8 @@ export default defineComponent({
       if (isExternal(routePath)) {
         return routePath
       }
-      return path.resolve(props.basePath, routePath)
+      // path.resolve 方法无法使用, 临时解决方案
+      return (props.basePath + '/' + routePath).replace("//", "/")
     }
     return {
       onlyOneChild,
