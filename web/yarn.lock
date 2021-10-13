@@ -128,6 +128,11 @@
   resolved "https://registry.npmmirror.com/@types/node/download/@types/node-16.10.3.tgz?cache=0&sync_timestamp=1633466158941&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-16.10.3.tgz#7a8f2838603ea314d1d22bb3171d899e15c57bd5"
   integrity sha1-eo8oOGA+oxTR0iuzFx2JnhXFe9U=
 
+"@types/nprogress@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.nlark.com/@types/nprogress/download/@types/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
+  integrity sha1-hsWTaC1BmSEqBQnMPE1WK7vW5F8=
+
 "@types/svgo@^2.4.2":
   version "2.6.0"
   resolved "https://registry.npmmirror.com/@types/svgo/download/@types/svgo-2.6.0.tgz?cache=0&sync_timestamp=1633346553187&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fsvgo%2Fdownload%2F%40types%2Fsvgo-2.6.0.tgz#f0c50eed286422f63b4e3346d8a309b0ea67d58a"

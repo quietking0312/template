@@ -19,6 +19,9 @@
               <user-info v-if="showUserInfo" class="hover-container user-container" />
             </div>
           </div>
+          <div v-if="showTags" id="tag-container" class="tags__wrap">
+            <tags-view />
+          </div>
         </div>
         <app-main />
       </el-scrollbar>
@@ -36,9 +39,10 @@ import Hamburger from '@/components/Hamburger/index.vue';
 import Screenfull from "@/components/Screenfull/index.vue";
 import Logo from "@/components/Logo/index.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
+import TagsView from "@/components/TagsView/index.vue";
 export default defineComponent({
   name: "Classic",
-  components: {UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
+  components: {TagsView, UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)
