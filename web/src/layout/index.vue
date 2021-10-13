@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, computed} from "vue";
 import {appStore} from "@/store/modules/app";
 import Classic from "./modules/Classic.vue"
 

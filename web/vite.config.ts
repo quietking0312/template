@@ -10,6 +10,11 @@ export default defineConfig({
     server: {
         fs: {
             strict: false
+        },
+        port: 9000,
+        open: false,
+        proxy: {
+            '/api': "http://127.0.0.1:9001/api"
         }
     },
     resolve: {

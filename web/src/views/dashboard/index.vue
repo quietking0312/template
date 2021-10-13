@@ -1,6 +1,6 @@
 <template>
   <div>hello world</div>
-  <svg-icon iconClass="dashboard" className="" />
+  <svg-icon iconClass="dashboard" />
 </template>
 
 <script lang="ts">
