@@ -45,7 +45,7 @@ import {tagsViewStore} from "@/store/modules/tagsView";
 import ScrollPane from "@/components/TagsView/ScrollPane.vue";
 export default defineComponent({
   name: "TagsView",
-  components: [ScrollPane],
+  components: {ScrollPane},
   setup() {
     const { currentRoute, push, replace } = useRouter()
     const wrapper = ref<HTMLElement | null>(null)
@@ -129,7 +129,7 @@ export default defineComponent({
     async function refreshSelectedTag(view: RouteLocationNormalizedLoaded) {
       await tagsViewStore.delCachedView()
       const { fullPath } = view
-      nextTick(() => {
+      await nextTick(() => {
         replace({
           path: '/redirect' + fullPath
         })

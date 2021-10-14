@@ -30,6 +30,18 @@ const Layout = () => import('../layout/index.vue')
 
 export const constantRouterMap: AppRouteRecordRaw[] = [
     {
+      path: '/redirect',
+      component: Layout,
+      children: [
+          {
+              path: '/redirect/:path*',
+              component:() => import('@/components/Redirect/index.vue'),
+              meta: {}
+          }
+      ],
+        meta: { hidden: true }
+    },
+    {
         path: "/",
         component: Layout,
         redirect: '/dashboard',

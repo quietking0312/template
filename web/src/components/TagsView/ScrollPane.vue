@@ -71,6 +71,12 @@ export default defineComponent({
     function moveTo(to: number) {
       const $scrollWrapper: any = (unref(scrollContainer) as any).wrap
       nextTick(() => {
+        const { start } = useScrollTo({
+          el: $scrollWrapper,
+          position: 'scrollLeft',
+          to: $scrollWrapper.scrollLeft + to,
+          duration: 500
+        })
         start()
       })
     }
