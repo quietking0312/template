@@ -1,5 +1,7 @@
 import store from "../index";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
+import {getLanguage} from "@/lang";
+import wsCache, {cacheKey} from "@/cache";
 
 export interface AppState {
     collapsed: boolean
@@ -16,6 +18,8 @@ export interface AppState {
     logoTitle: string
     greyMode: boolean
     showBackTop: boolean
+    lang: string
+    showLanguage: boolean
 }
 
 @Module({ dynamic: true, namespaced: true, store, name: 'app'})
@@ -34,15 +38,28 @@ class App extends VuexModule implements AppState {
     public logoTitle = "vue-admin" // logo标题
     public greyMode = false  // 是否开始灰色模式，用于特殊悼念日
     public showBackTop = true // 是否显示回到顶部
+    public lang = getLanguage()
+    public showLanguage = true // 是否显示选择语言
 
     @Mutation
     private SET_COLLAPSED(collapsed: boolean): void {
         this.collapsed = collapsed
     }
 
+    @Mutation
+    private SET_LANG(lang: string): void {
+        this.lang = lang
+    }
+
     @Action
     public SetCollapsed(collapsed: boolean): void {
         this.SET_COLLAPSED(collapsed)
+    }
+
+    @Action
+    public SetLanguage(lang: string): void {
+        wsCache.set(cacheKey.lang, lang)
+        this.SET_LANG(lang)
     }
 }
 

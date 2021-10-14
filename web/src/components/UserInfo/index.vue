@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown class="avatar-container" trigger="hover">
+  <el-dropdown class="avatar-container" trigger="click">
     <div id="user-container">
       <div class="avatar-wrapper">
         <img :src="getUserImg()" class="user-avatar">

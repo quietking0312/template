@@ -14,8 +14,9 @@
           <div v-if="showNavbar" class="navbar__wrap">
             <hamburger v-if="showHamburger" id="hamburger-container" :collapsed="collapsed" class="hover-container" @toggleClick="setCollapsed" />
             <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
-            <div v-if="showScreenfull|| showUserInfo" class="navbar__wrap--right">
+            <div v-if="showScreenfull || showUserInfo" class="navbar__wrap--right">
               <screenfull v-if="showScreenfull" class="hover-containeer screenfull-container" />
+              <lang-select v-if="showLanguage" class="hover-containeer language-container" />
               <user-info v-if="showUserInfo" class="hover-container user-container" />
             </div>
           </div>
@@ -40,9 +41,10 @@ import Screenfull from "@/components/Screenfull/index.vue";
 import Logo from "@/components/Logo/index.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import TagsView from "@/components/TagsView/index.vue";
+import LangSelect from "@/components/LangSelect/index.vue";
 export default defineComponent({
   name: "Classic",
-  components: {TagsView, UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
+  components: {LangSelect, TagsView, UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)
@@ -53,6 +55,7 @@ export default defineComponent({
     const showScreenfull = computed(() => appStore.showScreenfull)
     const showUserInfo = computed(() => appStore.showUserInfo)
     const showNavbar = computed(() => appStore.showNavbar)
+    const showLanguage = computed(() => appStore.showLanguage)
     const fixedHeader = computed(() => appStore.fixedHeader)
     const classObj = computed(() => {
       const obj = {}
@@ -75,6 +78,7 @@ export default defineComponent({
       showScreenfull,
       showUserInfo,
       showNavbar,
+      showLanguage,
       fixedHeader,
       setCollapsed
     }

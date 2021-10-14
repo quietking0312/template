@@ -5,6 +5,11 @@ import elementZHCNLocale from 'element-plus/lib/locale/lang/zh-cn'
 import zh_cn from "./zh_cn";
 import wsCache, {cacheKey} from "../cache";
 
+
+export const LangDict = {
+    zh_cn: "简体中文",
+}
+
 const messages = {
     zh_cn: {
         el: elementZHCNLocale.el,

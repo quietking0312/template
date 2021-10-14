@@ -265,7 +265,7 @@ export default defineComponent({
     line-height: @tagsViewHeight;
     text-align: center;
     padding: 0;
-    border-radius: 0;
+    border-radius: 4px;
   }
   .tags-view-wrapper {
     width: calc(~"100% - 78px");
@@ -280,6 +280,7 @@ export default defineComponent({
       height: 30px;
       line-height: 30px;
       border: 1px solid #d8dce5;
+      border-radius: 4px;
       color: #495060;
       background: #fff;
       padding: 0 8px;
