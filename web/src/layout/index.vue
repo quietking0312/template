@@ -9,9 +9,10 @@ import {defineComponent, computed} from "vue";
 import {appStore} from "@/store/modules/app";
 import Classic from "./modules/Classic.vue"
 import Top from "@/layout/modules/Top.vue";
+import LeftTop from "@/layout/modules/LeftTop.vue";
 export default defineComponent({
   name: "Layout",
-  components: { Classic, Top },
+  components: { Classic, Top, LeftTop },
   setup() {
     const layout = computed(() => appStore.layout)
     return {

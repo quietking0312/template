@@ -29,7 +29,7 @@ class App extends VuexModule implements AppState {
     public showLogo = true // 是否显示logo
     public showNavbar = true // 是否显示navbar
     public fixedHeader = true // 是否固定header
-    public layout = "Top" // layout布局
+    public layout = "LeftTop" // layout布局
     public showBreadcrumb = true // 是否显示面包屑
     public showHamburger = true // 是否显示侧边栏缩收按钮
     public showScreenfull = true // 是否全屏按钮

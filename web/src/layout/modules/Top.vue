@@ -5,12 +5,13 @@
       <div>
         <logo v-if="showLogo" :collapsed="collapsed" />
       </div>
-      <div id="sidebar__wrap" class="sidebar__wrap--Top">
+      <div id="sidebar__wrap" class="sidebar__item--Top">
         <sider :layout="layout" mode="horizontal" />
       </div>
       <div>
         <div v-if="showScreenfull || showUserInfo" class="navbar__wrap--right">
           <screenfull v-if="showScreenfull" class="hover-container screenfull-container" />
+          <lang-select v-if="showLanguage" class="hover-containeer language-container" />
           <user-info v-if="showUserInfo" class="hover-container user-container" />
         </div>
       </div>
@@ -42,6 +43,7 @@ import TagsView from "@/components/TagsView/index.vue";
 import AppMain from "@/layout/components/AppMain.vue";
 import Screenfull from "@/components/Screenfull/index.vue";
 import UserInfo from '@/components/UserInfo/index.vue'
+import LangSelect from '@/components/LangSelect/index.vue'
 export default defineComponent({
   name: "Top",
   components: {
@@ -50,7 +52,8 @@ export default defineComponent({
     Sider,
     Logo,
     Screenfull,
-    UserInfo
+    UserInfo,
+    LangSelect
   },
   setup() {
     const layout = computed(() => appStore.layout)
@@ -63,7 +66,7 @@ export default defineComponent({
     const showUserInfo = computed(() => appStore.showUserInfo)
     const showNavbar = computed(() => appStore.showNavbar)
     const fixedHeader = computed(() => appStore.fixedHeader)
-
+    const showLanguage = computed(() => appStore.showLanguage)
     const classObj = computed(() => {
       const obj = {}
       obj[`app__wrap--${layout.value}`] = true
@@ -85,6 +88,7 @@ export default defineComponent({
       showUserInfo,
       showNavbar,
       fixedHeader,
+      showLanguage,
       setCollapsed
     }
   }
