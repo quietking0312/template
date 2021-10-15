@@ -67,7 +67,7 @@
                 class="hover-container"
                 @toggleClick="setCollapsed"
             />
-            <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
+            <breadcrumb-wrap v-if="showBreadcrumb" id="breadcrumb-container" />
           </div>
           <div
               v-if="showTags"
@@ -92,7 +92,7 @@ import TagsView from '@/components/TagsView/index.vue'
 import Logo from '@/components/Logo/index.vue'
 import Sider from '@/components/Sider/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import BreadcrumbWrap from '@/components/Breadcrumb/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
 import UserInfo from '@/components/UserInfo/index.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
@@ -102,7 +102,7 @@ export default defineComponent({
     LangSelect,
     Sider,
     Hamburger,
-    Breadcrumb,
+    BreadcrumbWrap,
     Screenfull,
     UserInfo,
     AppMain,

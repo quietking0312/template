@@ -13,7 +13,7 @@
         'header__wrap--collapsed': fixedHeader && collapsed}">
           <div v-if="showNavbar" class="navbar__wrap">
             <hamburger v-if="showHamburger" id="hamburger-container" :collapsed="collapsed" class="hover-container" @toggleClick="setCollapsed" />
-            <breadcrumb v-if="showBreadcrumb" id="breadcrumb-container" />
+            <breadcrumb-wrap v-if="showBreadcrumb" id="breadcrumb-container" />
             <div v-if="showScreenfull || showUserInfo" class="navbar__wrap--right">
               <screenfull v-if="showScreenfull" class="hover-containeer screenfull-container" />
               <lang-select v-if="showLanguage" class="hover-containeer language-container" />
@@ -35,7 +35,7 @@ import {defineComponent, computed} from "vue";
 import {appStore} from "@/store/modules/app";
 import AppMain from "@/layout/components/AppMain.vue";
 import Sider from "@/components/Sider/index.vue";
-import Breadcrumb from "@/components/Breadcrumb/index.vue";
+import BreadcrumbWrap from "@/components/Breadcrumb/index.vue";
 import Hamburger from '@/components/Hamburger/index.vue';
 import Screenfull from "@/components/Screenfull/index.vue";
 import Logo from "@/components/Logo/index.vue";
@@ -44,7 +44,7 @@ import TagsView from "@/components/TagsView/index.vue";
 import LangSelect from "@/components/LangSelect/index.vue";
 export default defineComponent({
   name: "Classic",
-  components: {LangSelect, TagsView, UserInfo, Logo, Screenfull, Breadcrumb, Sider, AppMain, Hamburger},
+  components: {LangSelect, TagsView, UserInfo, Logo, Screenfull, BreadcrumbWrap, Sider, AppMain, Hamburger},
   setup() {
     const layout = computed(() => appStore.layout)
     const collapsed = computed(() => appStore.collapsed)

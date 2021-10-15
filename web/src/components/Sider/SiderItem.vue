@@ -78,7 +78,7 @@ export default defineComponent({
         return routePath
       }
       // path.resolve 方法无法使用, 临时解决方案
-      return (props.basePath + '/' + routePath).replace("//", "/")
+      return routePath? (props.basePath + '/' + routePath).replace("//", "/"): props.basePath
     }
     return {
       onlyOneChild,

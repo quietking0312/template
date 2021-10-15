@@ -1,7 +1,6 @@
 import {AppRouteRecordRaw} from "@/router/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from "@/store";
-import path from "path";
 import {asyncRouterMap, constantRouterMap} from "@/router";
 import {deepClone} from "@/utils";
 
@@ -54,6 +53,7 @@ class Permission extends VuexModule implements PermissionState {
 
 // 路由过滤，主要用于权限控制
 function generateRoutes(routes: AppRouteRecordRaw[], basePath = '/'): AppRouteRecordRaw[] {
+
     const res: AppRouteRecordRaw[] = []
 
     for (const route of routes) {
@@ -69,12 +69,13 @@ function generateRoutes(routes: AppRouteRecordRaw[], basePath = '/'): AppRouteRe
 
         // recursive child routes
         if (route.children && data) {
-            data.children = generateRoutes(route.children, path.resolve(basePath, data.path))
+            data.children = generateRoutes(route.children, (basePath + '/'+ data.path).replace('//', '/'))
         }
         if (data) {
             res.push(data as AppRouteRecordRaw)
         }
     }
+    console.log(routes)
     return res
 }
 

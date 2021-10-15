@@ -8,36 +8,36 @@
     .el-menu {
       // background-color: @menuBg !important;
       .el-menu-item,
-      .el-submenu__title {
+      .el-sub-menu__title {
         color: @menuText !important;
         background-color: @menuBg !important;
         i {
           color: @menuText !important;
         }
       }
-      .el-submenu {
+      .el-sub-menu {
         .el-menu-item,
-        .el-submenu {
+        .el-sub-menu {
           background-color: @subMenuBg !important;
         }
         .is-active {
           color: @menuActiveText !important;
           background-color: @subMenuHover !important;
-          &>.el-submenu__title {
+          &>.el-sub-menu__title {
             color: @menuActiveText !important;
           }
         }
         .is-opened,
         .el-menu {
           background-color: @subMenuBg !important;
-          .el-submenu__title {
+          .el-sub-menu__title {
             background-color: @subMenuBg !important;
           }
         }
       }
       // menu hover
       .submenu-title-noDropdown,
-      .el-submenu__title {
+      .el-sub-menu__title {
         &:hover {
           background-color: @menuBg !important;
           color: @subMenuActiveText !important;
@@ -54,19 +54,19 @@
           color: @subMenuActiveText !important;
           background-color: @subMenuHover !important;
         }
-        &>.el-submenu__title {
+        &>.el-sub-menu__title {
           color: @menuActiveText !important;
         }
       }
     }
     .el-menu--collapse {
-      &>div>.el-submenu {
+      &>div>.el-sub-menu {
         i {
           display: none;
         }
       }
       .is-active {
-        &>.el-submenu__title {
+        &>.el-sub-menu__title {
           background-color: @subMenuHover !important;
         }
       }
@@ -78,27 +78,27 @@
   background: @menuBg;
   .el-menu {
     background-color: @menuBg !important;
-      
+
     .el-menu-item,
-    .el-submenu__title {
+    .el-sub-menu__title {
       color: @menuText !important;
       background-color: @menuBg !important;
       i {
         color: @menuText !important;
       }
     }
-      
+
     .is-active {
       color: @menuActiveText !important;
       background-color: @subMenuHover !important;
-      &>.el-submenu__title {
+      &>.el-sub-menu__title {
         color: @menuActiveText !important;
       }
     }
 
     // menu hover
     .submenu-title-noDropdown,
-    .el-submenu__title {
+    .el-sub-menu__title {
       &:hover {
         background-color: @menuBg !important;
         color: @subMenuActiveText !important;
@@ -117,17 +117,17 @@
     .el-menu {
       background-color: @topMenuBg !important;
       .el-menu-item,
-      .el-submenu__title {
+      .el-sub-menu__title {
         color: @topMenuText !important;
         background-color: @topMenuBg !important;
         i {
           color: @topMenuText !important;
         }
       }
-      
+
       .is-active {
         color: @topMenuActiveText !important;
-        &>.el-submenu__title {
+        &>.el-sub-menu__title {
           color: @topMenuActiveText !important;
         }
       }
@@ -139,7 +139,7 @@
 
       // menu hover
       .submenu-title-noDropdown,
-      .el-submenu__title {
+      .el-sub-menu__title {
         &:hover {
           color: @topSMenuActiveText !important;
         }
@@ -155,24 +155,24 @@
   background: @topMenuBg;
   .el-menu {
     background-color: @topMenuBg !important;
-      
+
     .el-menu-item,
-    .el-submenu__title {
+    .el-sub-menu__title {
       color: @topMenuText !important;
       background-color: @topMenuBg !important;
     }
-      
+
     .is-active {
       color: @topMenuActiveText !important;
       // background-color: @subMenuHover !important;
-      &>.el-submenu__title {
+      &>.el-sub-menu__title {
         color: @topMenuActiveText !important;
       }
     }
 
     // menu hover
     .submenu-title-noDropdown,
-    .el-submenu__title {
+    .el-sub-menu__title {
       &:hover {
         background-color: @topMenuBg !important;
         color: @topSMenuHover !important;

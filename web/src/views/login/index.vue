@@ -3,11 +3,11 @@
     <div class="login-con">
       <el-card class="box-card">
         <template #header>
-          <span class="login--header">登录</span>
+          <span class="login--header">{{ $t('login.titleLogin') }}</span>
         </template>
         <el-form ref="loginForm" :model="form" class="login-form">
           <el-form-item prop="username">
-            <el-input v-model="form.username" class="form--input">
+            <el-input v-model="form.username" :placeholder="$t('login.placeholderUsername')" class="form--input">
               <template #prefix>
                 <span class="svg-container">
                   <svg-icon icon-class="user" />
@@ -16,7 +16,9 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="form.password" show-password :minlength="3" :maxlength="18" class="form--input">
+            <el-input v-model="form.password"
+                      show-password :minlength="3" :maxlength="18"
+                      :placeholder="$t('login.placeholderPassword')" class="form--input">
               <template #prefix>
                 <span class="svg-container">
                   <svg-icon icon-class="password" />
@@ -25,7 +27,7 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="loading" type="primary" class="login--button" @click="login">登录</el-button>
+            <el-button :loading="loading" type="primary" class="login--button" @click="login">{{ $t('login.btnLogin') }}</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -37,6 +39,7 @@
 import {defineComponent, ref, watch, reactive, unref} from "vue";
 import {useRouter} from "vue-router";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import wsCache, {cacheKey} from "@/cache";
 
 
 interface FormModule {
@@ -62,6 +65,22 @@ export default defineComponent({
     async function login(): Promise<void> {
       const formWrap = unref(loginForm) as any
       if (!formWrap) return
+      loading.value = true
+      try {
+        formWrap.validate(async (valid: boolean) => {
+          if (valid) {
+            wsCache.set(cacheKey.userInfo, form)
+            await push({path: redirect.value || '/'})
+          } else {
+            console.log("error submit!!")
+            return false
+          }
+        })
+      }catch (err) {
+        console.log(err)
+      } finally {
+        loading.value = false
+      }
     }
     return {
       loginForm,

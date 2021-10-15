@@ -62,7 +62,25 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     }
 ]
 
-export const asyncRouterMap: AppRouteRecordRaw[] = []
+export const asyncRouterMap: AppRouteRecordRaw[] = [
+    {
+        path: "/demo",
+        component: Layout,
+        redirect: "/demo/menu1",
+        children: [{
+            path: 'menu1',
+            name: 'menu1Demo',
+            component: () => import('@/views/demo/Menu1.vue'),
+            meta: { title: "menu1Demo" }
+        },{
+            path: 'menu2',
+            name: 'menu2Demo',
+            component: () => import('@/views/demo/Menu2.vue'),
+            meta: { title: "menu2Demo" }
+        }],
+        meta: { title: "demo", icon: "nested" }
+    }
+]
 
 const router = createRouter({
     history: createWebHistory(),
