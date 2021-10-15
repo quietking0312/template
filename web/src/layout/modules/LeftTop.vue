@@ -28,6 +28,7 @@
       <div>
         <div v-if="showScreenfull || showUserInfo" class="navbar__wrap--right">
           <screenfull v-if="showScreenfull" class="hover-container screenfull-container" />
+          <lang-select v-if="showLanguage" class="hover-container language-container" />
           <user-info v-if="showUserInfo" class="hover-container user-container" />
         </div>
       </div>
@@ -94,9 +95,11 @@ import Hamburger from '@/components/Hamburger/index.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
 import UserInfo from '@/components/UserInfo/index.vue'
+import LangSelect from '@/components/LangSelect/index.vue'
 export default defineComponent({
   name: 'LeftTop',
   components: {
+    LangSelect,
     Sider,
     Hamburger,
     Breadcrumb,
@@ -117,7 +120,7 @@ export default defineComponent({
     const showUserInfo = computed(() => appStore.showUserInfo)
     const showNavbar = computed(() => appStore.showNavbar)
     const fixedHeader = computed(() => appStore.fixedHeader)
-
+    const showLanguage = computed(() => appStore.showLanguage)
     const classObj = computed(() => {
       const obj = {}
       obj[`app__wrap--${layout.value}`] = true
@@ -140,6 +143,7 @@ export default defineComponent({
       showUserInfo,
       showNavbar,
       fixedHeader,
+      showLanguage,
       setCollapsed
     }
   }

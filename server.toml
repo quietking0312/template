@@ -1,0 +1,23 @@
+# 日志
+[log]
+# 日志路径, 空将输出控制台
+logpath = ""
+# logpath = "logs\\server.log"
+# log size (M)
+maxsize = 10
+# 压缩日志
+compress = true
+# 日志保存时间 (day)
+maxage = 7
+# 日志保存文件数
+maxbackups = 10
+# 日志等级
+loglevel = "debug"
+# 日志类型 text or json
+format = "json"
+
+[server]
+mode = "debug"
+# mode = "release"
+sqlpath = "sql\\server.sql"
+port = 9001

@@ -111,7 +111,7 @@ func newLoggerOptions() []zap.Option {
 func defaultOption() *logConfig {
 	return &logConfig{
 		LogPath:    "",
-		MaxSize:    10,
+		MaxSize:    10, // 单位MB
 		Compress:   true,
 		MaxAge:     7,
 		MaxBackups: 7,
