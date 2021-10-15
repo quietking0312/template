@@ -1,7 +1,7 @@
 <template>
-  <Breadcrumb class="app-breadcrumb">
+  <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <BreadcrumbItem v-for="(item, index) in levelList" :key="item.path">
+      <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
 <!--        <svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon" clas="icon-breadcrumb" />-->
         <span v-if="item.redirect === 'noredirect' || index==levelList.length-1" class="no-redirect">
           {{ item.meta.title }}
@@ -9,21 +9,18 @@
         <a v-else @click.prevent="handleLink(item)">
           {{ item.meta.title }}
         </a>
-      </BreadcrumbItem>
+      </el-breadcrumb-item>
     </transition-group>
-  </Breadcrumb>
+  </el-breadcrumb>
 </template>
 
 <script lang="ts">
 import {defineComponent, ref, watch} from "vue";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.vue";
-import BreadcrumbItem from "@/components/Breadcrumb/BreadcrumbItem.vue";
 import {RouteLocationMatched, RouteLocationNormalizedLoaded, RouteRecordRaw, useRouter} from "vue-router";
 import {compile} from "path-to-regexp";
 
 export default defineComponent({
   name: "BreadcrumbWrap",
-  components: {BreadcrumbItem, Breadcrumb},
   setup() {
     const { currentRoute, push } = useRouter()
     const levelList =ref<RouteRecordRaw[]>([])
