@@ -7,10 +7,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.23.0",
     "element-plus": "^1.1.0-beta.20",
     "fs": "^0.0.1-security",
     "nprogress": "^0.2.0",
     "protobufjs": "^6.11.2",
+    "qs": "^6.10.1",
     "screenfull": "^5.1.0",
     "vue": "^3.2.16",
     "vue-i18n": "^9.2.0-beta.11",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@types/node": "^16.10.3",
     "@types/nprogress": "^0.2.0",
+    "@types/qs": "^6.9.7",
     "@types/webpack-env": "^1.16.2",
     "@vitejs/plugin-vue": "^1.9.3",
     "less": "^4.1.2",
