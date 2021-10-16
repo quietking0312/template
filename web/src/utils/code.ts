@@ -21,6 +21,14 @@ export function StrToArrayBuffer(str: string, func: any) {
     }
 }
 
+export function BlobToArrayBuffer(blob: Blob, func: any) {
+    let reader = new FileReader()
+    reader.readAsArrayBuffer(blob)
+    reader.onload = () => {
+        func.call(null, reader.result)
+    }
+}
+
 export function Uint16ToBytes(value: any) {
     let a = new Uint8Array(2)
     a[1] = (value >> 8) & 0xFF
