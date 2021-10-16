@@ -53,7 +53,9 @@ service.interceptors.response.use(
             link.setAttribute('download', fileName)
             document.body.appendChild(link)
             link.click()
-        } else {
+        } else if (contextType.indexOf('application/x-protobuf') !== -1) {
+            return response.data
+        }else {
             if ((response.data as respType).code === result_code) {
                 return response.data
             } else {

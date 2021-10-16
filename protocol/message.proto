@@ -2,10 +2,9 @@ syntax = "proto3";
 option go_package = ".;protocol";
 package PROTO_MESSAGE;
 
-message Test
+
+message Login
 {
-  message items {
-    int64 time = 1;
-  }
-  repeated items data =1;
+  string username = 1;
+  string password = 2;
 }

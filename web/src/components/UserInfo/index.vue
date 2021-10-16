@@ -24,6 +24,7 @@ import wsCache, {cacheKey} from "../../cache";
 import {resetRouter} from "@/router";
 import {tagsViewStore} from "@/store/modules/tagsView";
 import { generateTitle } from "@/utils/i18n";
+import {permissionStore} from "@/store/modules/permission";
 
 export default defineComponent({
   name: "UserInfo",
@@ -32,6 +33,7 @@ export default defineComponent({
     async function loginOut(): Promise<void> {
       wsCache.delete(cacheKey.userInfo)
       await resetRouter()
+      await permissionStore.SetIsAddRouters(false)
       await tagsViewStore.delAllViews()
       await replace('/login')
     }

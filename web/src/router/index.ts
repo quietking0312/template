@@ -90,7 +90,8 @@ const router = createRouter({
 
 export function resetRouter(): void{
     const resetWhiteNameList = [
-        'Login'
+        'Login',
+        'Dashboard'
     ]
     router.getRoutes().forEach((route) => {
         const { name } = route
