@@ -20,7 +20,7 @@ import { fetch } from "@/request/axios";
     console.log(res)
   })
   let count = ref(0)
-  function onClickBtn() {
+  function onClickBtn(){
     count.value++
   }
 

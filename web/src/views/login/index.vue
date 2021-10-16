@@ -35,61 +35,48 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref, watch, reactive, unref} from "vue";
+<script setup lang="ts">
+import { ref, watch, reactive, unref} from "vue";
 import {useRouter} from "vue-router";
-import SvgIcon from "@/components/SvgIcon/index.vue";
 import wsCache, {cacheKey} from "@/cache";
-
 
 interface FormModule {
   username: string
   password: string
 }
 
-export default defineComponent({
-  name: "Login",
-  components: {SvgIcon},
-  setup() {
-    const { push, addRoute, currentRoute } = useRouter()
-    const loginForm = ref<HTMLElement | null>(null)
-    const loading = ref<boolean>(false)
-    const redirect = ref<string>('')
-    watch(() => {return currentRoute.value},
-        (route) =>{redirect.value=(route.query && route.query.redirect as string)},
-        {immediate: true})
-    const form = reactive<FormModule>({
-      username: '',
-      password: ''
-    })
-    async function login(): Promise<void> {
-      const formWrap = unref(loginForm) as any
-      if (!formWrap) return
-      loading.value = true
-      try {
-        formWrap.validate(async (valid: boolean) => {
-          if (valid) {
-            wsCache.set(cacheKey.userInfo, form)
-            await push({path: redirect.value || '/'})
-          } else {
-            console.log("error submit!!")
-            return false
-          }
-        })
-      }catch (err) {
-        console.log(err)
-      } finally {
-        loading.value = false
-      }
-    }
-    return {
-      loginForm,
-      loading,
-      form,
-      login
-    }
-  }
+const { push, addRoute, currentRoute } = useRouter()
+const loginForm = ref<HTMLElement | null>(null)
+const loading = ref<boolean>(false)
+const redirect = ref<string>('')
+watch(() => {return currentRoute.value},
+    (route) =>{redirect.value=(route.query && route.query.redirect as string)},
+    {immediate: true})
+const form = reactive<FormModule>({
+  username: '',
+  password: ''
 })
+async function login(): Promise<void> {
+  const formWrap = unref(loginForm) as any
+  if (!formWrap) return
+  loading.value = true
+  try {
+    formWrap.validate(async (valid: boolean) => {
+      if (valid) {
+        wsCache.set(cacheKey.userInfo, form)
+        await push({path: redirect.value || '/'})
+      } else {
+        console.log("error submit!!")
+        return false
+      }
+    })
+  }catch (err) {
+    console.log(err)
+  } finally {
+    loading.value = false
+  }
+}
+
 </script>
 
 <style lang="less" scoped>

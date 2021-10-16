@@ -14,7 +14,7 @@
             @click.middle="closeSelectedTag(tag)"
             @contextmenu.prevent="openMenu(tag, $event)"
         >
-          {{ tag.title }}
+          {{ generateTitle(tag.title) }}
           <i v-if="!tag.meta.affix" class="el-icon-close icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
         </router-link>
       </div>
@@ -22,16 +22,16 @@
     <el-button class="move-btn next-btn" icon="el-icon-arrow-right" @click="move(200)" />
     <ul v-show="visible" :style="{left: left + 'px', top: top + 'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">
-        刷新
+        {{ $t('tagsView.refresh') }}
       </li>
       <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
-        关闭
+        {{ $t('tagsView.close') }}
       </li>
       <li @click="closeOthersTags">
-        关闭其他
+        {{ $t('tagsView.closeOther') }}
       </li>
       <li @click="closeAllTags(selectedTag)">
-        关闭全部
+        {{ $t('tagsView.closeAll') }}
       </li>
     </ul>
   </div>
@@ -43,6 +43,7 @@ import {permissionStore} from "@/store/modules/permission";
 import {RouteLocationNormalizedLoaded, RouteRecordRaw, useRouter} from "vue-router";
 import {tagsViewStore} from "@/store/modules/tagsView";
 import ScrollPane from "@/components/TagsView/ScrollPane.vue";
+import {generateTitle} from "@/utils/i18n";
 export default defineComponent({
   name: "TagsView",
   components: {ScrollPane},
@@ -234,7 +235,8 @@ export default defineComponent({
       toLastView,
       openMenu,
       closeMenu,
-      move
+      move,
+      generateTitle
     }
   }
 })

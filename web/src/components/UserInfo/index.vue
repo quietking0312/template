@@ -8,10 +8,10 @@
     </div>
     <template #dropdown>
       <el-dropdown-item key="1">
-        <span style="display: block;" @click="toHome">首页</span>
+        <span style="display: block;" @click="toHome">{{ generateTitle('dashboard') }}</span>
       </el-dropdown-item>
       <el-dropdown-item key="2">
-        <span style="display: block;" @click="loginOut">退出登录</span>
+        <span style="display: block;" @click="loginOut">{{ $t('userInfo.btnLogout') }}</span>
       </el-dropdown-item>
     </template>
   </el-dropdown>
@@ -22,6 +22,8 @@ import {defineComponent} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "../../cache";
 import {resetRouter} from "@/router";
+import {tagsViewStore} from "@/store/modules/tagsView";
+import { generateTitle } from "@/utils/i18n";
 
 export default defineComponent({
   name: "UserInfo",
@@ -30,6 +32,8 @@ export default defineComponent({
     async function loginOut(): Promise<void> {
       wsCache.delete(cacheKey.userInfo)
       await resetRouter()
+      await tagsViewStore.delAllViews()
+      await replace('/login')
     }
     function toHome() {
       push('/')
@@ -40,7 +44,8 @@ export default defineComponent({
     return {
       loginOut,
       toHome,
-      getUserImg
+      getUserImg,
+      generateTitle
     }
   }
 })

@@ -4,10 +4,10 @@
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
 <!--        <svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon" clas="icon-breadcrumb" />-->
         <span v-if="item.redirect === 'noredirect' || index==levelList.length-1" class="no-redirect">
-          {{ item.meta.title }}
+          {{ generateTitle(item.meta.title) }}
         </span>
         <a v-else @click.prevent="handleLink(item)">
-          {{ item.meta.title }}
+          {{ generateTitle(item.meta.title) }}
         </a>
       </el-breadcrumb-item>
     </transition-group>
@@ -18,6 +18,7 @@
 import {defineComponent, ref, watch} from "vue";
 import {RouteLocationMatched, RouteLocationNormalizedLoaded, RouteRecordRaw, useRouter} from "vue-router";
 import {compile} from "path-to-regexp";
+import {generateTitle} from "@/utils/i18n";
 
 export default defineComponent({
   name: "BreadcrumbWrap",
@@ -28,7 +29,7 @@ export default defineComponent({
       let matched: any[] = currentRoute.value.matched.filter((item: RouteLocationMatched) => item.meta && item.meta.title)
       const first = matched[0]
       if (!isDashboard(first)) {
-        matched = [{path: '/dashboard', meta: { title: '首页', icon: 'dashboard'}}].concat(matched)
+        matched = [{path: '/dashboard', meta: { title: 'dashboard', icon: 'dashboard'}}].concat(matched)
       }
       levelList.value = matched.filter((item: RouteLocationMatched) => item.meta && item.meta.title && item.meta.breadcrumb !== false)
     }
@@ -61,7 +62,8 @@ export default defineComponent({
     }, { immediate: true})
     return {
       levelList,
-      handleLink
+      handleLink,
+      generateTitle
     }
   }
 })

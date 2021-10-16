@@ -4,14 +4,14 @@
       <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown': !isNest}">
         <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
         <template #title>
-          <span class="anticon-item">{{ onlyOneChild.meta.title }}</span>
+          <span class="anticon-item">{{ generateTitle(onlyOneChild.meta.title) }}</span>
         </template>
       </el-menu-item>
     </template>
 
     <el-sub-menu v-else :popper-class="layout !== 'Top'? 'nest-popper-menu': 'top-popper-menu'" :index="resolvePath(item.path)">
       <template #title>
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
+        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="generateTitle(item.meta.title)" />
       </template>
       <sider-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :layout="layout"
           :base-path="resolvePath(child.path)"
@@ -25,6 +25,7 @@ import {defineComponent, PropType, ref} from "vue";
 import {RouteRecordRaw} from "vue-router";
 import {isExternal} from "@/utils/validate";
 import Item from "@/components/Sider/Item.vue";
+import {generateTitle} from "@/utils/i18n";
 export default defineComponent({
   name: "SiderItem",
   components: { Item },
@@ -83,7 +84,8 @@ export default defineComponent({
     return {
       onlyOneChild,
       hasOneShowingChild,
-      resolvePath
+      resolvePath,
+      generateTitle
     }
   }
 })
