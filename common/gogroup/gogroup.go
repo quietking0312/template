@@ -13,9 +13,12 @@ type Job func(data TaskData)
 
 type TaskData map[interface{}]interface{}
 
+type PanicFunc func(out interface{})
+
 type GoGroup struct {
-	num int
-	c   chan struct{}
+	num       int
+	c         chan struct{}
+	panicFunc PanicFunc
 }
 
 func NewGoGroup(n int) *GoGroup {
@@ -41,11 +44,19 @@ func (g *GoGroup) Run(data TaskData, job Job) error {
 	go func(fileName, funName string, line int) {
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Printf("%s: %s %d: %v\n", fileName, funName, line, r)
+				if g.panicFunc == nil {
+					fmt.Printf("%s: %s %d: %v\n", fileName, funName, line, r)
+				} else {
+					g.panicFunc(r)
+				}
 			}
 		}()
 		job(data)
 		<-g.c
 	}(fileName, funName, line)
 	return nil
+}
+
+func (g *GoGroup) SetLogger(fun PanicFunc) {
+	g.panicFunc = fun
 }

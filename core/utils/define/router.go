@@ -1,6 +1,7 @@
 package define
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -37,7 +38,14 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 	r.BasePath = g.BasePath()
 	path := strings.Join([]string{strings.TrimRight(r.BasePath, "/"), strings.Trim(r.Path, "/")}, "/")
 	if filter(path, r.Method) {
-		g.Handle(r.Method, r.Path, r.Handler)
+		g.Handle(r.Method, r.Path, func(c *gin.Context) {
+			defer func() {
+				if panicValue := recover(); panicValue != nil {
+					fmt.Println(fmt.Errorf("%s %s: %v", r.Method, path, panicValue))
+				}
+			}()
+			r.Handler(c)
+		})
 	}
 }
 

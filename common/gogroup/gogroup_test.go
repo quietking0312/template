@@ -36,4 +36,5 @@ func A2(g *GoGroup) {
 		fmt.Println("A2")
 		fmt.Println(a[2])
 	})
+
 }
