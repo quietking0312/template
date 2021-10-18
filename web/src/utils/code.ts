@@ -10,7 +10,7 @@ export function ArrayBufferToStr(arrayBuffer: string, func: any) {
     }
 }
 
-export function StrToArrayBuffer(str: string, func: any) {
+export function StrToArrayBuffer(str: string | Uint8Array, func: any) {
     let blob = new Blob([str], {type: 'text/plain'})
     let reader = new FileReader()
     reader.readAsArrayBuffer(blob)

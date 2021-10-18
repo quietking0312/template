@@ -1,6 +1,8 @@
 package login
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/protobuf/proto"
@@ -23,7 +25,9 @@ func Login(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(data)
+	byteBuffer := bytes.NewBuffer(data)
+	var x int32
+	_ = binary.Read(byteBuffer, binary.BigEndian, &x)
 
-	resp.JSON(c, resp.Success, "", data)
+	resp.JSON(c, resp.Success, "", int(x))
 }

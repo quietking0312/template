@@ -6,7 +6,7 @@ import (
 )
 
 /*
-协程组， 用于控制协程数量， 协程启用过多，则阻塞 任务
+协程池， 用于控制协程数量， 协程启用过多，则阻塞 任务
 */
 
 type Job func(data TaskData)
@@ -37,9 +37,15 @@ func (g *GoGroup) Run(data TaskData, job Job) error {
 	case <-timer.C:
 		return fmt.Errorf("timeout")
 	}
-	go func() {
+	fileName, funName, line := runFuncName()
+	go func(fileName, funName string, line int) {
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Printf("%s: %s %d: %v\n", fileName, funName, line, r)
+			}
+		}()
 		job(data)
 		<-g.c
-	}()
+	}(fileName, funName, line)
 	return nil
 }

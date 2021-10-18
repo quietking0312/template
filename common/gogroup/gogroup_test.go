@@ -12,16 +12,28 @@ func TestNewGoGroup(t *testing.T) {
 	g := NewGoGroup(2)
 	for i := 0; i < 30; i++ {
 		wg.Add(1)
-		goFunc := func(data TaskData) {
-			fmt.Printf("go func: %d\n", data["i"])
-			time.Sleep(33 * time.Second)
-			wg.Done()
-		}
-		err := g.Run(TaskData{"i": i}, goFunc)
-		if err != nil {
-			fmt.Println(err)
-			wg.Done()
-		}
+		A1(g)
+		A2(g)
+		wg.Done()
 	}
 	wg.Wait()
+}
+
+func A1(g *GoGroup) {
+	g.Run(TaskData{}, func(data TaskData) {
+
+		time.Sleep(5 * time.Second)
+		a := []int{1}
+		fmt.Println("A1")
+		fmt.Println(a[2])
+	})
+}
+
+func A2(g *GoGroup) {
+	g.Run(TaskData{}, func(data TaskData) {
+		time.Sleep(3 * time.Second)
+		a := []int{1}
+		fmt.Println("A2")
+		fmt.Println(a[2])
+	})
 }
