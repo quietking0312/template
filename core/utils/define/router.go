@@ -3,6 +3,7 @@ package define
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"runtime"
 	"strings"
 )
 
@@ -42,6 +43,13 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 			defer func() {
 				if panicValue := recover(); panicValue != nil {
 					fmt.Println(fmt.Errorf("%s %s: %v", r.Method, path, panicValue))
+					for i := 1; ; i++ {
+						pc, file, line, ok := runtime.Caller(i)
+						if !ok {
+							break
+						}
+						fmt.Println(fmt.Errorf("%s:%d (0x%x)", file, line, pc))
+					}
 				}
 			}()
 			r.Handler(c)

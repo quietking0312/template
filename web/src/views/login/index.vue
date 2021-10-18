@@ -39,6 +39,9 @@
 import { ref, watch, reactive, unref} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
+import {loginApi} from "@/api/login";
+import {PROTO_MESSAGE} from "@/proto/message";
+import {ArrayBufferToStr, BytesToUint16, StrToArrayBuffer, BlobToArrayBuffer} from "@/utils/code";
 
 interface FormModule {
   username: string
@@ -63,8 +66,21 @@ async function login(): Promise<void> {
   try {
     formWrap.validate(async (valid: boolean) => {
       if (valid) {
-        wsCache.set(cacheKey.userInfo, form)
-        await push({path: redirect.value || '/'})
+        const msg = PROTO_MESSAGE.Login.create()
+        msg.username = form.username
+        msg.password = form.password
+        const req = PROTO_MESSAGE.Login.encode(msg).finish()
+        await StrToArrayBuffer(req, (s) => {
+          loginApi(s).then(res => {
+            BlobToArrayBuffer(res, (rs) => {
+              const resp = PROTO_MESSAGE.Login.decode(rs)
+              console.log(resp)
+            })
+            wsCache.set(cacheKey.userInfo, form)
+            push({path: redirect.value || '/'})
+          })
+        })
+
       } else {
         console.log("error submit!!")
         return false
@@ -76,7 +92,6 @@ async function login(): Promise<void> {
     loading.value = false
   }
 }
-
 </script>
 
 <style lang="less" scoped>
