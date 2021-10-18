@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"runtime"
+	"server/core/utils/resp"
 	"strings"
 )
 
@@ -50,6 +51,7 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 						}
 						fmt.Println(fmt.Errorf("%s:%d (0x%x)", file, line, pc))
 					}
+					resp.JSON(c, resp.Success, "", "") // 确保服务错误 前期有返回
 				}
 			}()
 			r.Handler(c)
