@@ -4,13 +4,17 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/soheilhy/cmux"
+	"go.uber.org/zap"
 	"net"
 	"net/http"
+	"server/common/log"
+	"server/core/config"
 	"server/core/utils/middleware"
 )
 
 // NewHTTPRouter 创建HTTP路由
 func NewHTTPRouter() *http.Server {
+	gin.SetMode(config.GetConfig().Server.Mode)
 	router := gin.New()
 	router.Use(middleware.Cors())
 	router.Use(gin.Logger())
@@ -40,6 +44,6 @@ func Run(lis net.Listener) error {
 	go func() {
 		_ = httpServer.Serve(httpL)
 	}()
-
+	log.Info("start run http server", zap.String("addr", lis.Addr().String()))
 	return m.Serve()
 }

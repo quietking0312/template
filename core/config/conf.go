@@ -7,7 +7,7 @@ import (
 )
 
 // InitViperConfigFile 初始化配置文件
-func InitViperConfigFile(configFile string) error {
+func InitViperConfigFile(configFile string, version string) error {
 	_, err := os.Stat(configFile)
 	if err == nil {
 		viper.SetConfigFile(configFile)
@@ -19,15 +19,20 @@ func InitViperConfigFile(configFile string) error {
 		return fmt.Errorf("read config failed: %v", err)
 	}
 	viper.WatchConfig()
-	if err := viper.Unmarshal(&CoreConfig); err != nil {
+	if err := viper.Unmarshal(&coreConfig); err != nil {
 		return fmt.Errorf("config unmarshal filed: %v", err)
 	}
+	coreConfig.Version = version
 	return nil
 }
 
-var CoreConfig *coreConf
+func GetConfig() CoreConf {
+	return *coreConfig
+}
 
-type coreConf struct {
+var coreConfig *CoreConf
+
+type CoreConf struct {
 	Log     Log    // 日志配置
 	Server  Server // 服务配置
 	Version string // 版本号

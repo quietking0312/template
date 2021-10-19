@@ -3,7 +3,9 @@ package define
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"runtime"
+	"server/common/log"
 	"server/core/utils/resp"
 	"strings"
 )
@@ -43,15 +45,19 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 		g.Handle(r.Method, r.Path, func(c *gin.Context) {
 			defer func() {
 				if panicValue := recover(); panicValue != nil {
+					msg := ""
 					fmt.Println(fmt.Errorf("%s %s: %v", r.Method, path, panicValue))
 					for i := 1; ; i++ {
 						pc, file, line, ok := runtime.Caller(i)
 						if !ok {
 							break
 						}
-						fmt.Println(fmt.Errorf("%s:%d (0x%x)", file, line, pc))
+						msg = fmt.Sprintf("%s %s:%d(0x%x)", msg, file, line, pc)
 					}
-					resp.JSON(c, resp.Success, "", "") // 确保服务错误 前期有返回
+					log.Error(fmt.Sprintf("%s %s", r.Method, path),
+						zap.Error(fmt.Errorf("%v", panicValue)),
+						zap.Error(fmt.Errorf("%s", msg)))
+					resp.JSON(c, resp.ErrServer, fmt.Sprintf("%v", panicValue), "") // 确保服务错误 前期有返回
 				}
 			}()
 			r.Handler(c)

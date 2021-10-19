@@ -2,6 +2,7 @@ package gogroup
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -40,12 +41,21 @@ func (g *GoGroup) Run(data TaskData, job Job) error {
 	case <-timer.C:
 		return fmt.Errorf("timeout")
 	}
-	fileName, funName, line := runFuncName()
-	go func(fileName, funName string, line int) {
+	// fileName, funName, line := runFuncName()
+	go func() {
 		defer func() {
 			if r := recover(); r != nil {
 				if g.panicFunc == nil {
-					fmt.Printf("%s: %s %d: %v\n", fileName, funName, line, r)
+					fmt.Printf("%v\n", r)
+					for i := 1; ; i++ {
+						pc, file, line, ok := runtime.Caller(i)
+						if !ok {
+							break
+						}
+						f := runtime.FuncForPC(pc)
+						fmt.Printf("%s %s:%d(0x%x)\n", file, f.Name(), line, pc)
+					}
+
 				} else {
 					g.panicFunc(r)
 				}
@@ -53,7 +63,7 @@ func (g *GoGroup) Run(data TaskData, job Job) error {
 		}()
 		job(data)
 		<-g.c
-	}(fileName, funName, line)
+	}()
 	return nil
 }
 

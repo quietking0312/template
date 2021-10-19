@@ -8,7 +8,7 @@ import (
 )
 
 func Init() {
-	logCfg := config.CoreConfig.Log
+	logCfg := config.GetConfig().Log
 	err := log.InitLog(
 		log.Path(logCfg.LogPath),
 		log.Level(logCfg.LogLevel),
