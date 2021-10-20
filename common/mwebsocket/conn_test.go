@@ -11,6 +11,7 @@ import (
 
 func TestNewWSConn(t *testing.T) {
 	var pack = &JSONPack{}
+	var router = NewRouter()
 	http.HandleFunc("/ws", func(writer http.ResponseWriter, request *http.Request) {
 		var upgrader = websocket.Upgrader{
 			ReadBufferSize:  65535,
@@ -23,20 +24,21 @@ func TestNewWSConn(t *testing.T) {
 		if err != nil {
 			return
 		}
-		NewWSConn(ws, pack)
+		NewWSConn(ws, pack, router)
 	})
 	http.ListenAndServe("127.0.0.1:8787", nil)
 }
 
 func TestNewWSConn2(t *testing.T) {
 	var pack = &JSONPack{}
+	var router = NewRouter()
 	u := url.URL{Scheme: "ws", Host: "127.0.0.1:8787", Path: "/ws"}
 	ws, resp, err := websocket.DefaultDialer.Dial(u.String(), http.Header{})
 	if err != nil {
 		t.Error(err)
 	}
 	fmt.Println(resp.Body)
-	conn := NewWSConn(ws, pack)
+	conn := NewWSConn(ws, pack, router)
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 	for {
@@ -44,11 +46,11 @@ func TestNewWSConn2(t *testing.T) {
 		case <-ticker.C:
 
 			for i := 0; i < 10; i++ {
-				data := map[string]interface{}{
-					"hello": "hello",
-					"world": 2,
-				}
 				go func(i int) {
+					data := map[string]interface{}{
+						"hello": "hello",
+						"world": 2,
+					}
 					data["index"] = i
 					if err := conn.Write(data); err != nil {
 						return
