@@ -1,33 +1,21 @@
 package login
 
 import (
-	"bytes"
-	"encoding/binary"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/protobuf/proto"
+	"server/common/cyptos"
 	"server/core/protocol"
 	"server/core/utils/resp"
 )
 
 func Login(c *gin.Context) {
-	// var req protocol.Login
-	// if err := c.ShouldBindWith(&req, binding.ProtoBuf); err != nil {
-	// 	fmt.Println(err)
-	// 	resp.JSON(c, resp.Success, "", "")
-	// 	return
-	// }
-	// fmt.Println(req)
-	var res protocol.Login
-	res.Username = "hello"
-	res.Password = "world"
-	data, err := proto.Marshal(&res)
-	if err != nil {
+	var req protocol.Login
+	if err := c.ShouldBind(&req); err != nil {
 		fmt.Println(err)
+		resp.JSON(c, resp.Success, "", "")
+		return
 	}
-	byteBuffer := bytes.NewBuffer(data)
-	var x int32
-	_ = binary.Read(byteBuffer, binary.BigEndian, &x)
+	fmt.Println(req.String())
 
-	resp.JSON(c, resp.Success, "", int(x))
+	resp.JSON(c, resp.Success, "", cyptos.Get32MD5(req.GetPassword()))
 }

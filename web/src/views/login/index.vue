@@ -4,6 +4,7 @@
       <el-card class="box-card">
         <template #header>
           <span class="login--header">{{ $t('login.titleLogin') }}</span>
+          <LangSelect v-if="showVersion" class="lang--header" />
         </template>
         <el-form ref="loginForm" :model="form" class="login-form">
           <el-form-item prop="username">
@@ -30,25 +31,39 @@
             <el-button :loading="loading" type="primary" class="login--button" @click="login">{{ $t('login.btnLogin') }}</el-button>
           </el-form-item>
         </el-form>
+        <div class="login-tips">
+          <span>{{ $t('login.tipsVersion') }}： {{ version }}</span>
+        </div>
       </el-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, reactive, unref} from "vue";
+import {ref, watch, reactive, unref, computed} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
-import {loginApi} from "@/api/login";
+import {appInfoApi, loginApi} from "@/api/login";
 import {PROTO_MESSAGE} from "@/proto/message";
-import {ArrayBufferToStr, BytesToUint16, StrToArrayBuffer, BlobToArrayBuffer} from "@/utils/code";
+import LangSelect from "@/components/LangSelect/index.vue";
+import {appStore} from "@/store/modules/app";
 
+// app版本
+let version = ref<string>("")
+appInfoApi().then(res => {
+  console.log(res)
+  version.value = "1.1.1"
+})
+
+const showVersion = computed(() => appStore.showLanguage)
+
+// d登录
 interface FormModule {
   username: string
   password: string
 }
 
-const { push, addRoute, currentRoute } = useRouter()
+const { push, currentRoute } = useRouter()
 const loginForm = ref<HTMLElement | null>(null)
 const loading = ref<boolean>(false)
 const redirect = ref<string>('')
@@ -69,16 +84,10 @@ async function login(): Promise<void> {
         const msg = PROTO_MESSAGE.Login.create()
         msg.username = form.username
         msg.password = form.password
-        const req = PROTO_MESSAGE.Login.encode(msg).finish()
-        await StrToArrayBuffer(req, (s) => {
-          loginApi(s).then(res => {
-            BlobToArrayBuffer(res, (rs) => {
-              const resp = PROTO_MESSAGE.Login.decode(rs)
-              console.log(resp)
-            })
-            wsCache.set(cacheKey.userInfo, form)
-            push({path: redirect.value || '/'})
-          })
+
+        loginApi(msg.toJSON()).then(res => {
+          wsCache.set(cacheKey.userInfo, res.data)
+          push({path: redirect.value || '/'})
         })
 
       } else {
@@ -108,6 +117,10 @@ async function login(): Promise<void> {
       font-size: 24px;
       font-weight: 600;
     }
+    @{deep}(.lang--header) {
+      right: 35px;
+      position: absolute;
+    }
     .svg-container {
       color: #889aa4;
       vertical-align: middle;
@@ -129,6 +142,10 @@ async function login(): Promise<void> {
     right: 160px;
     top: 50%;
     transform: translateY(-60%);
+  }
+  .login-tips {
+    font-size: 12px;
+    line-height: 15px;
   }
 }
 </style>
