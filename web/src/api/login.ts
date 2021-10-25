@@ -7,3 +7,7 @@ export const appInfoApi = () => {
 export const loginApi = (data: any) => {
     return fetch({url: "v1/login", method: "post", data: data})
 }
+
+export const userInfoApi = (params: any) => {
+    return fetch({url: "v1/userinfo", method: "get", params: params})
+}

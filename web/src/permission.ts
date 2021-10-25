@@ -6,27 +6,32 @@ import 'nprogress/nprogress.css'
 import {permissionStore} from "@/store/modules/permission";
 import {RouteRecordRaw} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
+import {userInfoStore} from "@/store/modules/userInfo";
 
 NProgress.configure({ showSpinner: false })
 
 const whiteList: string[] = ['/login']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     NProgress.start()
     if (wsCache.get(cacheKey.userInfo)) {
         if (to.path === '/login') {
-            next({ path: '/'})
+            next({path: '/'})
         } else {
             if (permissionStore.isAddRouters) {
                 next()
                 return
             }
-            permissionStore.GenerateRoutes().then(() => {
+            let permissionIdList = [] as number[]
+            await userInfoStore.SetUserInfo().then(permission_id => {
+                permissionIdList = permission_id as number[]
+            })
+            await permissionStore.GenerateRoutes(permissionIdList).then(() => {
                 permissionStore.addRouters.forEach((route: RouteRecordRaw) => {
                     router.addRoute(route)
                 })
                 const redirectPath = (from.query.redirect || to.path) as string
                 const redirect = decodeURIComponent(redirectPath)
-                const nextData = to.path === redirect? { ...to, replace: true }: {path: redirect}
+                const nextData = to.path === redirect ? {...to, replace: true} : {path: redirect}
                 permissionStore.SetIsAddRouters(true)
                 next(nextData)
             })
@@ -35,7 +40,7 @@ router.beforeEach((to, from, next) => {
         if (whiteList.indexOf(to.path) !== -1) {
             next()
         } else {
-            next({path: '/login', query: { redirect: to.path}})
+            next({path: '/login', query: {redirect: to.path}})
         }
     }
 })

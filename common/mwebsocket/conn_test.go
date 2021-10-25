@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"net/url"
+	"path"
 	"testing"
 	"time"
 )
@@ -60,4 +61,13 @@ func TestNewWSConn2(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestNewWSConn3(t *testing.T) {
+	a := "/hello"
+	b := "world"
+	c := "a/"
+	fmt.Println(path.Join(a, b, c))
+	fmt.Println(path.Join(b, a, c))
+	fmt.Println(path.Join(c, a, b))
 }

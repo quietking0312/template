@@ -20,6 +20,11 @@ var v1RouteGroup = define.RouteGroup{
 			Routes: []*define.Route{
 				{Path: "", Method: http.MethodPost, Handler: login.Login, Title: "login"},
 			},
+		}, {
+			Path: "userinfo",
+			Routes: []*define.Route{
+				{Path: "", Method: http.MethodGet, Handler: login.GetUserInfo, Title: "用户信息"},
+			},
 		},
 	},
 }

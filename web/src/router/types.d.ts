@@ -18,6 +18,7 @@ import type { RouteRecordRaw } from "vue-router";
     followAuth: '/dashboard'  跟随哪个路由进行权限过滤
     showMainRoute: true       设置为true即使hidden为true，也依然可以进行路由跳转(默认 false)
     followRoute: '/dashboard' 为路由设置跟随其他路由的权限
+    permission: [100000] 路由权限, 不设置为任意用户可访问
 }
 **/
 export interface RouteMeta {
@@ -33,7 +34,8 @@ export interface RouteMeta {
     noTagsView?: boolean,
     followAuth?: string
     showMainRoute?: boolean,
-    followRoute?: string
+    followRoute?: string,
+    permission?: number[]
 }
 
 export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {

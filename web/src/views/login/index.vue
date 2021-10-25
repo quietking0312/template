@@ -81,12 +81,8 @@ async function login(): Promise<void> {
   try {
     formWrap.validate(async (valid: boolean) => {
       if (valid) {
-        const msg = PROTO_MESSAGE.Login.create()
-        msg.username = form.username
-        msg.password = form.password
-
-        loginApi(msg.toJSON()).then(res => {
-          wsCache.set(cacheKey.userInfo, res.data)
+        loginApi(form).then(res => {
+          wsCache.set(cacheKey.userInfo, res.data.token)
           push({path: redirect.value || '/'})
         })
 

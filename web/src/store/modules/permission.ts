@@ -37,10 +37,10 @@ class Permission extends VuexModule implements PermissionState {
     }
 
     @Action
-    public GenerateRoutes(): Promise<unknown> {
+    public GenerateRoutes(permissionIdList: number[] = []): Promise<unknown> {
         return new Promise<void>(resolve => {
             // 路由权限控制
-            const routerMap: AppRouteRecordRaw[] = generateRoutes(deepClone(asyncRouterMap, ['component']))
+            const routerMap: AppRouteRecordRaw[] = generateRoutes(deepClone(asyncRouterMap, ['component']), permissionIdList)
             this.SET_ROUTERS(routerMap)
             resolve()
         })
@@ -51,14 +51,32 @@ class Permission extends VuexModule implements PermissionState {
     }
 }
 
+
+function hasPermission(permissionIdList: number[], route: AppRouteRecordRaw):boolean{
+    if (route.meta && route.meta.permission) {
+        return permissionIdList.some(permissionId => {
+            if (permissionId === 100000) {
+                return true
+            } else {
+                return route.meta.permission?.includes(permissionId)
+            }
+        })
+    } else {
+        return true
+    }
+}
+
 // 路由过滤，主要用于权限控制
-function generateRoutes(routes: AppRouteRecordRaw[], basePath = '/'): AppRouteRecordRaw[] {
+function generateRoutes(routes: AppRouteRecordRaw[], permissionIdList: number[] = [], basePath = '/'): AppRouteRecordRaw[] {
 
     const res: AppRouteRecordRaw[] = []
 
     for (const route of routes) {
         // skip some route
         if (route.meta && route.meta.hidden && !route.meta.showMainRoute) {
+            continue
+        }
+        if (!hasPermission(permissionIdList, route)){
             continue
         }
 
@@ -69,13 +87,12 @@ function generateRoutes(routes: AppRouteRecordRaw[], basePath = '/'): AppRouteRe
 
         // recursive child routes
         if (route.children && data) {
-            data.children = generateRoutes(route.children, (basePath + '/'+ data.path).replace('//', '/'))
+            data.children = generateRoutes(route.children, permissionIdList, (basePath + '/'+ data.path).replace('//', '/'))
         }
         if (data) {
             res.push(data as AppRouteRecordRaw)
         }
     }
-    console.log(routes)
     return res
 }
 

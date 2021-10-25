@@ -4,18 +4,27 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/cyptos"
-	"server/core/protocol"
+	"server/core/utils/reqs"
 	"server/core/utils/resp"
 )
 
+type (
+	loginReq struct {
+		Username string `json:"username" form:"username" binding:"required"`
+		Password string `json:"password" form:"password" binding:"required"`
+	}
+	loginRes struct {
+		Token string `json:"token" form:"token"`
+	}
+)
+
 func Login(c *gin.Context) {
-	var req protocol.Login
-	if err := c.ShouldBind(&req); err != nil {
-		fmt.Println(err)
-		resp.JSON(c, resp.Success, "", "")
+	var req loginReq
+	if err := reqs.ShouldBind(c, &req); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), "")
 		return
 	}
-	fmt.Println(req.String())
+	fmt.Println(req)
 
-	resp.JSON(c, resp.Success, "", cyptos.Get32MD5(req.GetPassword()))
+	resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
 }
