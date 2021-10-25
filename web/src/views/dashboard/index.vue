@@ -3,6 +3,7 @@
     <div>hello world</div>
     <span>{{ count }}</span>
     <el-button @click="onClickBtn">点击</el-button>
+    <el-button v-permission="[1000]">hello</el-button>
   </div>
 </template>
 

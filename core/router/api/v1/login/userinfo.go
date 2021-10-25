@@ -22,7 +22,7 @@ func GetUserInfo(c *gin.Context) {
 	}
 
 	res := getUserInfoRes{
-		PermissionId: []int32{100000},
+		PermissionId: []int32{1000},
 	}
 
 	resp.JSON(c, resp.Success, "", res)
