@@ -8,6 +8,8 @@ import (
 	"server/core/config"
 )
 
+// ShouldBind 统一解析前端上传参数
+// req interface{} 接收结构体指针类型
 func ShouldBind(c *gin.Context, req interface{}) error {
 	if err := c.ShouldBind(req); err != nil {
 		return err
