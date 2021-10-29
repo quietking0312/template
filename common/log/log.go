@@ -1,11 +1,13 @@
 package log
 
 import (
+	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
+	"runtime"
 )
 
 var _logger *zap.Logger
@@ -210,4 +212,20 @@ func Panic(msg string, fields ...zap.Field) {
 
 func Fatal(msg string, fields ...zap.Field) {
 	_logger.Fatal(msg, fields...)
+}
+
+// Recover 异常捕获
+// 务必使用 使其处于defer 函数内
+func Recover() {
+	if value := recover(); value != nil {
+		msg := ""
+		for i := 1; ; i++ {
+			pc, file, line, ok := runtime.Caller(i)
+			if !ok {
+				break
+			}
+			msg = fmt.Sprintf("%s %s:%d(0x%x)", msg, file, line, pc)
+		}
+		_logger.Error(fmt.Sprintf("%v", value), zap.Error(fmt.Errorf("%s", msg)))
+	}
 }
