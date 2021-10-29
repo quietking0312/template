@@ -9,7 +9,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { PROTO_MESSAGE } from "@/proto/message"
 import { fetch } from "@/request/axios";
   fetch({url: "v1/helloworld", method: "get"} ).then(res => {
     console.log(res)

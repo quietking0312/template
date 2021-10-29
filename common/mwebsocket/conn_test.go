@@ -125,5 +125,20 @@ func TestNewWSConn5(t *testing.T) {
 }
 
 func TestNewWSConn6(t *testing.T) {
-
+	dp := make([]int, 100)
+	dp[0] = 1
+	var n2, n3, n5 = 0, 0, 0
+	for i := 1; i < 100; i++ {
+		dp[i] = int(math.Min(float64(2*dp[n2]), math.Min(float64(3*dp[n3]), float64(5*dp[n5]))))
+		if dp[i] == 2*dp[n2] {
+			n2++
+		}
+		if dp[i] == 3*dp[n3] {
+			n3++
+		}
+		if dp[i] == 5*dp[n5] {
+			n5++
+		}
+	}
+	fmt.Println(dp[99])
 }

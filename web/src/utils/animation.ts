@@ -17,12 +17,11 @@ let cancelAnimationFrame: typeof window.cancelAnimationFrame
         cancelAnimationFrame = window.cancelAnimationFrame
         let prefix
         for (let i = 0; i < prefixes.length; i++) {
-            if (requestAnimationFrame && cancelAnimationFrame) {
+            if (requestAnimationFrame != undefined && cancelAnimationFrame != undefined) {
                 break
             }
             prefix = prefixes[i]
-            requestAnimationFrame =
-                requestAnimationFrame || window[getWindowFrame(prefix + 'RequestAnimationFrame')]
+            requestAnimationFrame = requestAnimationFrame || window[getWindowFrame(prefix + 'RequestAnimationFrame')]
             cancelAnimationFrame =
                 cancelAnimationFrame ||
                 window[getWindowFrame(prefix + 'CancelAnimationFrame')] ||
