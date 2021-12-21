@@ -35,6 +35,10 @@ func InitDB() error {
 	return initTable()
 }
 
+func ContextWithTimeout() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.Background(), config.GetConfig().Server.DB.MaxQueryTime)
+}
+
 // 初始化表
 func initTable() error {
 	sqlBytes, err := ioutil.ReadFile(config.GetConfig().Server.SqlPath)
@@ -42,9 +46,9 @@ func initTable() error {
 		return err
 	}
 	if string(sqlBytes) != "" {
-		ctx, cancel := context.WithTimeout(context.Background(), config.GetConfig().Server.DB.MaxQueryTime)
+		ctx, cancel := ContextWithTimeout()
 		defer cancel()
-		if _, err := model.sqlDB.DB.ExecContext(ctx, string(sqlBytes)); err != nil {
+		if _, err := model.sqlxDB.ExecContext(ctx, string(sqlBytes)); err != nil {
 			return err
 		}
 	}

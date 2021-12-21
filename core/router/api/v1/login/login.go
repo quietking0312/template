@@ -1,9 +1,10 @@
 package login
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/cyptos"
+	"server/core/config"
+	"server/core/modules"
 	"server/core/utils/reqs"
 	"server/core/utils/resp"
 )
@@ -24,7 +25,17 @@ func Login(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), "")
 		return
 	}
-	fmt.Println(req)
-
-	resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
+	userModule := new(modules.UserModule)
+	token, err := userModule.Login(req.Username, req.Password)
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	if config.GetConfig().Server.Mode == "debug" && token == "" {
+		resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
+		return
+	}
+	resp.JSON(c, resp.Success, "", loginRes{
+		Token: token,
+	})
 }
