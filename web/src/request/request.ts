@@ -3,13 +3,13 @@ import { Message } from "@/components/Message";
 import qs from 'qs'
 import config from "@/request/config";
 
-const { result_code, base_url} = config
+const { result_code, base_url, request_timeout} = config
 
 export const PATH_URL: string = base_url[import.meta.env.VITE_MODE as string]
 
 const service: AxiosInstance = axios.create({
     baseURL: PATH_URL,
-    timeout: 500
+    timeout: request_timeout
 })
 
 service.interceptors.request.use(
@@ -30,7 +30,7 @@ service.interceptors.request.use(
     }
 )
 
-interface respType {
+export interface respType {
     code: number,
     message: string,
     data: any

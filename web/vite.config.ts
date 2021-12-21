@@ -25,7 +25,7 @@ export default defineConfig({
     plugins: [
       vue(),
       Components({
-        resolvers: [ElementPlusResolver()]
+        resolvers: [ElementPlusResolver({importStyle: true})]
       }),
         viteSvgIcons({
             iconDirs: [resolve(__dirname, "src/assets/icons/svg")],

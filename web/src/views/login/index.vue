@@ -47,6 +47,8 @@ import {appInfoApi, loginApi} from "@/api/login";
 import {PROTO_MESSAGE} from "@/proto/message";
 import LangSelect from "@/components/LangSelect/index.vue";
 import {appStore} from "@/store/modules/app";
+import {respType} from "@/request/request";
+import {ElMessage} from "element-plus";
 
 // app版本
 let version = ref<string>("")
@@ -82,8 +84,10 @@ async function login(): Promise<void> {
     formWrap.validate(async (valid: boolean) => {
       if (valid) {
         loginApi(form).then(res => {
-          wsCache.set(cacheKey.userInfo, res.data.token)
-          push({path: redirect.value || '/'})
+          if (res) {
+            wsCache.set(cacheKey.userInfo, (res as unknown as respType).data.token)
+            push({path: redirect.value || '/'})
+          }
         })
 
       } else {
