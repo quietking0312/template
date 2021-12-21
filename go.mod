@@ -3,6 +3,7 @@ module server
 go 1.16
 
 require (
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-redis/redis/v8 v8.11.4
@@ -10,6 +11,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/websocket v1.4.2
 	github.com/jmoiron/sqlx v1.3.4
+	github.com/mitchellh/mapstructure v1.4.1
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/soheilhy/cmux v0.1.5
 	github.com/spf13/cobra v1.2.1
