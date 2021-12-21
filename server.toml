@@ -27,4 +27,4 @@ drive_name = "mysql"
 dsn = "root:123456@tcp(127.0.0.1:3306)/admin?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true"
 max_idle = 30
 max_conn = 60
-max_querytime = "180s"
+max_query_time = "180s"
