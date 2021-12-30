@@ -15,13 +15,15 @@ max_backups = 10
 log_level = "debug"
 # 日志类型 text or json
 format = "json"
-
+#路由日志, 如果nginx 开启了日志，该日志可关闭
+route_log = true
 [server]
 mode = "debug"
 # mode = "release"
 sql_path = "sql\\server.sql"
 port = 9001
-
+# pprof 分析, debug模式固定打开，release模式可选
+pprof = false
 [server.db]
 drive_name = "mysql"
 dsn = "root:123456@tcp(127.0.0.1:3306)/admin?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true"

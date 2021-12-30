@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+// viper bug OnConfigChange 会回调2次
+// https://github.com/spf13/viper/issues?q=OnConfigChange
+var lastChangeTime time.Time
+
+func init() {
+	lastChangeTime = time.Now()
+}
+
 // InitViperConfigFile 初始化配置文件
 func InitViperConfigFile(configFile string, version string) error {
 	tagName := "viper"
@@ -30,12 +38,15 @@ func InitViperConfigFile(configFile string, version string) error {
 	}
 	cfgObj.WatchConfig()
 	cfgObj.OnConfigChange(func(in fsnotify.Event) {
-		if err := cfgObj.Unmarshal(&coreConfig, func(c *mapstructure.DecoderConfig) {
-			c.TagName = tagName
-		}); err != nil {
-			fmt.Println(fmt.Errorf("config unmarshal filed: %v", err))
+		if time.Now().Sub(lastChangeTime).Seconds() >= 1 {
+			if err := cfgObj.Unmarshal(&coreConfig, func(c *mapstructure.DecoderConfig) {
+				c.TagName = tagName
+			}); err != nil {
+				fmt.Println(fmt.Errorf("config unmarshal filed: %v", err))
+			}
+			lastChangeTime = time.Now()
+			fmt.Printf("配置信息： %+v\n", *coreConfig)
 		}
-		fmt.Printf("配置信息： %+v\n", *coreConfig)
 	})
 	coreConfig.Version = version
 	fmt.Printf("配置信息：%+v\n", *coreConfig)
@@ -62,6 +73,7 @@ type Log struct {
 	MaxBackups int    `viper:"max_backups"`
 	MaxSize    int    `viper:"max_size"`
 	Format     string `viper:"format"`
+	RouteLog   bool   `viper:"route_log"` // 是否打印路由日志
 }
 
 type Server struct {
@@ -69,6 +81,7 @@ type Server struct {
 	Mode    string `viper:"mode"`
 	SqlPath string `viper:"sql_path"`
 	DB      db     `viper:"db"`
+	PPROF   bool   `viper:"pprof"` // 是否启用pprof 监听
 }
 
 type db struct {

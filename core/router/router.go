@@ -14,14 +14,31 @@ import (
 
 // NewHTTPRouter 创建HTTP路由
 func NewHTTPRouter() *http.Server {
-	gin.SetMode(config.GetConfig().Server.Mode)
-	router := gin.New()
-	router.Use(middleware.Cors())
-	router.Use(middleware.Recover())
-	router.Use(gin.Logger())
+	var router *gin.Engine
+	if config.GetConfig().Server.Mode == "debug" {
+		gin.SetMode(gin.DebugMode)
+		router = gin.New()
+		router.Use(middleware.Cors())
+		if config.GetConfig().Log.RouteLog {
+			router.Use(gin.Logger())
+		}
+		// 添加服务信息监听
+		pprof.Register(router)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		router = gin.New()
+		router.Use(middleware.Cors())
+		router.Use(middleware.Recover())
+		if config.GetConfig().Log.RouteLog {
+			router.Use(gin.Logger())
+		}
+		if config.GetConfig().Server.PPROF {
+			// 添加服务信息监听
+			pprof.Register(router)
+		}
+	}
+
 	apiGroup := router.Group("api")
-	// 添加服务信息监听
-	pprof.RouteRegister(apiGroup)
 
 	v1RouteGroup.GinGroup(apiGroup, func(path string, method string) bool {
 		return true
