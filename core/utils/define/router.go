@@ -1,12 +1,7 @@
 package define
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"runtime"
-	"server/common/log"
-	"server/core/utils/resp"
 	"strings"
 )
 
@@ -43,23 +38,23 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 	path := strings.Join([]string{strings.TrimRight(r.BasePath, "/"), strings.Trim(r.Path, "/")}, "/")
 	if filter(path, r.Method) {
 		g.Handle(r.Method, r.Path, func(c *gin.Context) {
-			defer func() {
-				if panicValue := recover(); panicValue != nil {
-					msg := ""
-					fmt.Println(fmt.Errorf("%s %s: %v", r.Method, path, panicValue))
-					for i := 1; ; i++ {
-						pc, file, line, ok := runtime.Caller(i)
-						if !ok {
-							break
-						}
-						msg = fmt.Sprintf("%s %s:%d(0x%x)", msg, file, line, pc)
-					}
-					log.Error(fmt.Sprintf("%s %s", r.Method, path),
-						zap.Error(fmt.Errorf("%v", panicValue)),
-						zap.Error(fmt.Errorf("%s", msg)))
-					resp.JSON(c, resp.ErrServer, fmt.Sprintf("%v", panicValue), "") // 确保服务错误 前期有返回
-				}
-			}()
+			//defer func() {
+			//	if panicValue := recover(); panicValue != nil {
+			//		msg := ""
+			//		fmt.Println(fmt.Errorf("%s %s: %v", r.Method, path, panicValue))
+			//		for i := 1; ; i++ {
+			//			pc, file, line, ok := runtime.Caller(i)
+			//			if !ok {
+			//				break
+			//			}
+			//			msg = fmt.Sprintf("%s %s:%d(0x%x)", msg, file, line, pc)
+			//		}
+			//		log.Error(fmt.Sprintf("%s %s", r.Method, path),
+			//			zap.Error(fmt.Errorf("%v", panicValue)),
+			//			zap.Error(fmt.Errorf("%s", msg)))
+			//		resp.JSON(c, resp.ErrServer, fmt.Sprintf("%v", panicValue), "") // 确保服务错误 前期有返回
+			//	}
+			//}()
 			r.Handler(c)
 		})
 	}

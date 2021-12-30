@@ -17,6 +17,7 @@ func NewHTTPRouter() *http.Server {
 	gin.SetMode(config.GetConfig().Server.Mode)
 	router := gin.New()
 	router.Use(middleware.Cors())
+	router.Use(middleware.Recover())
 	router.Use(gin.Logger())
 	apiGroup := router.Group("api")
 	// 添加服务信息监听
