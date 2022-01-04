@@ -31,8 +31,9 @@ var server = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		err = router.Run(lis)
-		return nil
+		// err = router.Run(lis)
+		err = router.RunHttpServer(lis)
+		return err
 	},
 }
 

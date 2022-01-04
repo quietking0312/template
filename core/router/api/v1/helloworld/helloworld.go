@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/core/utils/resp"
+	"time"
 )
 
 func GetHelloWorld(c *gin.Context) {
-	testList := []int{1, 2, 3}
-	fmt.Println(testList[4])
+	for i := 0; i < 10; i++ {
+		time.Sleep(1 * time.Second)
+		fmt.Println(i, "秒")
+	}
 	resp.JSON(c, resp.Success, "", "helloWorld")
 }
