@@ -1,22 +1,22 @@
-package modules
+package logic
 
 import (
 	"errors"
 	"fmt"
 	"server/common/cyptos"
 	"server/common/mtime"
-	"server/core/model"
+	"server/core/dao"
 )
 
-type UserModule struct{}
+type UserLogic struct{}
 
-func (u UserModule) IsExistUsername() {
+func (u UserLogic) IsExistUsername() {
 
 }
 
-func (u UserModule) Login(username string, password string) (string, error) {
-	userModel := new(model.UserModel)
-	var userTable model.MUserTable
+func (u UserLogic) Login(username string, password string) (string, error) {
+	userModel := new(dao.UserModel)
+	var userTable dao.MUserTable
 	if err := userModel.SelectOneByUsername(username, &userTable); err != nil {
 		return "", err
 	}

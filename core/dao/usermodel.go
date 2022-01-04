@@ -1,4 +1,4 @@
-package model
+package dao
 
 import "fmt"
 
@@ -13,7 +13,7 @@ type UserModel struct {
 func (u UserModel) InsertOne(user MUserTable) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	if _, err := model.sqlxDB.NamedExecContext(ctx, mUserInsertSql, user); err != nil {
+	if _, err := dao.sqlxDB.NamedExecContext(ctx, mUserInsertSql, user); err != nil {
 		return err
 	}
 	return nil
@@ -22,5 +22,5 @@ func (u UserModel) InsertOne(user MUserTable) error {
 func (u UserModel) SelectOneByUsername(username string, user *MUserTable) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	return model.sqlxDB.GetContext(ctx, user, fmt.Sprintf("%s where username=?", mUserSelectSql), username)
+	return dao.sqlxDB.GetContext(ctx, user, fmt.Sprintf("%s where username=?", mUserSelectSql), username)
 }

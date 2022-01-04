@@ -1,4 +1,4 @@
-package model
+package dao
 
 // MUserTable 用户表
 type MUserTable struct {

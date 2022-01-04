@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"server/core/config"
-	"server/core/model"
+	"server/core/dao"
 	"server/core/router"
 	"server/core/utils/mylog"
 )
@@ -19,7 +19,7 @@ var server = &cobra.Command{
 		}
 
 		mylog.Init() // 初始化日志模块
-		if err := model.InitDB(); err != nil {
+		if err := dao.InitDB(); err != nil {
 			fmt.Println("数据库初始化失败：", err)
 		}
 		return nil

@@ -1,10 +1,10 @@
-package login
+package v1
 
 import (
 	"github.com/gin-gonic/gin"
 	"server/common/cyptos"
 	"server/core/config"
-	"server/core/modules"
+	"server/core/logic"
 	"server/core/utils/reqs"
 	"server/core/utils/resp"
 )
@@ -25,7 +25,7 @@ func Login(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), "")
 		return
 	}
-	userModule := new(modules.UserModule)
+	userModule := new(logic.UserLogic)
 	token, err := userModule.Login(req.Username, req.Password)
 	if err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)

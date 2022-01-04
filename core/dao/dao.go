@@ -1,4 +1,4 @@
-package model
+package dao
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"server/core/config"
 )
 
-var model Model
+var dao Dao
 
-type Model struct {
+type Dao struct {
 	sqlxDB *sqlx.DB
 	sqlDB  *msql.DB
 }
@@ -28,7 +28,7 @@ func InitDB() error {
 	if err != nil {
 		return err
 	}
-	model = Model{
+	dao = Dao{
 		sqlDB:  _db,
 		sqlxDB: _db.GetSqlxConn(),
 	}
@@ -48,7 +48,7 @@ func initTable() error {
 	if string(sqlBytes) != "" {
 		ctx, cancel := ContextWithTimeout()
 		defer cancel()
-		if _, err := model.sqlxDB.ExecContext(ctx, string(sqlBytes)); err != nil {
+		if _, err := dao.sqlxDB.ExecContext(ctx, string(sqlBytes)); err != nil {
 			return err
 		}
 	}
