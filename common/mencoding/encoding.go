@@ -2,7 +2,6 @@ package mencoding
 
 import (
 	"bufio"
-	"fmt"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 	"io/ioutil"
@@ -21,7 +20,6 @@ func Decoder(r *bufio.Reader) ([]byte, error) {
 
 func Byte2Utf8(data []byte) ([]byte, error) {
 	e := GetStrCoding(data)
-	fmt.Println(e)
 	switch e {
 	case GBK:
 		return simplifiedchinese.GBK.NewDecoder().Bytes(data)

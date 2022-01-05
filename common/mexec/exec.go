@@ -4,36 +4,45 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"os"
 	"os/exec"
-	"server/common/mencoding"
 )
 
-func ExecCommandRun(cmdName string, args []string, env string, ctx context.Context) {
+const (
+	CMD        = "cmd"
+	POWERSHELL = "powershell"
+	BASH       = "/bin/bash"
+)
+
+func ExecCommand(env string, cmdName string, args []string) ([]byte, error) {
 	cmd := exec.Command(cmdName, args...)
-	if ctx != nil {
-		cmd = exec.CommandContext(ctx, cmdName, args...)
-	}
 	if env != "" {
 		cmd.Path = env
 	}
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		fmt.Println(err)
-	}
+	//var stdout bytes.Buffer
+	//var stderr bytes.Buffer
+	//cmd.Stdout = &stdout
+	//cmd.Stderr = &stderr
+	//if err := cmd.Run(); err != nil {
+	//	return nil, []byte(err.Error())
+	//}
+	return cmd.CombinedOutput()
+}
 
-	decoderBytes, err := mencoding.Byte2Utf8(stdout.Bytes())
-	//stdoutReader := bufio.NewReader(bytes.NewReader(stdout.Bytes()))
-	//decoderBytes, err := mencoding.Decoder(stdoutReader)
-	//decoderBytes, err := simplifiedchinese.GBK.NewDecoder().Bytes(stdout.Bytes())
-	if err != nil {
-		fmt.Println(err)
+func ExecCommandContext(env string, cmdName string, args []string, ctx context.Context) ([]byte, error) {
+	cmd := exec.CommandContext(ctx, cmdName, args...)
+	if env != "" {
+		cmd.Path = env
 	}
-	fmt.Println(string(decoderBytes))
-	fmt.Println(stderr.String())
+	//var stdout bytes.Buffer
+	//var stderr bytes.Buffer
+	//cmd.Stdout = &stdout
+	//cmd.Stderr = &stderr
+	//if err := cmd.Run(); err != nil {
+	//	return nil, []byte(err.Error())
+	//}
+	return cmd.CombinedOutput()
 }
 
 type MExec struct {
@@ -67,12 +76,6 @@ func Bash() ExecFunc {
 	}
 }
 
-func Env() ExecFunc {
-	return func(e *MExec) {
-
-	}
-}
-
 func NewMExec(cmds ...ExecFunc) *MExec {
 	e := &MExec{}
 	for _, cmd := range cmds {
@@ -81,23 +84,33 @@ func NewMExec(cmds ...ExecFunc) *MExec {
 	return e
 }
 
-func Start() {
-	mexec := NewMExec(WinCmd())
-	mexec.Cmd.Dir = ""
-	stdout, err := mexec.Cmd.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
-	}
+func (e *MExec) SetEevPath(env string) {
+	e.Cmd.Dir = env
+}
+
+func (e *MExec) Start(cmd string) {
 	stdin := bytes.NewBuffer(nil)
-	mexec.Cmd.Stdin = stdin
-	stdin.WriteString("ls")
-	if err := mexec.Cmd.Start(); err != nil {
-		fmt.Println(err)
-	}
-	if by, err := ioutil.ReadAll(stdout); err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(by))
+	e.Cmd.Stdin = stdin
+	stdin.WriteString(cmd)
+	stdoutIn, _ := e.Cmd.StdoutPipe()
+	stderrIn, _ := e.Cmd.StderrPipe()
+	var stdoutBuf, stderrBuf bytes.Buffer
+	stdout := io.MultiWriter(os.Stdout, &stdoutBuf)
+	stderr := io.MultiWriter(os.Stderr, &stderrBuf)
+	err := e.Cmd.Start()
+	if err != nil {
+		return
 	}
 
+	go func() {
+		_, _ = io.Copy(stdout, stdoutIn)
+	}()
+	go func() {
+		_, _ = io.Copy(stderr, stderrIn)
+	}()
+	err = e.Cmd.Wait()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
