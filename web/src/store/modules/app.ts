@@ -34,8 +34,8 @@ class App extends VuexModule implements AppState {
     public showHamburger = true // 是否显示侧边栏缩收按钮
     public showScreenfull = false // 是否全屏按钮
     public showUserInfo = true // 是否显示用户头像
-    public title = "7doc-crm" // 标题
-    public logoTitle = "7doc-crm" // logo标题
+    public title = "vue-admin" // 标题
+    public logoTitle = "vue-admin" // logo标题
     public greyMode = false  // 是否开始灰色模式，用于特殊悼念日
     public showBackTop = true // 是否显示回到顶部
     public lang = getLanguage()
