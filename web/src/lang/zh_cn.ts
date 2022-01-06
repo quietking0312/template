@@ -1,7 +1,10 @@
 export default {
     route: {
         login: '登录',
-        dashboard: "首页"
+        dashboard: "首页",
+        permission: "权限管理",
+        userManage: "用户管理",
+        roleManage: "角色管理"
     },
     tagsView: {
         refresh: "刷新",
@@ -18,5 +21,7 @@ export default {
         placeholderUsername:"请输入账号",
         placeholderPassword: "请输入密码",
         tipsVersion: "版本",
+    },
+    permission: {
     }
 }

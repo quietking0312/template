@@ -9,6 +9,10 @@ import (
 	"server/core/config"
 )
 
+const (
+	ErrSqlNoRows = "sql: no rows in result set"
+)
+
 var dao Dao
 
 type Dao struct {

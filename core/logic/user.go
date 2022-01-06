@@ -18,6 +18,9 @@ func (u UserLogic) Login(username string, password string) (string, error) {
 	userModel := new(dao.UserModel)
 	var userTable dao.MUserTable
 	if err := userModel.SelectOneByUsername(username, &userTable); err != nil {
+		if err.Error() == dao.ErrSqlNoRows {
+			return "", errors.New("username not exists")
+		}
 		return "", err
 	}
 	if userTable.Password != cyptos.Get32MD5(password) {

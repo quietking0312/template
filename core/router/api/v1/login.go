@@ -28,11 +28,11 @@ func Login(c *gin.Context) {
 	userModule := new(logic.UserLogic)
 	token, err := userModule.Login(req.Username, req.Password)
 	if err != nil {
+		if config.GetConfig().Server.Mode == "debug" {
+			resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
+			return
+		}
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
-		return
-	}
-	if config.GetConfig().Server.Mode == "debug" && token == "" {
-		resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
 		return
 	}
 	resp.JSON(c, resp.Success, "", loginRes{
