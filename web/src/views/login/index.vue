@@ -17,7 +17,7 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="form.password"
+            <el-input v-model="form.password" type="text"
                       show-password :minlength="3" :maxlength="18"
                       :placeholder="$t('login.placeholderPassword')" class="form--input">
               <template #prefix>
@@ -129,9 +129,9 @@ async function login(): Promise<void> {
     }
     .form--input {
       width: 100%;
-        @{deep}(.el-input__inner) {
-      padding-left: 40px;
-    }
+      @{deep}(.el-input__inner) {
+        padding-left: 40px;
+      }
     }
     .login--button {
       width: 100%;
