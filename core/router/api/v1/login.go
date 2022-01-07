@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"server/common/cyptos"
+	"server/common/cryptos"
 	"server/core/config"
 	"server/core/logic"
 	"server/core/utils/reqs"
@@ -29,7 +29,7 @@ func Login(c *gin.Context) {
 	token, err := userModule.Login(req.Username, req.Password)
 	if err != nil {
 		if config.GetConfig().Server.Mode == "debug" {
-			resp.JSON(c, resp.Success, "", loginRes{Token: cyptos.Get32MD5(req.Password)})
+			resp.JSON(c, resp.Success, "", loginRes{Token: cryptos.Get32MD5(req.Password)})
 			return
 		}
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)

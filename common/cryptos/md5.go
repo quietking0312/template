@@ -1,4 +1,4 @@
-package cyptos
+package cryptos
 
 import (
 	"crypto/md5"
