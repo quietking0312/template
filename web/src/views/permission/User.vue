@@ -133,7 +133,6 @@ function handleConfirm() {
   } else if (dialogTitleKey.value == "update") {
     UpdateUser()
   }
-  getUserList()
   dialogVisible.value = false
 }
 
@@ -152,7 +151,7 @@ function AddUser() {
     formWarp.validate(async (valid: boolean) => {
       if (valid) {
         await postUserApi(dialogForm).then(res => {
-          console.log(res)
+          getUserList()
         })
       }
     })
@@ -177,7 +176,9 @@ function UpdateUser() {
   try {
     formWarp.validate(async (valid: boolean) => {
       if (valid) {
-        await updateUserApi(dialogForm)
+        await updateUserApi(dialogForm).then(res => {
+          getUserList()
+        })
       }
     })
   }catch (err) {
