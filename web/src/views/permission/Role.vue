@@ -1,7 +1,11 @@
 <template>
-  <el-table :data="tableList">
+  <div style="padding-bottom: 10px">
+    <el-button type="primary">
+      新增
+    </el-button>
+  </div>
+  <el-table :data="tableList" fit border>
     <el-table-column label="角色名">
-
     </el-table-column>
   </el-table>
 </template>

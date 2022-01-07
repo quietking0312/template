@@ -9,7 +9,7 @@ const (
 	mUserSelectTotalSql = `select count(*) from m_user where state != ?`
 	mUserInsertSql      = `insert into m_user(uid, username, password, name, email, create_time, last_login_time, state) values (:uid, :username, :password, :name, :email, :create_time, :last_login_time, :state)`
 	mUserSelectSql      = `select uid, username, password, name, email, create_time, last_login_time, state from m_user`
-	mUserUpdateSql      = "update set %s where %s"
+	mUserUpdateSql      = "update m_user set %s where %s"
 )
 
 type UserModel struct {
@@ -48,16 +48,18 @@ func (u UserModel) UpdateUserOne(user MUserTable) error {
 	}
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	updateStr := ""
+	updateStr := fmt.Sprintf("state=%d", user.State)
 	if user.Name != "" {
-		updateStr = fmt.Sprintf("%s name=:name", updateStr)
+		updateStr = fmt.Sprintf("%s, name='%s'", updateStr, user.Name)
 	}
 	if user.Password != "" {
-		updateStr = fmt.Sprintf("%s, password=:password", updateStr)
+		updateStr = fmt.Sprintf("%s, password='%s'", updateStr, user.Password)
 	}
 	if user.Email != "" {
-		updateStr = fmt.Sprintf("%s, email=:email", updateStr)
+		updateStr = fmt.Sprintf("%s, email='%s'", updateStr, user.Email)
 	}
-	_, err := dao.sqlxDB.ExecContext(ctx, fmt.Sprintf(mUserUpdateSql, updateStr, fmt.Sprintf("uid=%d", user.Uid)))
+	updateStr = fmt.Sprintf(mUserUpdateSql, updateStr, fmt.Sprintf("uid=%d", user.Uid))
+	fmt.Println(updateStr)
+	_, err := dao.sqlxDB.ExecContext(ctx, updateStr)
 	return err
 }

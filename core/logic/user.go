@@ -74,3 +74,14 @@ func (u UserLogic) AddUser(name, username, password, email string) error {
 	}
 	return nil
 }
+
+func (u UserLogic) UpdateUser(uid int64, name, email string, state int8) error {
+	userModel := new(dao.UserModel)
+	var userTable = dao.MUserTable{
+		Uid:   uid,
+		Name:  name,
+		Email: email,
+		State: state,
+	}
+	return userModel.UpdateUserOne(userTable)
+}

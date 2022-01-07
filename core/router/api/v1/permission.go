@@ -1,8 +1,9 @@
 package v1
 
 import (
-	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/common/mjson"
 	"server/core/logic"
 	"server/core/utils/reqs"
 	"server/core/utils/resp"
@@ -46,20 +47,21 @@ func GetUserListApi(c *gin.Context) {
 	}
 	for _, row := range result {
 		var tempMap map[string]interface{}
-		jsonStr, _ := json.Marshal(row)
-		_ = json.Unmarshal(jsonStr, &tempMap)
+		jsonStr, _ := mjson.Marshal(row)
+		_ = mjson.Unmarshal(jsonStr, &tempMap)
 		delete(tempMap, "password")
 		respData.Data = append(respData.Data, tempMap)
 	}
+	fmt.Println(respData)
 	resp.JSON(c, resp.Success, "", respData)
 }
 
 type (
 	postUserReq struct {
-		Name     string `json:"name" binding:"required"`
-		UserName string `json:"userName" binding:"required"`
-		Password string `json:"password"`
-		Email    string `json:"email" binding:"required"`
+		Name     string `json:"name"  binding:"required" form:"name"`
+		UserName string `json:"userName" binding:"required" form:"userName"`
+		Password string `json:"password" form:"password"`
+		Email    string `json:"email" binding:"required" form:"email"`
 	}
 )
 
@@ -77,8 +79,26 @@ func PostUserApi(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", nil)
 }
 
-func PutUserApi(c *gin.Context) {
+type (
+	putUserReq struct {
+		Uid   int64  `json:"uid" form:"uid" binding:"required"`
+		Name  string `json:"name" form:"name"`
+		Email string `json:"email" form:"email" binding:"email"`
+		State int8   `json:"state" form:"state" binding:"required,oneof=1 2"`
+	}
+)
 
+func PutUserApi(c *gin.Context) {
+	var reqData putUserReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	userLogin := new(logic.UserLogic)
+	if err := userLogin.UpdateUser(reqData.Uid, reqData.Name, reqData.Email, reqData.State); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
 

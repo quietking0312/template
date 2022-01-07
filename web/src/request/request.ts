@@ -2,6 +2,7 @@ import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} fro
 import { Message } from "@/components/Message";
 import qs from 'qs'
 import config from "@/request/config";
+import JSON_BIG from 'json-bigint';
 
 const { result_code, base_url, request_timeout} = config
 
@@ -9,7 +10,15 @@ export const PATH_URL: string = base_url[import.meta.env.VITE_MODE as string]
 
 const service: AxiosInstance = axios.create({
     baseURL: PATH_URL,
-    timeout: request_timeout
+    timeout: request_timeout,
+    transformResponse: data => {
+        try {
+            return JSON_BIG.parse(data)
+        }catch (err) {
+            console.log(err)
+            return JSON.parse(data);
+        }
+    }
 })
 
 service.interceptors.request.use(
@@ -57,6 +66,7 @@ service.interceptors.response.use(
             return response.data
         }else {
             if ((response.data as respType).code === result_code) {
+                console.log(response.data)
                 return response.data
             } else {
                 Message.error((response.data as respType).message)

@@ -1,7 +1,7 @@
 <template>
   <div style="padding-bottom: 10px">
     <el-button type="primary" @click="handleAddUser">
-      <span style="vertical-align: middle">新增</span>
+      新增
     </el-button>
   </div>
   <el-table :data="userTabelList" fit border>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import {reactive, ref, unref} from "vue";
 import { formatTime } from "@/utils";
-import {getUserListApi, postUserApi} from "@/api/permission";
+import {getUserListApi, postUserApi, updateUserApi} from "@/api/permission";
 
 const formRef = ref<HTMLElement | null>(null)
 const userTabelList = ref([])
@@ -76,8 +76,8 @@ const dialogVisible = ref(false)
 
 
 const dialogTitleMap = reactive({
-  "create": "create",
-  "update": "update"
+  create: "create",
+  update: "update"
 })
 
 let dialogTitleKey = ref("create")
@@ -131,6 +131,7 @@ function handleConfirm() {
   if (dialogTitleKey.value === "create") {
     AddUser()
   } else if (dialogTitleKey.value == "update") {
+    UpdateUser()
   }
   getUserList()
   dialogVisible.value = false
@@ -150,7 +151,7 @@ function AddUser() {
   try {
     formWarp.validate(async (valid: boolean) => {
       if (valid) {
-        postUserApi(dialogForm).then(res => {
+        await postUserApi(dialogForm).then(res => {
           console.log(res)
         })
       }
@@ -162,7 +163,6 @@ function AddUser() {
 
 // 编辑按钮响应事件
 function handleUpdateUser(row: any) {
-
   dialogTitleKey.value = "update"
   Object.keys(dialogForm).map(key => {
     dialogForm[key] = row[key]
@@ -170,6 +170,20 @@ function handleUpdateUser(row: any) {
   dialogVisible.value =true
 }
 
+// 修改用户信息
+function UpdateUser() {
+  const formWarp = unref(formRef) as any
+  if (!formWarp) return
+  try {
+    formWarp.validate(async (valid: boolean) => {
+      if (valid) {
+        await updateUserApi(dialogForm)
+      }
+    })
+  }catch (err) {
+    console.log(err)
+  }
+}
 </script>
 
 <style lang="less" scoped>
