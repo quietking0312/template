@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/common/mjson"
 	"server/core/logic"
+	"server/core/utils/define"
 	"server/core/utils/reqs"
 	"server/core/utils/resp"
 	"strconv"
@@ -128,5 +129,20 @@ func PutRoleApi(c *gin.Context) {
 }
 
 func DeleteRoleApi(c *gin.Context) {
+	resp.JSON(c, resp.Success, "", nil)
+}
+
+func GetPermissionList(c *gin.Context) {
+	resData := map[string][]define.RouteItem{
+		"data": define.DefaultPermissionList,
+	}
+	resp.JSON(c, resp.Success, "", resData)
+}
+
+func PostUserPermission(c *gin.Context) {
+	resp.JSON(c, resp.Success, "", nil)
+}
+
+func PostRolePermission(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", nil)
 }

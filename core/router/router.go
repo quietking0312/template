@@ -13,17 +13,21 @@ import (
 	"os/signal"
 	"server/common/log"
 	"server/core/config"
+	"server/core/utils/define"
 	"server/core/utils/middleware"
+	"strings"
 	"syscall"
 )
 
 // NewHTTPRouter 创建HTTP路由
 func NewHTTPRouter() *http.Server {
+	authMiddle := middleware.NewAuthMiddleWare()
 	var router *gin.Engine
 	if config.GetConfig().Server.Mode == "debug" {
 		gin.SetMode(gin.DebugMode)
 		router = gin.New()
 		router.Use(middleware.Cors())
+		router.Use(authMiddle.Auth())
 		if config.GetConfig().Log.RouteLog {
 			router.Use(gin.Logger())
 		}
@@ -34,6 +38,7 @@ func NewHTTPRouter() *http.Server {
 		router = gin.New()
 		router.Use(middleware.Cors())
 		router.Use(middleware.Recover())
+		router.Use(authMiddle.Auth())
 		if config.GetConfig().Log.RouteLog {
 			router.Use(gin.Logger())
 		}
@@ -42,12 +47,17 @@ func NewHTTPRouter() *http.Server {
 			pprof.Register(router)
 		}
 	}
-	apiGroup := router.Group("api")
 
+	apiGroup := router.Group("api")
 	v1RouteGroup.GinGroup(apiGroup, func(path string, method string) bool {
+		if config.GetConfig().Server.Mode != "debug" && strings.Index(path, "helloworld") < 0 {
+			return false
+		}
 		return true
 	})
-
+	// 由于路径拼接问题，路由map需要执行完 GinGroup 才会生成
+	authMiddle.SetPermission(v1RouteGroup.RouteMap())
+	define.DefaultPermissionList = v1RouteGroup.RouteList()
 	httpSev := &http.Server{
 		Handler: router,
 	}

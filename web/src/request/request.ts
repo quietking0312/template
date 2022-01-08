@@ -3,6 +3,7 @@ import { Message } from "@/components/Message";
 import qs from 'qs'
 import config from "@/request/config";
 import JSON_BIG from 'json-bigint';
+import wsCache, {cacheKey} from "@/cache";
 
 const { result_code, base_url, request_timeout} = config
 
@@ -16,13 +17,20 @@ const service: AxiosInstance = axios.create({
             return JSON_BIG.parse(data)
         }catch (err) {
             console.log(err)
-            return JSON.parse(data);
+            try {
+                return JSON.parse(data);
+            }catch (err) {
+                return data
+            }
         }
     }
 })
 
 service.interceptors.request.use(
     (config: AxiosRequestConfig) => {
+        if (wsCache.get(cacheKey.userInfo)) {
+            (config.headers as object)["auth"] = wsCache.get(cacheKey.userInfo)
+        }
         if (config.method === 'post' && config.headers && config.headers['Content-Type'] ==  'application/x-www-form-urlencoded') {
             config.data = qs.stringify(config.data)
         }

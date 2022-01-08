@@ -1,6 +1,9 @@
 package define
 
-import "server/common/cryptos"
+import (
+	"github.com/gin-gonic/gin"
+	"server/common/cryptos"
+)
 
 const TokenKey = "auth"
 
@@ -10,6 +13,16 @@ const (
 	UserStateDelete = 4 // 删除, 标记为删除后将不会展示给前端
 )
 
+var DefaultPermissionList []RouteItem
+
 func CryptosPass(password string) string {
 	return cryptos.Get32MD5(password)
+}
+
+func GetToken(c *gin.Context) string {
+	token := c.Request.Header.Get(TokenKey)
+	if token == "" {
+		token, _ = c.Cookie(TokenKey)
+	}
+	return token
 }

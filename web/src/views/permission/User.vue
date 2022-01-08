@@ -4,7 +4,7 @@
       新增
     </el-button>
   </div>
-  <el-table :data="userTabelList" fit border>
+  <el-table :data="userTableList" fit border>
     <el-table-column label="姓名" prop="name">
     </el-table-column>
     <el-table-column label="用户名" prop="username">
@@ -24,7 +24,8 @@
     <el-table-column label="操作">
       <template #default="{ row }">
         <el-button @click="handleUpdateUser(row)" type="primary" size="small">编辑</el-button>
-        <el-button v-if="row.state===State.on" type="danger" size="small">删除</el-button>
+        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>
+        <el-button v-if="row.state===State.off" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -43,19 +44,26 @@
   <el-dialog v-model="dialogVisible" :title="dialogTitleMap[dialogTitleKey]">
     <el-form ref="formRef" :model="dialogForm" label-width="120px">
       <el-form-item label="姓名">
-        <el-input v-model="dialogForm.name"></el-input>
+        <el-input v-model="dialogForm.name" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="用户名">
-        <el-input  v-model="dialogForm.username"></el-input>
+        <el-input  v-model="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="email">
-        <el-input v-model="dialogForm.email"></el-input>
+        <el-input v-model="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item v-if="dialogTitleKey === 'update'" label="状态">
-        <el-select v-model="dialogForm.state">
+        <el-select v-model="dialogForm.state" :disabled="dialogTitleKey==='setPid'">
           <el-option v-for="item in Status" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-<!--        <el-input v-model="dialogForm.state"></el-input>-->
+      </el-form-item>
+      <el-form-item>
+        <el-tree ref="treeRef" v-if="dialogTitleKey === 'setPid'"
+            :data="permissionTreeData"
+            show-checkbox
+            check-on-click-node
+            :props="TreeProp"
+            node-key="permission_id"></el-tree>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -68,16 +76,21 @@
 <script setup lang="ts">
 import {reactive, ref, unref} from "vue";
 import { formatTime } from "@/utils";
-import {getUserListApi, postUserApi, updateUserApi} from "@/api/permission";
+import {getPermissionListApi, getUserListApi, postUserApi, updateUserApi} from "@/api/permission";
+import {PermissionListToTree} from "@/utils/permission";
+import {Message} from "@/components/Message";
+import config from "@/request/config";
+import {ElTree} from "element-plus";
 
 const formRef = ref<HTMLElement | null>(null)
-const userTabelList = ref([])
+const userTableList = ref([])
 const dialogVisible = ref(false)
 
 
 const dialogTitleMap = reactive({
-  create: "create",
-  update: "update"
+  create: "新增用户",
+  update: "修改用户",
+  setPid: "授权"
 })
 
 let dialogTitleKey = ref("create")
@@ -115,16 +128,29 @@ const pageLimit = reactive({
 
 const tableTotal = ref(100)
 
+getUserList()
+
+// 树组件
+const permissionTreeData = ref([])
+
+const TreeProp = {
+  label: function (data:any, node:any) {
+    return data.title
+  }
+}
+
+const treeRef = ref<InstanceType<typeof ElTree>>()
+
+
 function getUserList() {
   getUserListApi({page: pageLimit.page, limit: pageLimit.limit}).then(res => {
     const { code, data } = res as any
     if (code === 0) {
       tableTotal.value = data.total
-      userTabelList.value = data.data
+      userTableList.value = data.data
     }
   })
 }
-getUserList()
 
 // dialog确认按钮响应事件
 function handleConfirm() {
@@ -132,6 +158,8 @@ function handleConfirm() {
     AddUser()
   } else if (dialogTitleKey.value == "update") {
     UpdateUser()
+  } else if (dialogTitleKey.value == "setPid") {
+    SetUserPermission()
   }
   dialogVisible.value = false
 }
@@ -151,7 +179,11 @@ function AddUser() {
     formWarp.validate(async (valid: boolean) => {
       if (valid) {
         await postUserApi(dialogForm).then(res => {
-          getUserList()
+          const {code} = res as any
+          if (code === config.result_code) {
+            getUserList()
+            Message.success("操作成功")
+          }
         })
       }
     })
@@ -177,7 +209,11 @@ function UpdateUser() {
     formWarp.validate(async (valid: boolean) => {
       if (valid) {
         await updateUserApi(dialogForm).then(res => {
-          getUserList()
+          const {code} = res as any
+          if (code === config.result_code) {
+            getUserList()
+            Message.success("操作成功")
+          }
         })
       }
     })
@@ -185,6 +221,31 @@ function UpdateUser() {
     console.log(err)
   }
 }
+
+// 授权按钮响应事件
+function handleSetUserPermission(row: any) {
+  dialogTitleKey.value = "setPid"
+  GetPermissionList()
+  Object.keys(dialogForm).map(key => {
+    dialogForm[key] = row[key]
+  })
+  dialogVisible.value = true
+}
+
+function GetPermissionList() {
+  getPermissionListApi().then(res => {
+    const {code, data} = (res as any)
+    if (code == config.result_code) {
+      permissionTreeData.value = PermissionListToTree(data.data)
+    }
+  })
+}
+
+function SetUserPermission() {
+  const treeRefWarp = unref(treeRef)
+  console.log(treeRefWarp?.getCheckedKeys(false))
+}
+
 </script>
 
 <style lang="less" scoped>

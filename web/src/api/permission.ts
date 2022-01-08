@@ -32,3 +32,15 @@ export const updateRoleApi = (data:any) => {
 export const deleteRoleApi =(data: any) => {
     return fetch({url: "v1/permission/role", method: "delete", data:data})
 }
+
+export const getPermissionListApi = () => {
+    return fetch({url: "v1/permission", method: "get"})
+}
+
+export const postUserPermissionApi = (data: any) => {
+    return fetch({url: "v1/user/permission", method: "post", data:data})
+}
+
+export const postRolePermissionApi = (data: any) => {
+    return fetch({url: "v1/role/permission", method: "post", data: data})
+}
