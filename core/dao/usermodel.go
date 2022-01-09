@@ -59,7 +59,6 @@ func (u UserModel) UpdateUserOne(user MUserTable) error {
 		updateStr = fmt.Sprintf("%s, email=:email", updateStr)
 	}
 	updateStr = fmt.Sprintf(mUserUpdateSql, updateStr, "uid=:uid")
-	fmt.Println(updateStr)
 	_, err := dao.sqlxDB.NamedExecContext(ctx, updateStr, user)
 	return err
 }

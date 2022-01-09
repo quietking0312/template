@@ -14,8 +14,8 @@ type MUserTable struct {
 
 // MRoleTable 角色表
 type MRoleTable struct {
-	Rid      int64  `db:"rid"`
-	RoleName string `db:"role_name"`
+	Rid      int64  `db:"rid" json:"rid"`
+	RoleName string `db:"role_name" json:"role_name"`
 }
 
 // MUserPermissionRelationTable 用户权限表

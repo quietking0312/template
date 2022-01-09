@@ -16,7 +16,7 @@ create table if not exists `m_user`
 create table if not exists  `m_role`
 (
     `rid` bigint not null comment 'rid',
-    `rname` varchar(20) not null collate utf8mb4_bin comment '角色名',
+    `role_name` varchar(20) not null collate utf8mb4_bin comment '角色名',
     primary key (`rid`)
 )engine=InnoDB default charset=utf8mb4 collate=utf8mb4_bin comment '角色表';
 

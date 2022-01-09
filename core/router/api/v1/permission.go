@@ -115,7 +115,33 @@ func DeleteUserApi(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", nil)
 }
 
+type (
+	getRoleListReq struct {
+		Page  int `json:"page" form:"page" binding:"required"`
+		Limit int `json:"limit" form:"limit" binding:"required"`
+	}
+	getRoleListRes struct {
+		Data  []map[string]interface{} `json:"data"`
+		Total int                      `json:"total"`
+	}
+)
+
 func GetRoleListApi(c *gin.Context) {
+	var reqData getRoleListReq
+	if err := reqs.ShouldBind(c, reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	roleLogic := new(logic.RoleLogic)
+	total, err := roleLogic.GetRoleTotal()
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	if total == 0 {
+
+	}
+	roleLogic.GetRoleList(reqData.Page, reqData.Limit)
 	resp.JSON(c, resp.Success, "", nil)
 }
 
