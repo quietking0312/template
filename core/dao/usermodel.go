@@ -48,18 +48,18 @@ func (u UserModel) UpdateUserOne(user MUserTable) error {
 	}
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	updateStr := fmt.Sprintf("state=%d", user.State)
+	updateStr := "state=:state"
 	if user.Name != "" {
-		updateStr = fmt.Sprintf("%s, name='%s'", updateStr, user.Name)
+		updateStr = fmt.Sprintf("%s, name=:name", updateStr)
 	}
 	if user.Password != "" {
-		updateStr = fmt.Sprintf("%s, password='%s'", updateStr, user.Password)
+		updateStr = fmt.Sprintf("%s, password=:password", updateStr)
 	}
 	if user.Email != "" {
-		updateStr = fmt.Sprintf("%s, email='%s'", updateStr, user.Email)
+		updateStr = fmt.Sprintf("%s, email=:email", updateStr)
 	}
-	updateStr = fmt.Sprintf(mUserUpdateSql, updateStr, fmt.Sprintf("uid=%d", user.Uid))
+	updateStr = fmt.Sprintf(mUserUpdateSql, updateStr, "uid=:uid")
 	fmt.Println(updateStr)
-	_, err := dao.sqlxDB.ExecContext(ctx, updateStr)
+	_, err := dao.sqlxDB.NamedExecContext(ctx, updateStr, user)
 	return err
 }

@@ -60,6 +60,7 @@
       <el-form-item>
         <el-tree ref="treeRef" v-if="dialogTitleKey === 'setPid'"
             :data="permissionTreeData"
+            :check-strictly="true"
             show-checkbox
             check-on-click-node
             :props="TreeProp"
@@ -76,7 +77,13 @@
 <script setup lang="ts">
 import {reactive, ref, unref} from "vue";
 import { formatTime } from "@/utils";
-import {getPermissionListApi, getUserListApi, postUserApi, updateUserApi} from "@/api/permission";
+import {
+  getPermissionListApi,
+  getUserListApi,
+  postUserApi,
+  postUserPermissionApi,
+  updateUserApi
+} from "@/api/permission";
 import {PermissionListToTree} from "@/utils/permission";
 import {Message} from "@/components/Message";
 import config from "@/request/config";
@@ -243,7 +250,14 @@ function GetPermissionList() {
 
 function SetUserPermission() {
   const treeRefWarp = unref(treeRef)
-  console.log(treeRefWarp?.getCheckedKeys(false))
+  if (!treeRefWarp) return
+  postUserPermissionApi({uid: dialogForm.uid, p_ids: treeRefWarp?.getCheckedKeys(false)}).then(res => {
+    const {code} = res as any
+    if (code === config.result_code) {
+      getUserList()
+      Message.success("操作成功")
+    }
+  })
 }
 
 </script>

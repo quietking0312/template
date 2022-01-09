@@ -56,7 +56,6 @@ func GetUserListApi(c *gin.Context) {
 		delete(tempMap, "password")
 		respData.Data = append(respData.Data, tempMap)
 	}
-	fmt.Println(respData)
 	resp.JSON(c, resp.Success, "", respData)
 }
 
@@ -134,12 +133,37 @@ func DeleteRoleApi(c *gin.Context) {
 
 func GetPermissionList(c *gin.Context) {
 	resData := map[string][]define.RouteItem{
-		"data": define.DefaultPermissionList,
+		"data": define.DefaultPermissionList.GetList(),
 	}
 	resp.JSON(c, resp.Success, "", resData)
 }
 
+type postUserPermissionReq struct {
+	Uid           string   `json:"uid" form:"uid" binding:"required"`
+	PermissionIds []uint32 `json:"p_ids" form:"p_ids"`
+}
+
 func PostUserPermission(c *gin.Context) {
+	var reqData postUserPermissionReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	for _, pid := range reqData.PermissionIds {
+		if !define.DefaultPermissionList.PidIsExists(pid) {
+			resp.JSON(c, resp.ErrArgs, fmt.Sprintf("p_id:%d not is exists", pid), nil)
+		}
+	}
+	uid, err := strconv.ParseInt(reqData.Uid, 10, 64)
+	if err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	userLogin := new(logic.UserLogic)
+	if err := userLogin.UpdatePermission(uid, reqData.PermissionIds); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
 

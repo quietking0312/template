@@ -38,9 +38,9 @@ export const getPermissionListApi = () => {
 }
 
 export const postUserPermissionApi = (data: any) => {
-    return fetch({url: "v1/user/permission", method: "post", data:data})
+    return fetch({url: "v1/permission/user/permission", method: "post", data:data})
 }
 
 export const postRolePermissionApi = (data: any) => {
-    return fetch({url: "v1/role/permission", method: "post", data: data})
+    return fetch({url: "v1/permission/role/permission", method: "post", data: data})
 }

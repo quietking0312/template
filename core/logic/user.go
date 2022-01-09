@@ -85,3 +85,18 @@ func (u UserLogic) UpdateUser(uid int64, name, email string, state int8) error {
 	}
 	return userModel.UpdateUserOne(userTable)
 }
+
+func (u UserLogic) UpdatePermission(uid int64, pidS []uint32) error {
+	userPermissionModel := new(dao.UserPermissionModel)
+	return userPermissionModel.Insert(uid, pidS)
+}
+
+// GetPidByUid 获取用户权限
+func (u UserLogic) GetPidByUid(uid int64) ([]uint32, error) {
+	return nil, nil
+}
+
+// GetPidAllByUid 获取用户及用户所拥有角色权限
+func (u UserLogic) GetPidAllByUid(uid int64) ([]uint32, error) {
+	return nil, nil
+}

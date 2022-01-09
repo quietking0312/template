@@ -10,7 +10,7 @@ type Route struct {
 	Path         string `json:"path"`
 	Method       string `json:"method"`
 	Handler      gin.HandlerFunc
-	PermissionId uint64 `json:"permission_id"`
+	PermissionId uint32 `json:"permission_id"`
 	Title        string `json:"title"`
 }
 
@@ -58,47 +58,4 @@ func (r *Route) GinRoute(g *gin.RouterGroup, filter FilterRoute) {
 			r.Handler(c)
 		})
 	}
-}
-
-type RouteItem struct {
-	Path         string `json:"path"`
-	Method       string `json:"method"`
-	PermissionId uint64 `json:"permission_id"`
-	Title        string `json:"title"`
-}
-
-// RouteList 获取路由列表
-func (g *RouteGroup) RouteList() []RouteItem {
-	var permissionList []RouteItem
-	for _, route := range g.Routes {
-		path := strings.Join([]string{strings.TrimRight(route.BasePath, "/"), strings.Trim(route.Path, "/")}, "/")
-		var r = RouteItem{
-			Path:         strings.TrimRight(path, "/"),
-			Method:       route.Method,
-			PermissionId: route.PermissionId,
-			Title:        route.Title,
-		}
-		if r.PermissionId != 0 {
-			permissionList = append(permissionList, r)
-		}
-	}
-	for _, group := range g.RouteGroups {
-		permissionList = append(permissionList, group.RouteList()...)
-	}
-	return permissionList
-}
-
-// RouteMap 获取路由map
-// return map[path][method]RoutePermission
-func (g *RouteGroup) RouteMap() map[string]map[string]RouteItem {
-	var permissionMap = make(map[string]map[string]RouteItem)
-	for _, route := range g.RouteList() {
-		pM, ok := permissionMap[route.Path]
-		if !ok {
-			pM = make(map[string]RouteItem)
-			permissionMap[route.Path] = pM
-		}
-		pM[route.Method] = route
-	}
-	return permissionMap
 }

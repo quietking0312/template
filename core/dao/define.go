@@ -20,12 +20,12 @@ type MRoleTable struct {
 
 // MUserPermissionRelationTable 用户权限表
 type MUserPermissionRelationTable struct {
-	Uid int64 `db:"uid"`
-	Pid int64 `db:"pid"`
+	Uid int64  `db:"uid"`
+	Pid uint32 `db:"pid"`
 }
 
 // MRolePermissionRelationTable 角色权限表
 type MRolePermissionRelationTable struct {
-	Rid int64 `db:"rid"`
-	Pid int64 `db:"pid"`
+	Rid int64  `db:"rid"`
+	Pid uint32 `db:"pid"`
 }

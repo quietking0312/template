@@ -13,8 +13,6 @@ const (
 	UserStateDelete = 4 // 删除, 标记为删除后将不会展示给前端
 )
 
-var DefaultPermissionList []RouteItem
-
 func CryptosPass(password string) string {
 	return cryptos.Get32MD5(password)
 }
