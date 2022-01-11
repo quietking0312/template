@@ -1,10 +1,14 @@
 package dao
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/jmoiron/sqlx"
+)
 
 const (
 	mUserPermissionInsertSql = "insert ignore into m_user_permission_relation(uid, pid) values (:uid, :pid)"
 	mUserPermissionSelectSql = "select pid from m_user_permission_relation"
+	mUserPermissionDeleteSql = "delete from m_user_permission_relation where uid = ?"
 )
 
 type UserPermissionModel struct {
@@ -21,7 +25,29 @@ func (up UserPermissionModel) Insert(uid int64, pIdS []uint32) error {
 		}
 		upTables = append(upTables, upTable)
 	}
-	_, err := dao.sqlxDB.NamedExecContext(ctx, mUserPermissionInsertSql, upTables)
+	if len(upTables) > 0 {
+		if _, err := dao.sqlxDB.NamedExecContext(ctx, mUserPermissionInsertSql, upTables); err != nil {
+			return err
+		}
+	}
+	var (
+		sqlStr string
+		args   []interface{}
+		err    error
+	)
+	if len(pIdS) > 0 {
+		sqlStr, args, err = sqlx.In(fmt.Sprintf("%s and pid not in (?)", mUserPermissionDeleteSql), uid, pIdS)
+		if err != nil {
+			return err
+		}
+	} else {
+		sqlStr, args, err = sqlx.In(fmt.Sprintf("%s", mUserPermissionDeleteSql), uid)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = dao.sqlxDB.ExecContext(ctx, sqlStr, args...)
 	return err
 }
 

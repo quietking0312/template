@@ -128,7 +128,7 @@ type (
 
 func GetRoleListApi(c *gin.Context) {
 	var reqData getRoleListReq
-	if err := reqs.ShouldBind(c, reqData); err != nil {
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
 		return
 	}
@@ -138,18 +138,62 @@ func GetRoleListApi(c *gin.Context) {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
-	if total == 0 {
-
+	var respData = getRoleListRes{
+		Data:  []map[string]interface{}{},
+		Total: total,
 	}
-	roleLogic.GetRoleList(reqData.Page, reqData.Limit)
-	resp.JSON(c, resp.Success, "", nil)
+	if total == 0 {
+		resp.JSON(c, resp.Success, "", respData)
+		return
+	}
+	result, err := roleLogic.GetRoleList(reqData.Page, reqData.Limit)
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	for _, row := range result {
+		var tempMap map[string]interface{}
+		jsonStr, _ := mjson.Marshal(row)
+		_ = mjson.Unmarshal(jsonStr, &tempMap)
+		respData.Data = append(respData.Data, tempMap)
+	}
+	resp.JSON(c, resp.Success, "", respData)
 }
+
+type (
+	postRoleReq struct {
+		RoleName string `form:"role_name" json:"role_name" binding:"required"`
+	}
+)
 
 func PostRoleApi(c *gin.Context) {
+	var reqData postRoleReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	roleLogic := new(logic.RoleLogic)
+	if err := roleLogic.AddRole(reqData.RoleName); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
 
+type (
+	putRoleReq struct {
+		Rid      int32  `form:"rid" json:"rid" binding:"required"`
+		RoleName string `form:"role_name" json:"role_name" binding:"required"`
+	}
+)
+
 func PutRoleApi(c *gin.Context) {
+	var reqData putRoleReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+
 	resp.JSON(c, resp.Success, "", nil)
 }
 
@@ -193,6 +237,17 @@ func PostUserPermission(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", nil)
 }
 
+type postRolePermissionReq struct {
+	Rid           int32    `form:"rid" json:"rid" binding:"required"`
+	PermissionIds []uint32 `form:"p_ids" json:"p_ids"`
+}
+
 func PostRolePermission(c *gin.Context) {
+	var reqData postRolePermissionReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+
 	resp.JSON(c, resp.Success, "", nil)
 }

@@ -44,16 +44,16 @@
   <el-dialog v-model="dialogVisible" :title="dialogTitleMap[dialogTitleKey]">
     <el-form ref="formRef" :model="dialogForm" label-width="120px">
       <el-form-item label="姓名">
-        <el-input v-model="dialogForm.name" :disabled="dialogTitleKey==='setPid'"></el-input>
+        <el-input v-model.trim="dialogForm.name" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="用户名">
-        <el-input  v-model="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
+        <el-input  v-model.trim="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="email">
-        <el-input v-model="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
+        <el-input v-model.trim="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item v-if="dialogTitleKey === 'update'" label="状态">
-        <el-select v-model="dialogForm.state" :disabled="dialogTitleKey==='setPid'">
+        <el-select v-model.number="dialogForm.state" :disabled="dialogTitleKey==='setPid'">
           <el-option v-for="item in Status" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -64,6 +64,7 @@
             show-checkbox
             check-on-click-node
             :props="TreeProp"
+            default-expand-all
             node-key="permission_id"></el-tree>
       </el-form-item>
     </el-form>
