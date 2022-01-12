@@ -44,17 +44,19 @@ import {ref, watch, reactive, unref, computed} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
 import {appInfoApi, loginApi} from "@/api/login";
-import {PROTO_MESSAGE} from "@/proto/message";
 import LangSelect from "@/components/LangSelect/index.vue";
 import {appStore} from "@/store/modules/app";
 import {respType} from "@/request/request";
-import {ElMessage} from "element-plus";
+import config from "@/request/config";
 
 // app版本
 let version = ref<string>("")
 appInfoApi().then(res => {
-  console.log(res)
-  version.value = "1.1.1"
+  const {code, data} = res as any
+  if (code == config.result_code) {
+    version.value = data.version
+    wsCache.set(cacheKey.conf, data)
+  }
 })
 
 const showVersion = computed(() => appStore.showLanguage)

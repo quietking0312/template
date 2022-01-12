@@ -74,10 +74,12 @@ service.interceptors.response.use(
             return response.data
         }else {
             if ((response.data as respType).code === result_code) {
-                console.log(response.data)
                 return response.data
             } else {
                 Message.error((response.data as respType).message)
+                if ((response.data as respType).code >= 600) {
+                    return response.data
+                }
             }
         }
     },

@@ -2,7 +2,8 @@ import { ConfigOptions } from "@/request/config/types";
 
 const config: ConfigOptions = {
     base_url: {
-        dev: "http://127.0.0.1:9001/api"
+        dev: "http://127.0.0.1:9001/api",
+        pro: "api"
     },
 
     result_code: 0,

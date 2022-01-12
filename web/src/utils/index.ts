@@ -51,3 +51,25 @@ export function formatTime(time: any, fmt: string) {
         return fmt
     }
 }
+
+export function List2Tree(data: any) {
+    if (!Array.isArray(data)) {
+        return data
+    }
+    let map = {}
+    data.forEach(item => {
+        delete item.children
+        map[item.id] = item
+    })
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].pid && map[data[i].pid]) {
+            if (!map[data[i].pid].children) {
+                map[data[i].pid].children = []
+            }
+            map[data[i].pid].children.push(data[i])
+            data.splice(i, 1)
+            i--
+        }
+    }
+    return data
+}

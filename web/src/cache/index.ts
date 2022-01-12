@@ -8,7 +8,8 @@ const wsCache: WebStorageCache = new WebStorageCache({
 
 export enum cacheKey {
     lang = "language",
-    userInfo = "user_info"
+    userInfo = "user_info",
+    conf = "conf"
 }
 
 export default wsCache
