@@ -36,15 +36,45 @@ func (u UserLogic) Login(username string, password string) (string, error) {
 	return cryptos.Get32MD5(fmt.Sprintf("%s.%s.%d", username, password, mtime.GetTime())), nil
 }
 
+type UserPidItem struct {
+	Uid           int64    `json:"uid"`
+	UserName      string   `json:"username"`
+	Name          string   `json:"name"`
+	Email         string   `json:"email"`
+	CreateTime    int64    `json:"create_time"`
+	LastLoginTime int64    `json:"last_login_time"`
+	State         int8     `json:"state"`
+	PermissionIds []uint32 `json:"permission_ids"`
+}
+
 // GetUserList 该函数返回的用户信息会有 摘要算法后的密码
-func (u UserLogic) GetUserList(page, limit int) ([]dao.MUserTable, error) {
+func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 	var dest []dao.MUserTable
 	userModel := new(dao.UserModel)
 	if err := userModel.SelectUserList((page-1)*limit, limit, &dest); err != nil {
 		log.Error("", zap.Error(err))
 		return nil, err
 	}
-	return dest, nil
+	var userPidList []UserPidItem
+	userPermissionModel := new(dao.UserPermissionModel)
+	for _, userItem := range dest {
+		var userPid = UserPidItem{
+			Uid:           userItem.Uid,
+			UserName:      userItem.UserName,
+			Name:          userItem.Name,
+			Email:         userItem.Email,
+			CreateTime:    userItem.CreateTime,
+			LastLoginTime: userItem.LastLoginTime,
+			State:         userItem.State,
+		}
+		var pIds []uint32
+		if err := userPermissionModel.SelectListByUid(userItem.Uid, &pIds); err != nil {
+			return nil, err
+		}
+		userPid.PermissionIds = pIds
+		userPidList = append(userPidList, userPid)
+	}
+	return userPidList, nil
 }
 
 func (u UserLogic) GetUserTotal() (int, error) {
@@ -89,11 +119,6 @@ func (u UserLogic) UpdateUser(uid int64, name, email string, state int8) error {
 func (u UserLogic) UpdatePermission(uid int64, pidS []uint32) error {
 	userPermissionModel := new(dao.UserPermissionModel)
 	return userPermissionModel.Insert(uid, pidS)
-}
-
-// GetPidByUid 获取用户权限
-func (u UserLogic) GetPidByUid(uid int64) ([]uint32, error) {
-	return nil, nil
 }
 
 // GetPidAllByUid 获取用户及用户所拥有角色权限

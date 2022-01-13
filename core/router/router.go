@@ -56,6 +56,7 @@ func NewHTTPRouter() *http.Server {
 		return true
 	})
 	// 由于路径拼接问题，路由map需要执行完 GinGroup 才会生成
+	define.DefaultPermissionList.SetData(v1RouteGroup)
 	authMiddle.SetPermission(define.DefaultPermissionList.RouteMap(v1RouteGroup))
 	httpSev := &http.Server{
 		Handler: router,

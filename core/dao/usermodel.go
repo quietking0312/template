@@ -2,6 +2,8 @@ package dao
 
 import (
 	"fmt"
+	"go.uber.org/zap"
+	"server/common/log"
 	"server/core/utils/define"
 )
 
@@ -19,6 +21,7 @@ func (u UserModel) InsertOne(user MUserTable) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
 	if _, err := dao.sqlxDB.NamedExecContext(ctx, mUserInsertSql, user); err != nil {
+		log.Error("", zap.Error(err))
 		return err
 	}
 	return nil
@@ -27,7 +30,11 @@ func (u UserModel) InsertOne(user MUserTable) error {
 func (u UserModel) SelectOneByUsername(username string, user *MUserTable) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	return dao.sqlxDB.GetContext(ctx, user, fmt.Sprintf("%s where username=?", mUserSelectSql), username)
+	if err := dao.sqlxDB.GetContext(ctx, user, fmt.Sprintf("%s where username=?", mUserSelectSql), username); err != nil {
+		log.Error("", zap.Error(err))
+		return err
+	}
+	return nil
 }
 
 func (u UserModel) SelectUserList(index, limit int, dest *[]MUserTable) error {

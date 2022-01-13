@@ -1,7 +1,6 @@
 package define
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -16,13 +15,13 @@ type RouteItem struct {
 
 type PermissionList struct {
 	data         []RouteItem
-	pidIndexData map[uint32]RouteItem
+	pidIndexData map[uint32][]RouteItem
 }
 
 func NewPermission() *PermissionList {
 	return &PermissionList{
 		data:         []RouteItem{},
-		pidIndexData: make(map[uint32]RouteItem),
+		pidIndexData: make(map[uint32][]RouteItem),
 	}
 }
 
@@ -39,9 +38,11 @@ func (p *PermissionList) SetData(g RouteGroup) {
 		if r.PermissionId != 0 {
 			p.data = append(p.data, r)
 			if _, o := p.pidIndexData[r.PermissionId]; !o {
-				p.pidIndexData[r.PermissionId] = r
+				p.pidIndexData[r.PermissionId] = []RouteItem{
+					r,
+				}
 			} else {
-				panic(fmt.Sprintf("pid:%d is exists", r.PermissionId))
+				p.pidIndexData[r.PermissionId] = append(p.pidIndexData[r.PermissionId], r)
 			}
 		}
 	}
@@ -56,9 +57,6 @@ func (p *PermissionList) SetData(g RouteGroup) {
 // return map[path][method]RoutePermission
 func (p *PermissionList) RouteMap(g RouteGroup) map[string]map[string]RouteItem {
 	var permissionMap = make(map[string]map[string]RouteItem)
-	if len(p.data) == 0 {
-		p.SetData(g)
-	}
 	for _, route := range p.data {
 		pM, ok := permissionMap[route.Path]
 		if !ok {

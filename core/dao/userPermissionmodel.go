@@ -3,6 +3,8 @@ package dao
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
+	"server/common/log"
 )
 
 const (
@@ -54,5 +56,9 @@ func (up UserPermissionModel) Insert(uid int64, pIdS []uint32) error {
 func (up UserPermissionModel) SelectListByUid(uid int64, pidS *[]uint32) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	return dao.sqlxDB.SelectContext(ctx, pidS, fmt.Sprintf("%s where uid=?", mUserPermissionSelectSql), uid)
+	if err := dao.sqlxDB.SelectContext(ctx, pidS, fmt.Sprintf("%s where uid=?", mUserPermissionSelectSql), uid); err != nil {
+		log.Error("", zap.Error(err))
+		return err
+	}
+	return nil
 }

@@ -1,6 +1,10 @@
 package dao
 
-import "fmt"
+import (
+	"fmt"
+	"go.uber.org/zap"
+	"server/common/log"
+)
 
 const (
 	mRoleSelectTotalSql = "select count(*) from m_role"
@@ -24,7 +28,11 @@ func (r RoleModel) InsertOne(role MRoleTable) error {
 func (r RoleModel) SelectRoleList(index, limit int, dest *[]MRoleTable) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	return dao.sqlxDB.SelectContext(ctx, dest, fmt.Sprintf("%s limit %d, %d", mRoleSelectSql, index, limit))
+	if err := dao.sqlxDB.SelectContext(ctx, dest, fmt.Sprintf("%s limit %d, %d", mRoleSelectSql, index, limit)); err != nil {
+		log.Error("", zap.Error(err))
+		return err
+	}
+	return nil
 }
 
 func (r RoleModel) SelectRoleTotal(total *int) error {

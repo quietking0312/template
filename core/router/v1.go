@@ -32,6 +32,7 @@ var v1RouteGroup = define.RouteGroup{
 				{Path: "user", Method: http.MethodPut, Handler: v1.PutUserApi, Title: "修改用户", PermissionId: 100003},
 				{Path: "user", Method: http.MethodDelete, Handler: v1.DeleteUserApi, Title: "删除用户", PermissionId: 100004},
 				{Path: "role/list", Method: http.MethodGet, Handler: v1.GetRoleListApi, Title: "获取角色列表", PermissionId: 101001},
+				{Path: "role/all", Method: http.MethodGet, Handler: v1.GetRoleAllApi, Title: "获取全部角色列表", PermissionId: 101001},
 				{Path: "role", Method: http.MethodPost, Handler: v1.PostRoleApi, Title: "添加角色", PermissionId: 101002},
 				{Path: "role", Method: http.MethodPut, Handler: v1.PutRoleApi, Title: "修改角色", PermissionId: 101003},
 				{Path: "role", Method: http.MethodDelete, Handler: v1.DeleteRoleApi, Title: "删除角色", PermissionId: 101004},

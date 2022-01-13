@@ -24,7 +24,7 @@
     <el-table-column label="操作">
       <template #default="{ row }">
         <el-button @click="handleUpdateUser(row)" type="primary" size="small">编辑</el-button>
-        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>
+<!--        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>-->
         <el-button v-if="row.state===State.off" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>
@@ -60,6 +60,7 @@
       <el-form-item>
         <el-tree ref="treeRef" v-if="dialogTitleKey === 'setPid'"
             :data="permissionTreeData"
+            :default-checked-keys="defaultCheckedKeys"
             :check-strictly="true"
             show-checkbox
             check-on-click-node
@@ -89,6 +90,7 @@ import {PermissionListToTree} from "@/utils/permission";
 import {Message} from "@/components/Message";
 import config from "@/request/config";
 import {ElTree} from "element-plus";
+
 
 const formRef = ref<HTMLElement | null>(null)
 const userTableList = ref([])
@@ -140,7 +142,7 @@ getUserList()
 
 // 树组件
 const permissionTreeData = ref([])
-
+const defaultCheckedKeys = ref([])
 const TreeProp = {
   label: function (data:any, node:any) {
     return data.title
@@ -237,6 +239,7 @@ function handleSetUserPermission(row: any) {
   Object.keys(dialogForm).map(key => {
     dialogForm[key] = row[key]
   })
+  defaultCheckedKeys.value = row?.permission_ids
   dialogVisible.value = true
 }
 

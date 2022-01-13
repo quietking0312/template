@@ -18,11 +18,12 @@
   <el-dialog :title="dialogTitleMap[dialogTitleKey]" v-model="dialogVisible">
     <el-form ref="formRef" :model="dialogForm" :rules="formRules" label-width="100px">
       <el-form-item label="角色名" prop="role_name">
-        <el-input v-model.trim="dialogForm.role_name" maxlength="5"></el-input>
+        <el-input :disabled="dialogTitleKey === 'setPid'" v-model.trim="dialogForm.role_name" maxlength="5"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="dialogTitleKey === 'setPid'">
         <el-tree
             ref="treeRef"
+            :default-checked-keys="defaultCheckedKeys"
             :data="permissionTreeData"
             :check-strictly="true"
             show-checkbox
@@ -89,7 +90,7 @@ const tableTotal = ref(1)
 
 // 树组件
 const permissionTreeData = ref([])
-
+const defaultCheckedKeys = ref([])
 const TreeProp = {
   label: function (data:any, node:any) {
     return data.title
@@ -185,6 +186,7 @@ function handleSetRolePermission(row: any) {
   Object.keys(dialogForm).map(key => {
     dialogForm[key] = row[key]
   })
+  defaultCheckedKeys.value = row?.permission_ids
   dialogVisible.value = true
 }
 

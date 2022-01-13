@@ -160,6 +160,19 @@ func GetRoleListApi(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", respData)
 }
 
+func GetRoleAllApi(c *gin.Context) {
+	roleLogic := new(logic.RoleLogic)
+	result, err := roleLogic.GetRoleAll()
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	respData := map[string]interface{}{
+		"data": result,
+	}
+	resp.JSON(c, resp.Success, "", respData)
+}
+
 type (
 	postRoleReq struct {
 		RoleName string `form:"role_name" json:"role_name" binding:"required"`
@@ -182,7 +195,7 @@ func PostRoleApi(c *gin.Context) {
 
 type (
 	putRoleReq struct {
-		Rid      int32  `form:"rid" json:"rid" binding:"required"`
+		Rid      int64  `form:"rid" json:"rid" binding:"required"`
 		RoleName string `form:"role_name" json:"role_name" binding:"required"`
 	}
 )
@@ -193,7 +206,11 @@ func PutRoleApi(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
 		return
 	}
-
+	roleLogic := new(logic.RoleLogic)
+	if err := roleLogic.UpdateRole(reqData.Rid, reqData.RoleName); err != nil {
+		resp.JSON(c, resp.ErrServer, "", nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
 
@@ -222,6 +239,7 @@ func PostUserPermission(c *gin.Context) {
 	for _, pid := range reqData.PermissionIds {
 		if !define.DefaultPermissionList.PidIsExists(pid) {
 			resp.JSON(c, resp.ErrArgs, fmt.Sprintf("p_id:%d not is exists", pid), nil)
+			return
 		}
 	}
 	uid, err := strconv.ParseInt(reqData.Uid, 10, 64)
@@ -238,7 +256,7 @@ func PostUserPermission(c *gin.Context) {
 }
 
 type postRolePermissionReq struct {
-	Rid           int32    `form:"rid" json:"rid" binding:"required"`
+	Rid           int64    `form:"rid" json:"rid" binding:"required"`
 	PermissionIds []uint32 `form:"p_ids" json:"p_ids"`
 }
 
@@ -248,6 +266,10 @@ func PostRolePermission(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
 		return
 	}
-
+	roleLogic := new(logic.RoleLogic)
+	if err := roleLogic.UpdatePermission(reqData.Rid, reqData.PermissionIds); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
