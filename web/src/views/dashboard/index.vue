@@ -1,24 +1,15 @@
 <template>
-  <div>
-    <div>hello world</div>
-    <span>{{ count }}</span>
-    <el-button @click="onClickBtn">点击</el-button>
-    <el-button v-permission="[1000]">hello</el-button>
-  </div>
+  <div v-html="noticeData"></div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { fetch } from "@/request/axios";
-  fetch({url: "v1/helloworld", method: "get"} ).then(res => {
-    console.log(res)
-  })
-  let count = ref(0)
-  function onClickBtn(){
-    count.value++
-  }
+import { getNotice } from "@/api/notice";
+import {ref} from "vue";
 
-
+const noticeData = ref()
+getNotice().then(res => {
+  noticeData.value = res?.data
+})
 </script>
 
 <style scoped>
