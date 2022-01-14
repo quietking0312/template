@@ -56,20 +56,29 @@ export function List2Tree(data: any) {
     if (!Array.isArray(data)) {
         return data
     }
+    let newData: any[]= []
     let map = {}
     data.forEach(item => {
-        delete item.children
         map[item.id] = item
+        newData.push(item)
     })
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].pid && map[data[i].pid]) {
-            if (!map[data[i].pid].children) {
-                map[data[i].pid].children = []
+    for (let i = 0; i < newData.length; i++) {
+        if (newData[i].pid && map[newData[i].pid]) {
+            if (!map[newData[i].pid].children) {
+                map[newData[i].pid].children = []
             }
-            map[data[i].pid].children.push(data[i])
-            data.splice(i, 1)
+            map[newData[i].pid].children.push(newData[i])
+            newData.splice(i, 1)
             i--
         }
     }
-    return data
+    return newData
+}
+
+export function Array2Object(data: any, key: string) {
+    let obj = {}
+    data.forEach((item: any) => {
+        obj[item[key]] = item
+    })
+    return obj
 }

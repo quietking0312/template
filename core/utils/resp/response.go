@@ -27,3 +27,13 @@ func JSON(c *gin.Context, code int, message string, data interface{}) {
 	c.JSON(http.StatusOK, resp)
 	return
 }
+
+func String(c *gin.Context, message string) {
+	c.Writer.WriteString(message)
+	return
+}
+
+func File(c *gin.Context, filePath string) {
+	c.File(filePath)
+	return
+}
