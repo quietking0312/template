@@ -132,13 +132,19 @@ func createDB(DataSourceName string) (err error) {
 	source := fmt.Sprintf("%s:%s@tcp(%s)/", cfg.User, cfg.Passwd, cfg.Addr)
 	db, err = sql.Open("mysql", source)
 	if err != nil {
+		fmt.Println("createDB: sql.Open:", err)
 		return err
 	}
 	defer db.Close()
+	if err := db.Ping(); err != nil {
+		fmt.Println("ping: ", source, " error: ", err)
+		return err
+	}
 	_, err = db.Exec(
 		fmt.Sprintf("CREATE DATABASE If Not Exists `%s` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin",
 			cfg.DBName))
 	if err != nil {
+		fmt.Println("createDB: db.exec:", err)
 		return err
 	}
 	return nil

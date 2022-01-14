@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import {defineComponent} from "vue";
 import {useCache} from "@/components/ParentView/useCache";
 const { getCaches } = useCache(true)
 </script>

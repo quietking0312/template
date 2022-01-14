@@ -4,10 +4,10 @@
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
 <!--        <svg-icon v-if="item.meta.icon" :icon-class="item.meta.icon" clas="icon-breadcrumb" />-->
         <span v-if="item.redirect === 'noredirect' || index==levelList.length-1" class="no-redirect">
-          {{ generateTitle(item.meta.title) }}
+          {{ generateTitle(item?.meta?.title) }}
         </span>
         <a v-else @click.prevent="handleLink(item)">
-          {{ generateTitle(item.meta.title) }}
+          {{ generateTitle(item?.meta?.title) }}
         </a>
       </el-breadcrumb-item>
     </transition-group>

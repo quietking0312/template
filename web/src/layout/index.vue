@@ -4,22 +4,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent, computed} from "vue";
+<script setup lang="ts" name="Layout">
+import {computed} from "vue";
 import {appStore} from "@/store/modules/app";
 import Classic from "./modules/Classic.vue"
 import Top from "@/layout/modules/Top.vue";
 import LeftTop from "@/layout/modules/LeftTop.vue";
-export default defineComponent({
-  name: "Layout",
-  components: { Classic, Top, LeftTop },
-  setup() {
-    const layout = computed(() => appStore.layout)
-    return {
-      layout
-    }
-  }
-})
+
+
+const layout = computed(() => appStore.layout === 'Classic'? Classic : appStore.layout === 'Top'? Top:LeftTop)
+
 </script>
 
 <style lang="less" scoped>

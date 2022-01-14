@@ -6,22 +6,18 @@
   </slot>
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from "vue";
+<script setup lang="ts">
+import {PropType} from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 
-export default defineComponent({
-  name: "Item",
-  components: {SvgIcon},
-  props: {
-    icon: {
-      type: String as PropType<string>,
-      default: ''
-    },
-    title: {
-      type: String as PropType<string>,
-      default: ''
-    }
+defineProps({
+  icon: {
+    type: String as PropType<string>,
+    default: ''
+  },
+  title: {
+    type: String as PropType<string>,
+    default: ''
   }
 })
 </script>

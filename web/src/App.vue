@@ -1,19 +1,12 @@
 <template>
-  <div id="app">
-    <router-view v-slot="{ Component }">
-      <component :is="Component" />
-    </router-view>
-  </div>
+  <router-view class="app" :class="{ grey__mode: greyMode }" />
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-export default defineComponent({
-  name:"App",
-  setup() {
-    return {}
-  }
-})
+<script setup lang="ts">
+import {computed} from "vue";
+import {appStore} from "@/store/modules/app";
+
+const greyMode = computed(() => appStore.greyMode )
 </script>
 
 <style lang="less">

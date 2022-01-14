@@ -16,59 +16,47 @@
   </div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, PropType} from "vue";
-import SiderItem from "@/components/Sider/SiderItem.vue";
+<script setup lang="ts" name="Sider">
+import {computed,  PropType} from "vue";
+import SiderItem from "./SiderItem.vue";
 import {RouteRecordRaw, useRouter} from "vue-router";
 import {permissionStore} from "@/store/modules/permission";
 import {appStore} from "@/store/modules/app";
 import {isExternal} from "@/utils/validate";
 
-export default defineComponent({
-  name: "Sider",
-  components: { SiderItem },
-  props: {
-    layout: {
-      type: String as PropType<string>,
-      default: 'Classic'
-    },
-    mode: {
-      type: String as PropType<'horizontal' | 'vertical'>,
-      default: 'vertical'
-    }
-  },
-  setup() {
-    const { currentRoute, push } = useRouter()
-    const routers = computed((): RouteRecordRaw[] => {
-      return  permissionStore.routers
-    })
-    const activeMenu = computed(() => {
-      const { meta, path } = currentRoute.value
-      // 如果设置路径，侧边栏将突出显示您设置的路径
-      if (meta.activeMenu) {
-        return meta.activeMenu
-      }
-      return path
-    })
-    const collapsed = computed(() => appStore.collapsed)
-    const showLogo = computed(() => appStore.showLogo)
 
-    function selectMenu(path: string) {
-      if (isExternal(path)) {
-        window.open(path)
-      } else {
-        push(path)
-      }
-    }
-    return {
-      routers,
-      activeMenu,
-      collapsed,
-      showLogo,
-      selectMenu
-    }
+defineProps({
+  layout: {
+    type: String as PropType<string>,
+    default: 'Classic'
+  },
+  mode: {
+    type: String as PropType<'horizontal' | 'vertical'>,
+    default: 'vertical'
   }
 })
+
+const { currentRoute, push } = useRouter()
+const routers = computed(() => permissionStore.routers )
+const activeMenu = computed(() => {
+  const { meta, path } = currentRoute.value
+  // 如果设置路径，侧边栏将突出显示您设置的路径
+  if (meta.activeMenu) {
+    return meta.activeMenu
+  }
+  return path
+})
+const collapsed = computed(() => appStore.collapsed)
+const showLogo = computed(() => appStore.showLogo)
+
+function selectMenu(path: string) {
+  if (currentRoute.value.fullPath === path) return
+  if (isExternal(path)) {
+    window.open(path)
+  } else {
+    push(path)
+  }
+}
 </script>
 
 <style lang="less" scoped>

@@ -30,8 +30,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent, computed} from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import {appStore} from "@/store/modules/app";
 import AppMain from "@/layout/components/AppMain.vue";
 import Sider from "@/components/Sider/index.vue";
@@ -42,48 +42,28 @@ import Logo from "@/components/Logo/index.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import TagsView from "@/components/TagsView/index.vue";
 import LangSelect from "@/components/LangSelect/index.vue";
-export default defineComponent({
-  name: "Classic",
-  components: {LangSelect, TagsView, UserInfo, Logo, Screenfull, BreadcrumbWrap, Sider, AppMain, Hamburger},
-  setup() {
-    const layout = computed(() => appStore.layout)
-    const collapsed = computed(() => appStore.collapsed)
-    const showLogo = computed(() => appStore.showLogo)
-    const showTags = computed(() => appStore.showTags)
-    const showBreadcrumb = computed(() => appStore.showBreadcrumb)
-    const showHamburger = computed(() => appStore.showHamburger)
-    const showScreenfull = computed(() => appStore.showScreenfull)
-    const showUserInfo = computed(() => appStore.showUserInfo)
-    const showNavbar = computed(() => appStore.showNavbar)
-    const showLanguage = computed(() => appStore.showLanguage)
-    const fixedHeader = computed(() => appStore.fixedHeader)
-    const classObj = computed(() => {
-      const obj = {}
-      obj[`app__wrap--${layout.value}`] = true
-      return obj
-    })
 
-    function setCollapsed(collapsed: boolean): void {
-      appStore.SetCollapsed(collapsed)
-    }
-
-    return {
-      classObj,
-      layout,
-      collapsed,
-      showLogo,
-      showTags,
-      showBreadcrumb,
-      showHamburger,
-      showScreenfull,
-      showUserInfo,
-      showNavbar,
-      showLanguage,
-      fixedHeader,
-      setCollapsed
-    }
-  }
+const layout = computed(() => appStore.layout)
+const collapsed = computed(() => appStore.collapsed)
+const showLogo = computed(() => appStore.showLogo)
+const showTags = computed(() => appStore.showTags)
+const showBreadcrumb = computed(() => appStore.showBreadcrumb)
+const showHamburger = computed(() => appStore.showHamburger)
+const showScreenfull = computed(() => appStore.showScreenfull)
+const showUserInfo = computed(() => appStore.showUserInfo)
+const showNavbar = computed(() => appStore.showNavbar)
+const showLanguage = computed(() => appStore.showLanguage)
+const fixedHeader = computed(() => appStore.fixedHeader)
+const classObj = computed(() => {
+  const obj = {}
+  obj[`app__wrap--${layout.value}`] = true
+  return obj
 })
+
+function setCollapsed(collapsed: boolean): void {
+  appStore.SetCollapsed(collapsed)
+}
+
 </script>
 
 <style lang="less" scoped>

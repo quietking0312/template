@@ -6,8 +6,8 @@ import JSON_BIG from 'json-bigint';
 import wsCache, {cacheKey} from "@/cache";
 
 const { result_code, base_url, request_timeout} = config
-
-export const PATH_URL: string = base_url[import.meta.env.VITE_MODE as string]
+console.log(import.meta.env)
+export const PATH_URL: string = base_url[import.meta.env.VITE_API_BASE_PATH as string]
 
 const service: AxiosInstance = axios.create({
     baseURL: PATH_URL,

@@ -92,9 +92,9 @@ const tableTotal = ref(1)
 const permissionTreeData = ref([])
 const defaultCheckedKeys = ref([])
 const TreeProp = {
-  label: function (data:any, node:any) {
-    return data.title
-  }
+  label: "title",
+  children: 'children',
+  disabled: 'false'
 }
 const treeRef = ref<InstanceType<typeof ElTree>>()
 

@@ -53,7 +53,7 @@
         <el-input v-model.trim="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item v-if="dialogTitleKey === 'update'" label="状态">
-        <el-select v-model.number="dialogForm.state" :disabled="dialogTitleKey==='setPid'">
+        <el-select v-model.number="dialogForm.state">
           <el-option v-for="item in Status" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -144,9 +144,9 @@ getUserList()
 const permissionTreeData = ref([])
 const defaultCheckedKeys = ref([])
 const TreeProp = {
-  label: function (data:any, node:any) {
-    return data.title
-  }
+  label: "title",
+  children: "children",
+  disabled: "false"
 }
 
 const treeRef = ref<InstanceType<typeof ElTree>>()

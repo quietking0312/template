@@ -30,7 +30,7 @@
       <li @click="closeOthersTags">
         {{ $t('tagsView.closeOther') }}
       </li>
-      <li @click="closeAllTags(selectedTag)">
+      <li @click="closeAllTags()">
         {{ $t('tagsView.closeAll') }}
       </li>
     </ul>
