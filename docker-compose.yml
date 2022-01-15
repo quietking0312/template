@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  client:
+    image: nginx:1.18-alpine
+    ports:
+      - "11000:80"
+    depends_on:
+      - server
+    volumes:
+      - "./template.conf:/etc/nginx/conf.d/default.conf"
+      - "./logs/nginx:/var/logs/nginx"
+      - "./html:/data/www"
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "33060:3306"
+    expose:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+
+  server:
+    build: .
+    ports:
+      - "11001:9001"
+    expose:
+      - 9001
+    volumes:
+      - "./bin:/home/bin"
+    depends_on:
+      - mysql
+
+
+
+
+
+
+
