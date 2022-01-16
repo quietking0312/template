@@ -61,10 +61,11 @@ func GetUserListApi(c *gin.Context) {
 
 type (
 	postUserReq struct {
-		Name     string `json:"name"  binding:"required" form:"name"`
-		UserName string `json:"userName" binding:"required" form:"userName"`
-		Password string `json:"password" form:"password"`
-		Email    string `json:"email" binding:"required,email" form:"email"`
+		Name     string  `json:"name"  binding:"required" form:"name"`
+		UserName string  `json:"userName" binding:"required" form:"userName"`
+		Password string  `json:"password" form:"password"`
+		Email    string  `json:"email" binding:"required,email" form:"email"`
+		Rids     []int64 `json:"rids" form:"rids"`
 	}
 )
 
@@ -75,7 +76,7 @@ func PostUserApi(c *gin.Context) {
 		return
 	}
 	userLogic := new(logic.UserLogic)
-	if err := userLogic.AddUser(reqData.Name, reqData.UserName, reqData.Password, reqData.Email); err != nil {
+	if err := userLogic.AddUser(reqData.Name, reqData.UserName, reqData.Password, reqData.Email, reqData.Rids); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
@@ -84,10 +85,11 @@ func PostUserApi(c *gin.Context) {
 
 type (
 	putUserReq struct {
-		Uid   string `json:"uid" form:"uid" binding:"required"`
-		Name  string `json:"name" form:"name"`
-		Email string `json:"email" form:"email" binding:"email"`
-		State int8   `json:"state" form:"state" binding:"required,oneof=1 2"`
+		Uid   string  `json:"uid" form:"uid" binding:"required"`
+		Name  string  `json:"name" form:"name"`
+		Email string  `json:"email" form:"email" binding:"email"`
+		State int8    `json:"state" form:"state" binding:"required,oneof=1 2"`
+		Rids  []int64 `json:"rids" form:"rids"`
 	}
 )
 
@@ -104,6 +106,10 @@ func PutUserApi(c *gin.Context) {
 	}
 	userLogin := new(logic.UserLogic)
 	if err := userLogin.UpdateUser(uid, reqData.Name, reqData.Email, reqData.State); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	if err := userLogin.UpdateRole(uid, reqData.Rids); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}

@@ -21,6 +21,10 @@ export const getRoleListApi = (params: any) => {
     return fetch({url: "v1/permission/role/list", method: "get", params:params})
 }
 
+export const getRoleAllApi = () => {
+    return fetch({url: "v1/permission/role/all", method: 'get'})
+}
+
 export const postRoleApi = (data:any) => {
     return fetch({url: "v1/permission/role", method: "post", data:data})
 }

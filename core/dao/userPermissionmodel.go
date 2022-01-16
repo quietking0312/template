@@ -43,7 +43,7 @@ func (up UserPermissionModel) Insert(uid int64, pIdS []uint32) error {
 			return err
 		}
 	} else {
-		sqlStr, args, err = sqlx.In(fmt.Sprintf("%s", mUserPermissionDeleteSql), uid)
+		sqlStr, args, err = sqlx.In(mUserPermissionDeleteSql, uid)
 		if err != nil {
 			return err
 		}

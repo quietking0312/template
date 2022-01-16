@@ -29,3 +29,8 @@ type MRolePermissionRelationTable struct {
 	Rid int64  `db:"rid"`
 	Pid uint32 `db:"pid"`
 }
+
+type MUserRoleRelationTable struct {
+	Uid int64 `db:"uid"`
+	Rid int64 `db:"rid"`
+}

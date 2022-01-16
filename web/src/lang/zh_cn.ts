@@ -1,7 +1,8 @@
 export default {
     common: {
         cancel: "取消",
-        confirm: "确认"
+        confirm: "确认",
+        status: "状态"
     },
     route: {
         login: '登录',

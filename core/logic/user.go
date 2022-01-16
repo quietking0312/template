@@ -87,7 +87,7 @@ func (u UserLogic) GetUserTotal() (int, error) {
 	return total, nil
 }
 
-func (u UserLogic) AddUser(name, username, password, email string) error {
+func (u UserLogic) AddUser(name, username, password, email string, rids []int64) error {
 	userModel := new(dao.UserModel)
 	var userTable = dao.MUserTable{
 		Uid:           uidProcess.GetId(),
@@ -102,6 +102,9 @@ func (u UserLogic) AddUser(name, username, password, email string) error {
 	if err := userModel.InsertOne(userTable); err != nil {
 		return err
 	}
+	if err := u.UpdateRole(userTable.Uid, rids); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -113,7 +116,10 @@ func (u UserLogic) UpdateUser(uid int64, name, email string, state int8) error {
 		Email: email,
 		State: state,
 	}
-	return userModel.UpdateUserOne(userTable)
+	if err := userModel.UpdateUserOne(userTable); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u UserLogic) UpdatePermission(uid int64, pidS []uint32) error {
@@ -124,4 +130,12 @@ func (u UserLogic) UpdatePermission(uid int64, pidS []uint32) error {
 // GetPidAllByUid 获取用户及用户所拥有角色权限
 func (u UserLogic) GetPidAllByUid(uid int64) ([]uint32, error) {
 	return nil, nil
+}
+
+func (u UserLogic) UpdateRole(uid int64, rids []int64) error {
+	userRoleModel := new(dao.UserRoleModel)
+	if err := userRoleModel.InsertByUid(uid, rids); err != nil {
+		return err
+	}
+	return nil
 }

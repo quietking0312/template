@@ -75,7 +75,7 @@ export function List2Tree(data: any) {
     return newData
 }
 
-export function Array2Object(data: any, key: string) {
+export function Array2Object(data: any, key: string): object {
     let obj = {}
     data.forEach((item: any) => {
         obj[item[key]] = item

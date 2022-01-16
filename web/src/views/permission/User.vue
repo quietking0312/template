@@ -5,23 +5,23 @@
     </el-button>
   </div>
   <el-table :data="userTableList" fit border>
-    <el-table-column label="姓名" prop="name">
+    <el-table-column label="姓名" prop="name"  align="center">
     </el-table-column>
-    <el-table-column label="用户名" prop="username">
+    <el-table-column label="用户名" prop="username"  align="center">
     </el-table-column>
-    <el-table-column label="邮箱" prop="email">
+    <el-table-column label="邮箱" prop="email"  align="center">
     </el-table-column>
-    <el-table-column label="创建时间">
+    <el-table-column label="创建时间"  align="center" width="180">
       <template #default="{row}">
         {{ formatTime(row.create_time * 1000, "yyyy-MM-dd HH:mm:ss") }}
       </template>
     </el-table-column>
-    <el-table-column label="状态">
+    <el-table-column label="状态" align="center" width="100">
       <template #default="{row}">
-        {{ row.state }}
+        {{ Array2Object(Status, 'value')[row.state].label }}
       </template>
     </el-table-column>
-    <el-table-column label="操作">
+    <el-table-column label="操作" align="center">
       <template #default="{ row }">
         <el-button @click="handleUpdateUser(row)" type="primary" size="small">编辑</el-button>
 <!--        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>-->
@@ -41,12 +41,12 @@
   </div>
 
 
-  <el-dialog v-model="dialogVisible" :title="dialogTitleMap[dialogTitleKey]">
-    <el-form ref="formRef" :model="dialogForm" label-width="120px">
-      <el-form-item label="姓名">
+  <el-dialog v-model="dialogVisible" :title="dialogTitleMap[dialogTitleKey]" width="800px">
+    <el-form ref="formRef" :model="dialogForm" label-width="120px" :rules="formRules">
+      <el-form-item label="姓名" prop="name">
         <el-input v-model.trim="dialogForm.name" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
-      <el-form-item label="用户名">
+      <el-form-item label="用户名" prop="username">
         <el-input  v-model.trim="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="email">
@@ -57,8 +57,8 @@
           <el-option v-for="item in Status" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-tree ref="treeRef" v-if="dialogTitleKey === 'setPid'"
+      <el-form-item  v-if="dialogTitleKey === 'setPid'">
+        <el-tree ref="treeRef"
             :data="permissionTreeData"
             :default-checked-keys="defaultCheckedKeys"
             :check-strictly="true"
@@ -68,19 +68,26 @@
             default-expand-all
             node-key="permission_id"></el-tree>
       </el-form-item>
+      <el-form-item>
+        <el-transfer :data="roleList"
+                     v-model="dialogForm.rids"
+                     filterable
+                     :props="{key:'rid', label: 'role_name'}"
+                     :titles="['角色列表', '已选择']"></el-transfer>
+      </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="dialogVisible=false">Cancel</el-button>
-      <el-button type="primary" @click="handleConfirm()">confirm</el-button>
+      <el-button @click="dialogVisible=false">{{ $t("common.cancel") }}</el-button>
+      <el-button type="primary" @click="handleConfirm()">{{ $t("common.confirm") }}</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import {reactive, ref, unref} from "vue";
-import { formatTime } from "@/utils";
+import {Array2Object, formatTime} from "@/utils";
 import {
-  getPermissionListApi,
+  getPermissionListApi, getRoleAllApi,
   getUserListApi,
   postUserApi,
   postUserPermissionApi,
@@ -90,7 +97,6 @@ import {PermissionListToTree} from "@/utils/permission";
 import {Message} from "@/components/Message";
 import config from "@/request/config";
 import {ElTree} from "element-plus";
-
 
 const formRef = ref<HTMLElement | null>(null)
 const userTableList = ref([])
@@ -120,7 +126,8 @@ const dialogForm = reactive({
   name: "",
   username: "",
   email: "",
-  state: State.on
+  state: State.on,
+  rids: [] as any[]
 })
 
 function resetDialogForm() {
@@ -129,14 +136,28 @@ function resetDialogForm() {
   dialogForm.username = ""
   dialogForm.email = ""
   dialogForm.state = State.on
+  dialogForm.rids = []
 }
+
+const formRules = reactive({
+  name: [{required: true, trigger: 'blur'}, {min: 2, max:8, trigger: 'blur'}],
+  username: [{required: true, trigger:'blur'}, {min: 3, max:18, trigger: 'blur'}],
+})
+
+const roleList = ref<any[]>([])
+getRoleAllApi().then(res => {
+  const {code, data} = res as any
+  if (code === 0) {
+    roleList.value = data.data
+  }
+})
 
 const pageLimit = reactive({
   page: 1,
   limit: 20
 })
 
-const tableTotal = ref(100)
+const tableTotal = ref(0)
 
 getUserList()
 

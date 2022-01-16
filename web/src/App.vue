@@ -1,10 +1,15 @@
 <template>
-  <router-view class="app" :class="{ grey__mode: greyMode }" />
+  <el-config-provider :locale="elementZHCNLocale">
+    <router-view class="app" :class="{ grey__mode: greyMode }" />
+  </el-config-provider>
+
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import {appStore} from "@/store/modules/app";
+import elementZHCNLocale from 'element-plus/lib/locale/lang/zh-cn'
+
 
 const greyMode = computed(() => appStore.greyMode )
 </script>
