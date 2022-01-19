@@ -25,8 +25,7 @@ func Login(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), "")
 		return
 	}
-	userModule := new(logic.UserLogic)
-	token, err := userModule.Login(req.Username, req.Password)
+	token, err := logic.LoginLogicObj.Login(req.Username, req.Password)
 	if err != nil {
 		if config.GetConfig().Server.Mode == "debug" {
 			resp.JSON(c, resp.Success, "", loginRes{Token: cryptos.Get32MD5(req.Password)})

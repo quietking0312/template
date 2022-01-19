@@ -1,10 +1,7 @@
 package logic
 
 import (
-	"errors"
-	"fmt"
 	"go.uber.org/zap"
-	"server/common/cryptos"
 	"server/common/idprocess"
 	"server/common/log"
 	"server/common/mtime"
@@ -20,31 +17,16 @@ var uidProcess, _ = idprocess.NewWorker(0)
 func (u UserLogic) IsExistUsername() {
 }
 
-func (u UserLogic) Login(username string, password string) (string, error) {
-	userModel := new(dao.UserModel)
-	var userTable dao.MUserTable
-	if err := userModel.SelectOneByUsername(username, &userTable); err != nil {
-		if err.Error() == dao.ErrSqlNoRows {
-			return "", errors.New("username not exists")
-		}
-		log.Error("", zap.Error(err))
-		return "", err
-	}
-	if userTable.Password != cryptos.Get32MD5(password) {
-		return "", errors.New("password is err")
-	}
-	return cryptos.Get32MD5(fmt.Sprintf("%s.%s.%d", username, password, mtime.GetTime())), nil
-}
-
 type UserPidItem struct {
-	Uid           int64    `json:"uid"`
-	UserName      string   `json:"username"`
-	Name          string   `json:"name"`
-	Email         string   `json:"email"`
-	CreateTime    int64    `json:"create_time"`
-	LastLoginTime int64    `json:"last_login_time"`
-	State         int8     `json:"state"`
-	PermissionIds []uint32 `json:"permission_ids"`
+	Uid           int64         `json:"uid"`
+	UserName      string        `json:"username"`
+	Name          string        `json:"name"`
+	Email         string        `json:"email"`
+	CreateTime    int64         `json:"create_time"`
+	LastLoginTime int64         `json:"last_login_time"`
+	State         int8          `json:"state"`
+	Role          []RolePidItem `json:"role"`
+	PermissionIds []uint32      `json:"permission_ids"`
 }
 
 // GetUserList 该函数返回的用户信息会有 摘要算法后的密码
@@ -75,6 +57,10 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 		userPidList = append(userPidList, userPid)
 	}
 	return userPidList, nil
+}
+
+func (u UserLogic) GetUserAll() ([]UserPidItem, error) {
+	return nil, nil
 }
 
 func (u UserLogic) GetUserTotal() (int, error) {

@@ -20,21 +20,28 @@ router.beforeEach(async (to, from, next) => {
             if (permissionStore.isAddRouters) {
                 next()
                 return
+            } else {
+                try {
+                    let permissionIdList = [] as number[]
+                    await userInfoStore.SetUserInfo().then(permission_id => {
+                        permissionIdList = permission_id as number[]
+                    })
+                    await permissionStore.GenerateRoutes(permissionIdList).then(() => {
+                        permissionStore.addRouters.forEach((route: RouteRecordRaw) => {
+                            router.addRoute(route)
+                        })
+                        const redirectPath = (from.query.redirect || to.path) as string
+                        const redirect = decodeURIComponent(redirectPath)
+                        const nextData = to.path === redirect ? {...to, replace: true} : {path: redirect}
+                        permissionStore.SetIsAddRouters(true)
+                        next(nextData)
+                    })
+                }catch (err) {
+                    await userInfoStore.resetToken()
+                    next({path: '/login', query: {redirect: to.path}})
+                    NProgress.done()
+                }
             }
-            let permissionIdList = [] as number[]
-            await userInfoStore.SetUserInfo().then(permission_id => {
-                permissionIdList = permission_id as number[]
-            })
-            await permissionStore.GenerateRoutes(permissionIdList).then(() => {
-                permissionStore.addRouters.forEach((route: RouteRecordRaw) => {
-                    router.addRoute(route)
-                })
-                const redirectPath = (from.query.redirect || to.path) as string
-                const redirect = decodeURIComponent(redirectPath)
-                const nextData = to.path === redirect ? {...to, replace: true} : {path: redirect}
-                permissionStore.SetIsAddRouters(true)
-                next(nextData)
-            })
         }
     } else {
         if (whiteList.indexOf(to.path) !== -1) {

@@ -2,7 +2,7 @@ import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decor
 import store from "@/store";
 import {userInfoApi} from "@/api/login";
 import wsCache, {cacheKey} from "@/cache";
-import internal from "stream";
+
 
 
 
@@ -24,14 +24,26 @@ class UserInfo extends VuexModule implements UserInfoState {
         return new Promise<unknown>((resolve, reject) => {
             const params = { token: wsCache.get(cacheKey.userInfo)}
             userInfoApi(params).then(res => {
-                const permission_id = (res.data as object)['permission_id']
-                this.SET_PERMISSIONIDLIST(permission_id as number[])
-                resolve(permission_id)
+                const {code, data} = res as any
+                if (code === 0) {
+                    const permission_id = (data as object)['permission_id']
+                    this.SET_PERMISSIONIDLIST(permission_id as number[])
+                    resolve(permission_id)
+                } else if (code === 501) {
+
+                    reject()
+                }
             }).catch(err => {
                 reject(err)
             })
         })
-
+    }
+    @Action
+    public resetToken(): Promise<unknown> {
+        return new Promise<unknown>((resolve) => {
+            wsCache.delete(cacheKey.userInfo)
+            resolve("")
+        })
     }
 }
 
