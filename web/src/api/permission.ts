@@ -4,6 +4,10 @@ export const getUserListApi = (params:any) => {
     return fetch({url:"v1/permission/user/list", method: "get", params:params})
 }
 
+export const getUserAllApi = () => {
+    return fetch({url: "v1/permission/user/all", method: "get"})
+}
+
 export const postUserApi = (data: any) => {
     return fetch({url:"v1/permission/user", method: "post", data:data})
 }

@@ -59,6 +59,24 @@ func GetUserListApi(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", respData)
 }
 
+func GetUserAllApi(c *gin.Context) {
+	var userLogic = new(logic.UserLogic)
+	result, err := userLogic.GetUserAll()
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, "", nil)
+		return
+	}
+	var data []map[string]interface{}
+	for _, row := range result {
+		var item = map[string]interface{}{
+			"uid":  strconv.FormatInt(row.Uid, 10),
+			"name": row.Name,
+		}
+		data = append(data, item)
+	}
+	resp.JSON(c, resp.Success, "", data)
+}
+
 type (
 	postUserReq struct {
 		Name     string  `json:"name"  binding:"required" form:"name"`
@@ -224,7 +242,7 @@ func DeleteRoleApi(c *gin.Context) {
 	resp.JSON(c, resp.Success, "", nil)
 }
 
-func GetPermissionList(c *gin.Context) {
+func GetPermissionListApi(c *gin.Context) {
 	resData := map[string][]define.RouteItem{
 		"data": define.DefaultPermissionList.GetList(),
 	}
@@ -236,7 +254,7 @@ type postUserPermissionReq struct {
 	PermissionIds []uint32 `json:"p_ids" form:"p_ids"`
 }
 
-func PostUserPermission(c *gin.Context) {
+func PostUserPermissionApi(c *gin.Context) {
 	var reqData postUserPermissionReq
 	if err := reqs.ShouldBind(c, &reqData); err != nil {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
@@ -266,7 +284,7 @@ type postRolePermissionReq struct {
 	PermissionIds []uint32 `form:"p_ids" json:"p_ids"`
 }
 
-func PostRolePermission(c *gin.Context) {
+func PostRolePermissionApi(c *gin.Context) {
 	var reqData postRolePermissionReq
 	if err := reqs.ShouldBind(c, &reqData); err != nil {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)

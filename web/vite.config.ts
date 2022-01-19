@@ -28,6 +28,8 @@ export default defineConfig({
     plugins: [
       vue(),
       Components({
+          dts: true,
+          deep: true,
         resolvers: [ElementPlusResolver({importStyle: true})]
       }),
         viteSvgIcons({
