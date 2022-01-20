@@ -60,7 +60,8 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 }
 
 func (u UserLogic) GetUserAll() ([]UserPidItem, error) {
-	return nil, nil
+	// 偷懒 调用分页查询进行查找， 人数超过500是更改方案
+	return u.GetUserList(1, 500)
 }
 
 func (u UserLogic) GetUserTotal() (int, error) {
