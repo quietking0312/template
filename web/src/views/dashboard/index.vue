@@ -1,5 +1,5 @@
 <template>
-  <div v-html="noticeData"></div>
+  <div style="white-space: pre-line" v-html="noticeData"></div>
 </template>
 
 <script setup lang="ts">
