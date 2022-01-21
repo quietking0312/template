@@ -13,6 +13,11 @@ const (
 	UserStateDelete = 4 // 删除, 标记为删除后将不会展示给前端
 )
 
+const (
+	DefaultPass = "123456"
+	AdminPid    = 100000
+)
+
 func CryptosPass(password string) string {
 	return cryptos.Get32MD5(password)
 }

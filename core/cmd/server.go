@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"server/core/config"
 	"server/core/dao"
+	"server/core/logic"
 	"server/core/router"
 	"server/core/utils/mylog"
 	"time"
@@ -23,6 +24,11 @@ var server = &cobra.Command{
 		time.Sleep(5 * time.Second) // 使用docker 启动时， mysql 启动比server 启动慢，需要延时
 		if err := dao.InitDB(); err != nil {
 			fmt.Println("数据库初始化失败：", err)
+			return err
+		}
+		if err := logic.Common.Init(); err != nil {
+			fmt.Println("common 初始化失败：", err)
+			return err
 		}
 		return nil
 	},

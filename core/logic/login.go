@@ -129,13 +129,9 @@ func (l *LoginLogic) GetLoginUserInfo(token string) (LoginUserInfo, error) {
 }
 
 func (l *LoginLogic) Login(username string, password string) (string, error) {
-	userModel := new(dao.UserModel)
+	userLogic := new(UserLogic)
 	var userTable dao.MUserTable
-	if err := userModel.SelectOneByUsername(username, &userTable); err != nil {
-		if err.Error() == dao.ErrSqlNoRows {
-			return "", errors.New("username not exists")
-		}
-		log.Error("", zap.Error(err))
+	if err := userLogic.GetUserOneByUsername(username, &userTable); err != nil {
 		return "", err
 	}
 	if userTable.Password != cryptos.Get32MD5(password) {

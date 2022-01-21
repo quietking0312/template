@@ -24,6 +24,16 @@
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
         <el-button @click="handleUpdateUser(row)" type="primary" size="small">编辑</el-button>
+        <el-popconfirm v-if="row.state===State.on"
+                       confirm-button-text="ok"
+                       cancel-button-text="cancel"
+                       title="是否重置该用户密码？"
+                       @confirm="InitUserPass(row.uid)"
+        >
+          <template #reference>
+            <el-button type="danger" size="small">密码初始化</el-button>
+          </template>
+        </el-popconfirm>
 <!--        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>-->
         <el-button v-if="row.state===State.off" type="danger" size="small">删除</el-button>
       </template>
@@ -68,7 +78,7 @@
             default-expand-all
             node-key="permission_id"></el-tree>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="roleList">
         <el-transfer :data="roleList"
                      v-model="dialogForm.rids"
                      filterable
@@ -87,6 +97,7 @@
 import {reactive, ref, unref} from "vue";
 import {Array2Object, formatTime} from "@/utils";
 import {
+  deleteUserPassApi,
   getPermissionListApi, getRoleAllApi,
   getUserListApi,
   postUserApi,
@@ -281,6 +292,15 @@ function SetUserPermission() {
     if (code === config.result_code) {
       getUserList()
       Message.success("操作成功")
+    }
+  })
+}
+
+function InitUserPass(uid: string) {
+  deleteUserPassApi({uid: uid}).then(res => {
+    const {code} =res as any
+    if (code === 0) {
+      Message.success("重置成功")
     }
   })
 }

@@ -19,24 +19,24 @@ type UserRoleModel struct {
 func (ur UserRoleModel) InsertByUid(uid int64, rids []int64) error {
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
-	var urTables []MUserRoleRelationTable
-	for _, rid := range rids {
-		urTable := MUserRoleRelationTable{
-			Uid: uid,
-			Rid: rid,
-		}
-		urTables = append(urTables, urTable)
-	}
-	_, err := dao.sqlxDB.NamedExecContext(ctx, mUserRoleInsertSql, urTables)
-	if err != nil {
-		log.Error("", zap.Error(err))
-		return err
-	}
 	var (
 		sqlStr string
 		args   []interface{}
+		err    error
 	)
 	if len(rids) > 0 {
+		var urTables []MUserRoleRelationTable
+		for _, rid := range rids {
+			urTable := MUserRoleRelationTable{
+				Uid: uid,
+				Rid: rid,
+			}
+			urTables = append(urTables, urTable)
+		}
+		if _, err := dao.sqlxDB.NamedExecContext(ctx, mUserRoleInsertSql, urTables); err != nil {
+			log.Error("", zap.Error(err))
+			return err
+		}
 		sqlStr, args, err = sqlx.In(fmt.Sprintf("%s and rid not in (?)", mUserRoleDeleteByUidSql), uid, rids)
 		if err != nil {
 			log.Error("", zap.Error(err))

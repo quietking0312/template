@@ -20,6 +20,9 @@ export const deleteUserApi = (data:any) => {
     return fetch({url: "v1/permission/user", method: "delete", data: data})
 }
 
+export const deleteUserPassApi = (data: any) => {
+    return fetch({url: "v1/permission/user/password", method: "delete", data: data})
+}
 
 export const getRoleListApi = (params: any) => {
     return fetch({url: "v1/permission/role/list", method: "get", params:params})

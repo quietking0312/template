@@ -11,3 +11,7 @@ export const loginApi = (data: any) => {
 export const userInfoApi = (params: any) => {
     return fetch({url: "v1/userinfo", method: "get", params: params})
 }
+
+export const resetPassApi = (data:any) => {
+    return fetch({url: "v1/user/password", method: "put", data:data})
+}

@@ -33,9 +33,30 @@
         </el-form>
         <div class="login-tips">
           <span>{{ $t('login.tipsVersion') }}： {{ version }}</span>
+          <a href="javascript:void(0)" style="float: right" @click="HandleResetPass">修改密码</a>
         </div>
       </el-card>
     </div>
+    <el-dialog title="修改密码" v-model="dialogVisible" width="600px">
+      <el-form ref="dialogForm" v-model="dialogFormData" label-width="80px">
+        <el-form-item label="账号">
+          <el-input v-model.trim="dialogFormData.username"></el-input>
+        </el-form-item>
+        <el-form-item label="旧密码">
+          <el-input v-model.trim="dialogFormData.oldPassword" show-password :minlength="3" :maxlength="18" ></el-input>
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input v-model.trim="dialogFormData.password" show-password :minlength="3" :maxlength="18" ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码">
+          <el-input v-model.trim="dialogFormData.newPassword" show-password :minlength="3" :maxlength="18" ></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="ResetPass">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -43,11 +64,12 @@
 import {ref, watch, reactive, unref, computed} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
-import {appInfoApi, loginApi} from "@/api/login";
+import {appInfoApi, loginApi, resetPassApi} from "@/api/login";
 import LangSelect from "@/components/LangSelect/index.vue";
 import {appStore} from "@/store/modules/app";
 import {respType} from "@/request/request";
 import config from "@/request/config";
+import {Message} from "@/components/Message";
 
 // app版本
 let version = ref<string>("")
@@ -102,6 +124,45 @@ async function login(): Promise<void> {
   } finally {
     loading.value = false
   }
+}
+
+// ======= 修改密码 =====
+const dialogVisible = ref<boolean>(false)
+const dialogForm = ref<HTMLElement | null>(null)
+const dialogFormData = reactive({
+  username: "",
+  oldPassword: "",
+  password: "",
+  newPassword: ""
+})
+
+function resetDialogForm() {
+  dialogFormData.username = ""
+  dialogFormData.oldPassword = ""
+  dialogFormData.password = ""
+  dialogFormData.newPassword = ""
+}
+
+function HandleResetPass() {
+  resetDialogForm()
+  dialogVisible.value = true
+}
+
+function ResetPass() {
+  const formWrap = unref(loginForm) as any
+  if (!formWrap) return
+  try {
+    resetPassApi(dialogFormData).then(res => {
+      const {code} = res as any
+      if (code === 0) {
+        Message.success("修改成功")
+        dialogVisible.value = false
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+
 }
 </script>
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/mjson"
+	"server/core/dao"
 	"server/core/logic"
 	"server/core/utils/define"
 	"server/core/utils/reqs"
@@ -94,7 +95,7 @@ func PostUserApi(c *gin.Context) {
 		return
 	}
 	userLogic := new(logic.UserLogic)
-	if err := userLogic.AddUser(reqData.Name, reqData.UserName, reqData.Password, reqData.Email, reqData.Rids); err != nil {
+	if err := userLogic.AddUserAndRole(reqData.Name, reqData.UserName, reqData.Password, reqData.Email, reqData.Rids); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
@@ -136,6 +137,62 @@ func PutUserApi(c *gin.Context) {
 
 func DeleteUserApi(c *gin.Context) {
 
+	resp.JSON(c, resp.Success, "", nil)
+}
+
+type (
+	deletePassReq struct {
+		Uid string `json:"uid" form:"uid" binding:"required"`
+	}
+)
+
+func DeletePassApi(c *gin.Context) {
+	var reqData deletePassReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	uid, err := strconv.ParseInt(reqData.Uid, 10, 64)
+	if err != nil {
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
+		return
+	}
+	userLogic := new(logic.UserLogic)
+	if err := userLogic.ResetUserPass(uid, ""); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	resp.JSON(c, resp.Success, "", nil)
+}
+
+type (
+	putResetPassReq struct {
+		Username    string `json:"username" form:"username" binding:"required"`
+		Password    string `json:"password" form:"password" binding:"required"`
+		OldPassword string `json:"oldPassword" form:"oldPassword" binding:"required"`
+	}
+)
+
+func PutResetPassApi(c *gin.Context) {
+	var reqData putResetPassReq
+	if err := reqs.ShouldBind(c, &reqData); err != nil {
+		resp.JSON(c, resp.ErrArgs, "", nil)
+		return
+	}
+	var dest dao.MUserTable
+	userLogic := new(logic.UserLogic)
+	if err := userLogic.GetUserOneByUsername(reqData.Username, &dest); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	if dest.Password != define.CryptosPass(reqData.OldPassword) {
+		resp.JSON(c, resp.ErrArgs, "password is err", nil)
+		return
+	}
+	if err := userLogic.ResetUserPass(dest.Uid, reqData.Password); err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
 	resp.JSON(c, resp.Success, "", nil)
 }
 
