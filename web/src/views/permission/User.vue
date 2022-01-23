@@ -59,7 +59,7 @@
       <el-form-item label="用户名" prop="username">
         <el-input  v-model.trim="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
-      <el-form-item label="email">
+      <el-form-item label="email" prop="email">
         <el-input v-model.trim="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item v-if="dialogTitleKey === 'update'" label="状态">
@@ -153,6 +153,7 @@ function resetDialogForm() {
 const formRules = reactive({
   name: [{required: true, trigger: 'blur'}, {min: 2, max:8, trigger: 'blur'}],
   username: [{required: true, trigger:'blur'}, {min: 3, max:18, trigger: 'blur'}],
+  email: [{required: true, trigger: 'blur'}],
 })
 
 const roleList = ref<any[]>([])

@@ -43,23 +43,23 @@
       </el-card>
     </div>
     <el-dialog :title="dialogTitleMap[dialogTitleKey]" v-model="dialogVisible" width="600px">
-      <el-form ref="dialogForm" v-model="dialogFormData" label-width="80px">
-        <el-form-item v-if="dialogTitleKey === 'register'" label="姓名">
-          <el-input v-model="dialogFormData.name"></el-input>
+      <el-form ref="dialogForm" :model="dialogFormData" label-width="80px" :rules="dialogFormRules">
+        <el-form-item v-if="dialogTitleKey === 'register'" label="姓名" prop="name">
+          <el-input v-model.trim="dialogFormData.name"></el-input>
         </el-form-item>
-        <el-form-item v-if="dialogTitleKey === 'register'" label="email">
-          <el-input v-model="dialogFormData.email"></el-input>
+        <el-form-item v-if="dialogTitleKey === 'register'" label="email" prop="email">
+          <el-input v-model.trim="dialogFormData.email"></el-input>
         </el-form-item>
-        <el-form-item label="账号">
+        <el-form-item label="账号" prop="username">
           <el-input v-model.trim="dialogFormData.username"></el-input>
         </el-form-item>
-        <el-form-item v-if="dialogTitleKey==='resetPass'" label="旧密码">
+        <el-form-item v-if="dialogTitleKey==='resetPass'" label="旧密码" prop="oldPassword">
           <el-input v-model.trim="dialogFormData.oldPassword" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
-        <el-form-item :label="dialogTitleKey === 'resetPass'? '新密码': '密码'">
+        <el-form-item :label="dialogTitleKey === 'resetPass'? '新密码': '密码'" prop="password">
           <el-input v-model.trim="dialogFormData.password" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
-        <el-form-item label="确认密码">
+        <el-form-item label="确认密码" prop="newPassword">
           <el-input v-model.trim="dialogFormData.newPassword" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
 
@@ -164,6 +164,15 @@ function resetDialogForm() {
   dialogFormData.password = ""
   dialogFormData.newPassword = ""
 }
+
+const dialogFormRules = reactive({
+  name: [{min: 2, max:8, trigger: 'blur'}, {required: true, trigger: 'blur'}],
+  email: [{required: true, trigger: 'blur'}],
+  username: [{min: 3, max:18, trigger: 'blur'}, {required: true, trigger: 'blur'}],
+  oldPassword: [{required: true, trigger: 'blur'}],
+  password: [{min: 6, max:18, trigger: 'blur'}, {required: true, trigger: 'blur'}],
+  newPassword: [{required: true, trigger: 'blur'}],
+})
 
 function HandleResetPass() {
   dialogTitleKey.value = "resetPass"
