@@ -64,12 +64,17 @@ func (l *LoginLogic) logout(token string) {
 func (l *LoginLogic) expire() {
 	l.data.Range(func(token, info interface{}) bool {
 		infoData, _ := info.(LoginUserInfo)
-		if mtime.GetTime() > infoData.LastLoginTime+24*3600 {
+		if !l.isExpire(infoData.LastLoginTime) {
 			key, _ := token.(string)
 			l.logout(key)
 		}
 		return true
 	})
+}
+
+// 判断是否过期， 过期返回 false
+func (l *LoginLogic) isExpire(t int64) bool {
+	return mtime.GetTime() <= t+24*3600
 }
 
 func (l *LoginLogic) RemoveDuplicate(v []uint32) []uint32 {
@@ -98,6 +103,9 @@ func (l *LoginLogic) GetLoginUserInfo(token string) (LoginUserInfo, error) {
 	if !o {
 		log.Error("", zap.Error(errors.New(ErrValueType)))
 		return LoginUserInfo{}, errors.New(ErrValueType)
+	}
+	if !l.isExpire(infoData.LastLoginTime) {
+		return LoginUserInfo{}, errors.New(ErrTokenExpire)
 	}
 	if len(infoData.PermissionIds) == 0 {
 		userPermissionModel := new(dao.UserPermissionModel)
