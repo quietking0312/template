@@ -59,13 +59,15 @@ class UserInfo extends VuexModule implements UserInfoState {
             userInfoApi(params).then(res => {
                 const {code, data} = res as any
                 if (code === 0) {
+                    let permission: number[]
+                    permission = data.permissionIds? data.permissionIds: []
                     this.SET_UID(data.uid)
                     this.SET_NAME(data.name)
                     this.SET_USERNAME(data.userName)
                     this.SET_ROLES(data.roles)
                     this.SET_LAST_LOGIN_TIME(data.lastLoginTime)
-                    this.SET_PERMISSIONIDLIST(data.permissionIds)
-                    resolve(data.permissionIds)
+                    this.SET_PERMISSIONIDLIST(permission)
+                    resolve(permission)
                 } else if (code === 501) {
                     reject()
                 }

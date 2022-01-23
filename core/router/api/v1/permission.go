@@ -176,7 +176,7 @@ type (
 func PutResetPassApi(c *gin.Context) {
 	var reqData putResetPassReq
 	if err := reqs.ShouldBind(c, &reqData); err != nil {
-		resp.JSON(c, resp.ErrArgs, "", nil)
+		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
 		return
 	}
 	var dest dao.MUserTable

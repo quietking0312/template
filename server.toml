@@ -24,6 +24,8 @@ sql_path = "sql\\server.sql"
 port = 9001
 # pprof 分析, debug模式固定打开，release模式可选
 pprof = false
+# 是否开启注册, 第一个注册用户为管理员用户, 当存在管理用户时生效
+register = true
 [server.db]
 drive_name = "mysql"
 dsn = "root:123456@tcp(127.0.0.1:3306)/admin?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true"

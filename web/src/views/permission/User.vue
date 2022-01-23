@@ -72,7 +72,7 @@
             :data="permissionTreeData"
             :default-checked-keys="defaultCheckedKeys"
             :check-strictly="true"
-            show-checkbox
+            :show-checkbox="CheckPermission([102003])"
             check-on-click-node
             :props="TreeProp"
             default-expand-all
@@ -88,7 +88,7 @@
     </el-form>
     <template #footer>
       <el-button @click="dialogVisible=false">{{ $t("common.cancel") }}</el-button>
-      <el-button type="primary" @click="handleConfirm()">{{ $t("common.confirm") }}</el-button>
+      <el-button v-if="dialogTitleKey === 'setPid'? CheckPermission([102002]): true"  type="primary" @click="handleConfirm()">{{ $t("common.confirm") }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -104,7 +104,7 @@ import {
   postUserPermissionApi,
   updateUserApi
 } from "@/api/permission";
-import {PermissionListToTree} from "@/utils/permission";
+import {CheckPermission, PermissionListToTree} from "@/utils/permission";
 import {Message} from "@/components/Message";
 import config from "@/request/config";
 import {ElTree} from "element-plus";
@@ -200,7 +200,7 @@ function handleConfirm() {
     AddUser()
   } else if (dialogTitleKey.value == "update") {
     UpdateUser()
-  } else if (dialogTitleKey.value == "setPid") {
+  } else if (dialogTitleKey.value === 'setPid' && CheckPermission([102002])) {
     SetUserPermission()
   }
   dialogVisible.value = false
@@ -264,10 +264,13 @@ function UpdateUser() {
   }
 }
 
+
+if (CheckPermission([102001])){
+  GetPermissionList()
+}
 // 授权按钮响应事件
 function handleSetUserPermission(row: any) {
   dialogTitleKey.value = "setPid"
-  GetPermissionList()
   Object.keys(dialogForm).map(key => {
     dialogForm[key] = row[key]
   })

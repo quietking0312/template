@@ -1,6 +1,6 @@
 <template>
   <div style="padding-bottom: 10px">
-    <el-button type="primary" @click="handleAddRole()">
+    <el-button v-permission="[101002]" type="primary" @click="handleAddRole()">
       新增
     </el-button>
   </div>
@@ -9,9 +9,9 @@
     </el-table-column>
     <el-table-column label="操作">
       <template #default="{row}">
-        <el-button type="primary" @click="handleUpdateRole(row)" size="small">编辑</el-button>
-        <el-button type="primary" @click="handleSetRolePermission(row)" size="small">授权</el-button>
-<!--        <el-button>删除</el-button>-->
+        <el-button v-permission="[101003]" type="primary" @click="handleUpdateRole(row)" size="small">编辑</el-button>
+        <el-button v-permission="[102001]" type="primary" @click="handleSetRolePermission(row)" size="small">授权</el-button>
+<!--        <el-button v-permission=[101004]>删除</el-button>-->
       </template>
     </el-table-column>
   </el-table>
@@ -26,7 +26,7 @@
             :default-checked-keys="defaultCheckedKeys"
             :data="permissionTreeData"
             :check-strictly="true"
-            show-checkbox
+            :show-checkbox="CheckPermission([102003])"
             check-on-click-node
             :props="TreeProp"
             node-key="permission_id"
@@ -37,7 +37,7 @@
     </el-form>
     <template #footer>
       <el-button @click="dialogVisible=false">cancel</el-button>
-      <el-button type="primary" @click="handleConfirm">confirm</el-button>
+      <el-button v-if="dialogTitleKey === 'setPid'? CheckPermission([102003]): true" type="primary" @click="handleConfirm">confirm</el-button>
     </template>
   </el-dialog>
 </template>
@@ -52,7 +52,7 @@ import {
 } from "@/api/permission";
 import config from "@/request/config";
 import {Message} from "@/components/Message";
-import {PermissionListToTree} from "@/utils/permission";
+import {CheckPermission, PermissionListToTree} from "@/utils/permission";
 import {ElTree} from "element-plus/es";
 
 const formRef = ref<HTMLElement | null>(null)
@@ -116,7 +116,7 @@ function handleConfirm() {
     AddRole()
   } else if (dialogTitleKey.value === 'update') {
     UpdateRole()
-  } else if (dialogTitleKey.value === 'setPid') {
+  } else if (dialogTitleKey.value === 'setPid' && CheckPermission([102003])) {
     SetRolePermission()
   }
   dialogVisible.value = false
@@ -190,7 +190,9 @@ function handleSetRolePermission(row: any) {
   dialogVisible.value = true
 }
 
-GetPermissionList()
+if (CheckPermission([102001])){
+  GetPermissionList()
+}
 function GetPermissionList() {
   getPermissionListApi().then(res => {
     const {code, data} = (res as any)

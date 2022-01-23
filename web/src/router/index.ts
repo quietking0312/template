@@ -89,14 +89,14 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
             path: "user",
             name: "User",
             component: () => import('@/views/permission/User.vue'),
-            meta: { title: "userManage" }
+            meta: { title: "userManage", permission: [100001]}
         },{
             path: "role",
             name: "Role",
             component: () => import('@/views/permission/Role.vue'),
-            meta: { title: "roleManage" }
+            meta: { title: "roleManage", permission: [101001]}
         }],
-        meta: { title: "permission", icon: "lock"}
+        meta: { title: "permission", icon: "lock", permission: [100001, 101001]}
     }
 ]
 

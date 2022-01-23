@@ -15,3 +15,7 @@ export const userInfoApi = (params: any) => {
 export const resetPassApi = (data:any) => {
     return fetch({url: "v1/user/password", method: "put", data:data})
 }
+
+export const registerApi = (data:any) => {
+    return fetch({url: "v1/register", method:"post", data:data})
+}

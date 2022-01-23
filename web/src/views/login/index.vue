@@ -33,28 +33,40 @@
         </el-form>
         <div class="login-tips">
           <span>{{ $t('login.tipsVersion') }}： {{ version }}</span>
-          <a href="javascript:void(0)" style="float: right" @click="HandleResetPass">修改密码</a>
+          <span style="float: right">
+            <span v-if="registerOk">
+              <a href="javascript:void(0)" @click="HandleRegister">注册账号</a> |
+            </span>
+            <a href="javascript:void(0)" @click="HandleResetPass">修改密码</a>
+          </span>
         </div>
       </el-card>
     </div>
-    <el-dialog title="修改密码" v-model="dialogVisible" width="600px">
+    <el-dialog :title="dialogTitleMap[dialogTitleKey]" v-model="dialogVisible" width="600px">
       <el-form ref="dialogForm" v-model="dialogFormData" label-width="80px">
+        <el-form-item v-if="dialogTitleKey === 'register'" label="姓名">
+          <el-input v-model="dialogFormData.name"></el-input>
+        </el-form-item>
+        <el-form-item v-if="dialogTitleKey === 'register'" label="email">
+          <el-input v-model="dialogFormData.email"></el-input>
+        </el-form-item>
         <el-form-item label="账号">
           <el-input v-model.trim="dialogFormData.username"></el-input>
         </el-form-item>
-        <el-form-item label="旧密码">
+        <el-form-item v-if="dialogTitleKey==='resetPass'" label="旧密码">
           <el-input v-model.trim="dialogFormData.oldPassword" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
-        <el-form-item label="新密码">
+        <el-form-item :label="dialogTitleKey === 'resetPass'? '新密码': '密码'">
           <el-input v-model.trim="dialogFormData.password" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
         <el-form-item label="确认密码">
           <el-input v-model.trim="dialogFormData.newPassword" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
+
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="ResetPass">确认</el-button>
+        <el-button type="primary" @click="dialogTitleKey === 'resetPass'?ResetPass():register()">确认</el-button>
       </template>
     </el-dialog>
   </div>
@@ -64,18 +76,19 @@
 import {ref, watch, reactive, unref, computed} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
-import {appInfoApi, loginApi, resetPassApi} from "@/api/login";
+import {appInfoApi, loginApi, registerApi, resetPassApi} from "@/api/login";
 import LangSelect from "@/components/LangSelect/index.vue";
 import {appStore} from "@/store/modules/app";
 import {respType} from "@/request/request";
 import config from "@/request/config";
 import {Message} from "@/components/Message";
-
+const registerOk = ref<boolean>(false)
 // app版本
 let version = ref<string>("")
 appInfoApi().then(res => {
   const {code, data} = res as any
   if (code == config.result_code) {
+    registerOk.value = data?.register
     version.value = data.version
     wsCache.set(cacheKey.conf, data)
   }
@@ -127,9 +140,16 @@ async function login(): Promise<void> {
 }
 
 // ======= 修改密码 =====
+const dialogTitleMap = reactive({
+  resetPass: "重置密码",
+  register: "注册"
+})
+const dialogTitleKey = ref("resetPass")
 const dialogVisible = ref<boolean>(false)
 const dialogForm = ref<HTMLElement | null>(null)
 const dialogFormData = reactive({
+  name: "",
+  email: "",
   username: "",
   oldPassword: "",
   password: "",
@@ -137,6 +157,8 @@ const dialogFormData = reactive({
 })
 
 function resetDialogForm() {
+  dialogFormData.name = ""
+  dialogFormData.email = ""
   dialogFormData.username = ""
   dialogFormData.oldPassword = ""
   dialogFormData.password = ""
@@ -144,15 +166,21 @@ function resetDialogForm() {
 }
 
 function HandleResetPass() {
+  dialogTitleKey.value = "resetPass"
   resetDialogForm()
   dialogVisible.value = true
 }
 
 function ResetPass() {
-  const formWrap = unref(loginForm) as any
+  const formWrap = unref(dialogForm) as any
   if (!formWrap) return
   try {
-    resetPassApi(dialogFormData).then(res => {
+    let data = {
+      username: dialogFormData.username,
+      oldPassword: dialogFormData.oldPassword,
+      password: dialogFormData.password,
+    }
+    resetPassApi(data).then(res => {
       const {code} = res as any
       if (code === 0) {
         Message.success("修改成功")
@@ -162,8 +190,38 @@ function ResetPass() {
   } catch (err) {
     console.log(err)
   }
-
 }
+
+
+function HandleRegister() {
+  dialogTitleKey.value = "register"
+  resetDialogForm()
+  dialogVisible.value = true
+}
+
+function register() {
+  const formWrap = unref(dialogForm) as any
+  if (!formWrap) return
+  try {
+    let data = {
+      name: dialogFormData.name,
+      email: dialogFormData.email,
+      username: dialogFormData.username,
+      password: dialogFormData.password,
+    }
+    registerApi(data).then(res => {
+      const {code, data} = res as any
+      if (code === 0) {
+        registerOk.value = data?.register
+        Message.success("注册成功")
+        dialogVisible.value = false
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 </script>
 
 <style lang="less" scoped>

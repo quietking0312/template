@@ -84,13 +84,17 @@ func GetUserInfo(c *gin.Context) {
 type (
 	registerReq struct {
 		Name     string `json:"name" binding:"required" form:"userName"`
-		UserName string `json:"userName" binding:"required" form:"userName"`
+		UserName string `json:"username" binding:"required" form:"username"`
 		Password string `json:"password" binding:"required" form:"password"`
 		Email    string `json:"email" binding:"required,email" form:"email"`
 	}
 )
 
 func RegisterApi(c *gin.Context) {
+	if !logic.Common.Register() {
+		resp.JSON(c, resp.ErrArgs, "404", nil)
+		return
+	}
 	var reqData registerReq
 	if err := reqs.ShouldBind(c, &reqData); err != nil {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
@@ -105,5 +109,7 @@ func RegisterApi(c *gin.Context) {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
-	resp.JSON(c, resp.Success, "", nil)
+	resp.JSON(c, resp.Success, "", map[string]bool{
+		"register": logic.Common.Register(),
+	})
 }

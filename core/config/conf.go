@@ -77,11 +77,12 @@ type Log struct {
 }
 
 type Server struct {
-	Port    int    `viper:"port"`
-	Mode    string `viper:"mode"`
-	SqlPath string `viper:"sql_path"`
-	DB      db     `viper:"db"`
-	PPROF   bool   `viper:"pprof"` // 是否启用pprof 监听
+	Port     int    `viper:"port"`
+	Mode     string `viper:"mode"`
+	SqlPath  string `viper:"sql_path"`
+	DB       db     `viper:"db"`
+	PPROF    bool   `viper:"pprof"`    // 是否启用pprof 监听
+	Register bool   `viper:"register"` // 是否开启注册
 }
 
 type db struct {

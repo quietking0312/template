@@ -1,20 +1,26 @@
 package logic
 
+import (
+	"server/core/config"
+)
+
 var Common *CommonLogic
 
 type CommonLogic struct {
 	adminExists bool
+	register    bool
 	init        bool // 是否初始化
 }
 
 func init() {
 	Common = &CommonLogic{
 		adminExists: false,
+		init:        false,
 	}
 }
 
 func (comm *CommonLogic) Init() error {
-	if !comm.init {
+	if comm.init {
 		return nil
 	}
 	defer func() {
@@ -35,4 +41,13 @@ func (comm *CommonLogic) SetAdminExists(exists bool) {
 
 func (comm *CommonLogic) AdminExists() bool {
 	return comm.adminExists
+}
+
+// Register 注册功能是否开放
+func (comm *CommonLogic) Register() bool {
+	if config.GetConfig().Server.Register {
+		return true
+	} else {
+		return !comm.AdminExists()
+	}
 }

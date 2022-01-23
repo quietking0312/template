@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/core/utils/define"
+	"server/core/utils/resp"
 )
 
 type authMiddleWare struct {
@@ -25,7 +26,13 @@ func (a *authMiddleWare) Auth() gin.HandlerFunc {
 		if r, ok := a.permissionMap[c.Request.URL.Path][c.Request.Method]; ok {
 			if r.PermissionId != 0 {
 				token := define.GetToken(c)
+				if token == "" {
+					resp.JSON(c, resp.ErrTokenExpire, "", nil)
+					c.Abort()
+					return
+				}
 				fmt.Println(token)
+
 			}
 		}
 		c.Next()

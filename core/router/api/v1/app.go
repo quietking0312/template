@@ -9,8 +9,8 @@ import (
 
 func GetAppInfo(c *gin.Context) {
 	data := map[string]interface{}{
-		"adminExists": logic.Common.AdminExists(),
-		"version":     config.GetConfig().Version,
+		"register": logic.Common.Register(),
+		"version":  config.GetConfig().Version,
 	}
 	resp.JSON(c, resp.Success, "", data)
 }
