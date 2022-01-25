@@ -32,7 +32,6 @@ func (a *authMiddleWare) Auth() gin.HandlerFunc {
 					return
 				}
 				fmt.Println(token)
-
 			}
 		}
 		c.Next()

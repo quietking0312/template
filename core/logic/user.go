@@ -16,15 +16,15 @@ type UserLogic struct{}
 var uidProcess, _ = idprocess.NewWorker(0)
 
 type UserPidItem struct {
-	Uid           int64         `json:"uid"`
-	UserName      string        `json:"username"`
-	Name          string        `json:"name"`
-	Email         string        `json:"email"`
-	CreateTime    int64         `json:"create_time"`
-	LastLoginTime int64         `json:"last_login_time"`
-	State         int8          `json:"state"`
-	Role          []RolePidItem `json:"role"`
-	PermissionIds []uint32      `json:"permission_ids"`
+	Uid           int64    `json:"uid"`
+	UserName      string   `json:"username"`
+	Name          string   `json:"name"`
+	Email         string   `json:"email"`
+	CreateTime    int64    `json:"create_time"`
+	LastLoginTime int64    `json:"last_login_time"`
+	State         int8     `json:"state"`
+	Rids          []int64  `json:"rids"`
+	PermissionIds []uint32 `json:"permission_ids"`
 }
 
 func (u UserLogic) GetUserOneByUsername(username string, dest *dao.MUserTable) error {

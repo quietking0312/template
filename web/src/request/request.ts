@@ -4,6 +4,7 @@ import qs from 'qs'
 import config from "@/request/config";
 import JSON_BIG from 'json-bigint';
 import wsCache, {cacheKey} from "@/cache";
+import {userInfoStore} from "@/store/modules/userInfo";
 
 const { result_code, base_url, request_timeout} = config
 console.log(import.meta.env)
@@ -79,6 +80,8 @@ service.interceptors.response.use(
                 Message.error((response.data as respType).message)
                 if ((response.data as respType).code >= 600) {
                     return response.data
+                } else {
+                    userInfoStore.resetToken().then()
                 }
             }
         }

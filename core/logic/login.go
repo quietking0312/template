@@ -8,6 +8,7 @@ import (
 	"server/common/log"
 	"server/common/mtime"
 	"server/core/dao"
+	"server/core/utils/define"
 	"sync"
 )
 
@@ -144,6 +145,12 @@ func (l *LoginLogic) Login(username string, password string) (string, error) {
 	}
 	if userTable.Password != cryptos.Get32MD5(password) {
 		return "", errors.New("password is err")
+	}
+	if userTable.State != define.UserStateOn {
+		return "", errors.New("账号已禁用")
+	}
+	if password == define.DefaultPass {
+		return "", errors.New("请先修改密码")
 	}
 	info := LoginUserInfo{
 		Uid:           userTable.Uid,

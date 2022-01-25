@@ -11,6 +11,7 @@ const (
 	mUserRoleInsertSql      = "insert ignore into m_user_role_relation(uid, rid) values (:uid, :rid)"
 	mUserRoleDeleteByUidSql = "delete from m_user_role_relation where uid = ?"
 	mRoleSelectByUidSql     = "select rid, role_name from m_role where rid = (select rid from m_user_role_relation where uid=?)"
+	mRidSelectByUidSql      = "select rid from m_user_role_relation where uid = ?"
 )
 
 type UserRoleModel struct {
@@ -60,6 +61,16 @@ func (ur UserRoleModel) SelectRoleListByUid(uid int64, dest *[]MRoleTable) error
 	ctx, cancel := ContextWithTimeout()
 	defer cancel()
 	if err := dao.sqlxDB.SelectContext(ctx, dest, mRoleSelectByUidSql, uid); err != nil {
+		log.Error("", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (ur UserRoleModel) SelectRidByUid(uid int64, rid *[]int64) error {
+	ctx, cancel := ContextWithTimeout()
+	defer cancel()
+	if err := dao.sqlxDB.SelectContext(ctx, rid, mRidSelectByUidSql, uid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

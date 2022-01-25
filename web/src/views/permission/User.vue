@@ -24,18 +24,20 @@
     <el-table-column label="操作" align="center">
       <template #default="{ row }">
         <el-button @click="handleUpdateUser(row)" type="primary" size="small">编辑</el-button>
-        <el-popconfirm v-if="row.state===State.on"
-                       confirm-button-text="ok"
-                       cancel-button-text="cancel"
-                       title="是否重置该用户密码？"
-                       @confirm="InitUserPass(row.uid)"
-        >
-          <template #reference>
-            <el-button type="danger" size="small">密码初始化</el-button>
-          </template>
-        </el-popconfirm>
-<!--        <el-button @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>-->
-        <el-button v-if="row.state===State.off" type="danger" size="small">删除</el-button>
+        <span v-permission="[100005]">
+          <el-popconfirm v-if="row.state===State.on"
+                         confirm-button-text="ok"
+                         cancel-button-text="cancel"
+                         title="是否重置该用户密码？"
+                         @confirm="InitUserPass(row.uid)"
+          >
+            <template #reference>
+              <el-button type="danger" size="small">密码初始化</el-button>
+            </template>
+          </el-popconfirm>
+        </span>
+        <el-button v-permission="[102002]" @click="handleSetUserPermission(row)" type="primary" size="small">授权</el-button>
+        <el-button v-if="row.state===State.off" v-permission="[100004]" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -57,7 +59,7 @@
         <el-input v-model.trim="dialogForm.name" :disabled="dialogTitleKey==='setPid'"></el-input>
       </el-form-item>
       <el-form-item label="用户名" prop="username">
-        <el-input  v-model.trim="dialogForm.username" :disabled="dialogTitleKey==='setPid'"></el-input>
+        <el-input  v-model.trim="dialogForm.username" :disabled="dialogTitleKey!=='create'"></el-input>
       </el-form-item>
       <el-form-item label="email" prop="email">
         <el-input v-model.trim="dialogForm.email" :disabled="dialogTitleKey==='setPid'"></el-input>
@@ -78,7 +80,7 @@
             default-expand-all
             node-key="permission_id"></el-tree>
       </el-form-item>
-      <el-form-item v-if="roleList">
+      <el-form-item v-if="roleList && dialogTitleKey !== 'setPid'">
         <el-transfer :data="roleList"
                      v-model="dialogForm.rids"
                      filterable
@@ -239,7 +241,9 @@ function AddUser() {
 function handleUpdateUser(row: any) {
   dialogTitleKey.value = "update"
   Object.keys(dialogForm).map(key => {
-    dialogForm[key] = row[key]
+    if (row[key] !== null && row[key] !== undefined) {
+      dialogForm[key] = row[key]
+    }
   })
   dialogVisible.value =true
 }
@@ -273,7 +277,9 @@ if (CheckPermission([102001])){
 function handleSetUserPermission(row: any) {
   dialogTitleKey.value = "setPid"
   Object.keys(dialogForm).map(key => {
-    dialogForm[key] = row[key]
+    if (row[key] !== null && row[key] !== undefined) {
+      dialogForm[key] = row[key]
+    }
   })
   defaultCheckedKeys.value = row?.permission_ids
   dialogVisible.value = true
