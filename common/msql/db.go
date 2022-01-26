@@ -23,8 +23,9 @@ type dbCfg struct {
 }
 
 type DB struct {
-	DB    *sql.DB
-	dbCfg *dbCfg
+	DB     *sql.DB
+	SqlxDB *sqlx.DB
+	dbCfg  *dbCfg
 }
 
 func (_db *DB) GetConn(ctx context.Context) (*sql.Conn, error) {
@@ -36,52 +37,12 @@ func (_db *DB) GetConn(ctx context.Context) (*sql.Conn, error) {
 	return conn, err
 }
 
-func (_db *DB) GetSqlxConn() *sqlx.DB {
-	return sqlx.NewDb(_db.DB, _db.dbCfg.DriveName)
-}
-
 func GetConn(ctx context.Context) (*sql.Conn, error) {
 	return _db.GetConn(ctx)
 }
 
-func GetSqlxConn() *sqlx.DB {
-	return _db.GetSqlxConn()
-}
-
 func GetDB() *sql.DB {
 	return _db.DB
-}
-
-type Option func(*dbCfg)
-
-func DriveName(drivename string) Option {
-	return func(cfg *dbCfg) {
-		cfg.DriveName = drivename
-	}
-}
-
-func DataSourceName(dsn string) Option {
-	return func(cfg *dbCfg) {
-		cfg.DataSourceName = dsn
-	}
-}
-
-func MaxIdleConnection(idle int) Option {
-	return func(cfg *dbCfg) {
-		cfg.MaxIdleConnection = idle
-	}
-}
-
-func MaxOpenConnection(open int) Option {
-	return func(cfg *dbCfg) {
-		cfg.MaxOpenConnection = open
-	}
-}
-
-func MaxQueryTime(query time.Duration) Option {
-	return func(cfg *dbCfg) {
-		cfg.MaxQueryTime = query
-	}
 }
 
 func defaultDBOption() *dbCfg {
@@ -117,6 +78,7 @@ func NewDb(opts ...Option) (*DB, error) {
 		DB:    db,
 		dbCfg: dbCfg,
 	}
+	_db.getSqlxConn()
 	return _db, nil
 }
 
