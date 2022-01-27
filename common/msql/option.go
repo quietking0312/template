@@ -34,6 +34,14 @@ func DefaultTxOptions() *sql.TxOptions {
 	}
 }
 
+type dbCfg struct {
+	DriveName         string
+	DataSourceName    string
+	MaxIdleConnection int // 连接池中的最大闲置链接
+	MaxOpenConnection int // 与数据库建立链接的最大数目
+	MaxQueryTime      time.Duration
+}
+
 type Option func(*dbCfg)
 
 func DriveName(drivename string) Option {
@@ -63,5 +71,15 @@ func MaxOpenConnection(open int) Option {
 func MaxQueryTime(query time.Duration) Option {
 	return func(cfg *dbCfg) {
 		cfg.MaxQueryTime = query
+	}
+}
+
+func defaultDBOption() *dbCfg {
+	return &dbCfg{
+		DriveName:         "",
+		DataSourceName:    "",
+		MaxIdleConnection: 10,
+		MaxOpenConnection: 5,
+		MaxQueryTime:      3,
 	}
 }

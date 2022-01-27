@@ -13,6 +13,7 @@ func (_db *DB) getSqlxConn() {
 	_db.SqlxDB = sqlx.NewDb(_db.DB, _db.dbCfg.DriveName)
 	return
 }
+
 func GetSqlxConn() *sqlx.DB {
 	return _db.GetSqlxConn()
 }

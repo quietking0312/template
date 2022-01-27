@@ -3,7 +3,8 @@ import WebStorageCache from 'web-storage-cache'
 
 const wsCache: WebStorageCache = new WebStorageCache({
     // storage: 'sessionStorage'
-    storage: "localStorage"
+    storage: "localStorage",
+    exp: 3600 * 12
 })
 
 export enum cacheKey {

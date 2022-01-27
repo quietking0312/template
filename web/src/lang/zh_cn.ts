@@ -2,7 +2,13 @@ export default {
     common: {
         cancel: "取消",
         confirm: "确认",
-        status: "状态"
+        status: "状态",
+        getBtn: "查询",
+        addBtn: "新增",
+        updateBtn: "修改",
+        deleteBtn: "删除",
+        operationLabel: "操作",
+        loadingErr: "加载失败",
     },
     route: {
         login: '登录',

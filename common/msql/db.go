@@ -7,20 +7,11 @@ import (
 	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"time"
 )
 
 var (
 	_db *DB
 )
-
-type dbCfg struct {
-	DriveName         string
-	DataSourceName    string
-	MaxIdleConnection int // 连接池中的最大闲置链接
-	MaxOpenConnection int // 与数据库建立链接的最大数目
-	MaxQueryTime      time.Duration
-}
 
 type DB struct {
 	DB     *sql.DB
@@ -45,23 +36,10 @@ func GetDB() *sql.DB {
 	return _db.DB
 }
 
-func defaultDBOption() *dbCfg {
-	return &dbCfg{
-		DriveName:         "",
-		DataSourceName:    "",
-		MaxIdleConnection: 10,
-		MaxOpenConnection: 5,
-		MaxQueryTime:      3,
-	}
-}
-
 func NewDb(opts ...Option) (*DB, error) {
 	dbCfg := defaultDBOption()
 	for _, opt := range opts {
 		opt(dbCfg)
-	}
-	if dbCfg.DriveName == "mysql" {
-		_ = createDB(dbCfg.DataSourceName)
 	}
 	db, err := sql.Open(dbCfg.DriveName, dbCfg.DataSourceName)
 	if err != nil {
@@ -70,9 +48,10 @@ func NewDb(opts ...Option) (*DB, error) {
 	db.SetMaxOpenConns(dbCfg.MaxOpenConnection)
 	db.SetMaxIdleConns(dbCfg.MaxIdleConnection)
 	db.SetConnMaxIdleTime(dbCfg.MaxQueryTime)
-	err = db.Ping()
-	if err != nil {
-		return nil, err
+	for i := 0; i < dbCfg.MaxIdleConnection; i++ {
+		if err = db.Ping(); err != nil {
+			return nil, err
+		}
 	}
 	_db = &DB{
 		DB:    db,
@@ -82,8 +61,8 @@ func NewDb(opts ...Option) (*DB, error) {
 	return _db, nil
 }
 
-// mysql 创建数据库
-func createDB(DataSourceName string) (err error) {
+// CreateDB mysql 创建数据库
+func CreateDB(DataSourceName string) (err error) {
 	var (
 		db *sql.DB
 	)
