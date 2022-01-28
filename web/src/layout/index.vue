@@ -6,13 +6,14 @@
 
 <script setup lang="ts" name="Layout">
 import {computed} from "vue";
-import {appStore} from "@/store/modules/app";
+import { useAppStore } from "@/store/modules/app";
+const appStore = useAppStore()
 import Classic from "./modules/Classic.vue"
 import Top from "@/layout/modules/Top.vue";
 import LeftTop from "@/layout/modules/LeftTop.vue";
 
 
-const layout = computed(() => appStore.layout === 'Classic'? Classic : appStore.layout === 'Top'? Top:LeftTop)
+const layout = computed(() => appStore.getLayout === 'Classic'? Classic : appStore.getLayout === 'Top'? Top:LeftTop)
 
 </script>
 

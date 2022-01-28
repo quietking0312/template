@@ -7,11 +7,12 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {appStore} from "@/store/modules/app";
+import { useAppStore } from "@/store/modules/app";
+const appStore = useAppStore()
 import elementZHCNLocale from 'element-plus/lib/locale/lang/zh-cn'
 
 
-const greyMode = computed(() => appStore.greyMode )
+const greyMode = computed(() => appStore.getGreyMode)
 </script>
 
 <style lang="less">
