@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"context"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
 	"server/common/msql"
@@ -22,7 +21,7 @@ type Dao struct {
 // InitDB 初始化db
 func InitDB() error {
 	dbCfg := config.GetConfig().Server.DB
-	if err := msql.CreateDB(dbCfg.DriveName); err != nil {
+	if err := msql.CreateDB(dbCfg.Dsn); err != nil {
 		return err
 	}
 	_db, err := msql.NewDb(
@@ -41,10 +40,6 @@ func InitDB() error {
 	return initTable()
 }
 
-func ContextWithTimeout() (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), config.GetConfig().Server.DB.MaxQueryTime)
-}
-
 // 初始化表
 func initTable() error {
 	sqlBytes, err := ioutil.ReadFile(config.GetConfig().Server.SqlPath)
@@ -52,9 +47,7 @@ func initTable() error {
 		return err
 	}
 	if string(sqlBytes) != "" {
-		ctx, cancel := ContextWithTimeout()
-		defer cancel()
-		if _, err := dao.sqlxDB.ExecContext(ctx, string(sqlBytes)); err != nil {
+		if _, err := dao.sqlDB.Exec(string(sqlBytes)); err != nil {
 			return err
 		}
 	}

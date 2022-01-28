@@ -2,6 +2,7 @@ package msql
 
 import (
 	"context"
+	"database/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -42,4 +43,32 @@ func (_db *DB) SqlxBeginTx(cb func(tx *sqlx.Tx) error, opts ...TxOption) error {
 		return err
 	}
 	return err
+}
+
+func (_db *DB) SqlxNameExec(format string, arg interface{}) (sql.Result, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	return _db.SqlxDB.NamedExecContext(ctx, format, arg)
+}
+
+func (_db *DB) SqlxExec(format string, args ...interface{}) (sql.Result, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	return _db.SqlxDB.ExecContext(ctx, format, args...)
+}
+
+func (_db *DB) SqlxGet(dest interface{}, format string, args ...interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	return _db.SqlxDB.GetContext(ctx, dest, format, args...)
+}
+
+func (_db *DB) SqlxSelect(dest interface{}, format string, args ...interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	return _db.SqlxDB.SelectContext(ctx, dest, format, args...)
+}
+
+func (_db *DB) In(format string, args ...interface{}) (string, []interface{}, error) {
+	return sqlx.In(format, args...)
 }

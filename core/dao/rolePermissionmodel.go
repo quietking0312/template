@@ -2,11 +2,11 @@ package dao
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"server/common/log"
 )
 
+// language=sql
 const (
 	mRolePermissionInsertSql = "insert ignore into m_role_permission_relation(rid, pid) values (:rid, :pid)"
 	mRolePermissionSelectSql = "select pid from m_role_permission_relation"
@@ -17,8 +17,6 @@ type RolePermissionModel struct {
 }
 
 func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
-	ctx, cancel := ContextWithTimeout()
-	defer cancel()
 	var rpTables []MRolePermissionRelationTable
 	for _, pid := range pidS {
 		rpTable := MRolePermissionRelationTable{
@@ -28,7 +26,7 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 		rpTables = append(rpTables, rpTable)
 	}
 	if len(rpTables) > 0 {
-		_, err := dao.sqlxDB.NamedExecContext(ctx, mRolePermissionInsertSql, rpTables)
+		_, err := dao.sqlDB.SqlxNameExec(mRolePermissionInsertSql, rpTables)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
@@ -40,19 +38,19 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 		err    error
 	)
 	if len(pidS) > 0 {
-		sqlStr, args, err = sqlx.In(fmt.Sprintf("%s and pid not in (?)", mRolePermissionDeleteSql), rid, pidS)
+		sqlStr, args, err = dao.sqlDB.In(fmt.Sprintf("%s and pid not in (?)", mRolePermissionDeleteSql), rid, pidS)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	} else {
-		sqlStr, args, err = sqlx.In(mRolePermissionDeleteSql, rid)
+		sqlStr, args, err = dao.sqlDB.In(mRolePermissionDeleteSql, rid)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	}
-	if _, err := dao.sqlxDB.ExecContext(ctx, sqlStr, args...); err != nil {
+	if _, err := dao.sqlDB.SqlxExec(sqlStr, args...); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -60,9 +58,7 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 }
 
 func (rp RolePermissionModel) SelectListByRid(rid int64, pidS *[]uint32) error {
-	ctx, cancel := ContextWithTimeout()
-	defer cancel()
-	if err := dao.sqlxDB.SelectContext(ctx, pidS, fmt.Sprintf("%s where rid=?", mRolePermissionSelectSql), rid); err != nil {
+	if err := dao.sqlDB.SqlxSelect(pidS, fmt.Sprintf("%s where rid=?", mRolePermissionSelectSql), rid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

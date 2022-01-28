@@ -25,15 +25,22 @@ func JSON(c *gin.Context, code int, message string, data interface{}) {
 	}
 
 	c.JSON(http.StatusOK, resp)
+	defer abort(c)
 	return
 }
 
 func String(c *gin.Context, message string) {
 	c.Writer.WriteString(message)
+	defer abort(c)
 	return
 }
 
 func File(c *gin.Context, filePath string) {
 	c.File(filePath)
+	defer abort(c)
 	return
+}
+
+func abort(c *gin.Context) {
+	c.Abort()
 }
