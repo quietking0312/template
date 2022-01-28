@@ -13,6 +13,7 @@
     "json-bigint": "^1.0.0",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^6.2.0",
+    "pinia": "^2.0.10",
     "protobufjs": "^6.11.2",
     "qs": "^6.10.1",
     "screenfull": "^5.1.0",
