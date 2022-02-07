@@ -93,7 +93,7 @@ export default defineComponent({
     }
 
     function initTags(): void {
-      affixTags.value = filterAffixTags(routers.value)
+      affixTags.value = filterAffixTags(routers.value as RouteRecordRaw[])
       const affixTagArr: any[] = affixTags.value
       for (const tag of affixTagArr) {
         // Must have tag name
