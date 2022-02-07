@@ -57,6 +57,12 @@ func (_db *DB) SqlxExec(format string, args ...interface{}) (sql.Result, error) 
 	return _db.SqlxDB.ExecContext(ctx, format, args...)
 }
 
+func (_db *DB) SqlxNameQuery(format string, args interface{}) (*sqlx.Rows, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	return _db.SqlxDB.NamedQueryContext(ctx, format, args)
+}
+
 func (_db *DB) SqlxGet(dest interface{}, format string, args ...interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
 	defer cancel()

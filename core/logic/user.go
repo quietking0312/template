@@ -49,6 +49,7 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 	}
 	var userPidList []UserPidItem
 	userPermissionModel := new(dao.UserPermissionModel)
+	roleUserModel := new(dao.UserRoleModel)
 	for _, userItem := range dest {
 		var userPid = UserPidItem{
 			Uid:           userItem.Uid,
@@ -64,6 +65,11 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 			return nil, err
 		}
 		userPid.PermissionIds = pIds
+		var rids []int64
+		if err := roleUserModel.SelectRidByUid(userItem.Uid, &rids); err != nil {
+			return nil, err
+		}
+		userPid.Rids = rids
 		userPidList = append(userPidList, userPid)
 	}
 	return userPidList, nil

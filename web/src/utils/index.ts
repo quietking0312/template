@@ -77,8 +77,10 @@ export function List2Tree(data: any) {
 
 export function Array2Object(data: any, key: string): object {
     let obj = {}
-    data.forEach((item: any) => {
-        obj[item[key]] = item
-    })
+    if (Array.isArray(data)) {
+        data.forEach((item: any) => {
+            obj[item[key]] = item
+        })
+    }
     return obj
 }
