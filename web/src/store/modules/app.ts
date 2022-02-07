@@ -90,6 +90,9 @@ export const useAppStore = defineStore({
         },
         getShowLanguage(): boolean {
             return this.showLanguage
+        },
+        getLang(): string {
+            return this.lang
         }
     },
     actions: {

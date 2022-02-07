@@ -1,4 +1,5 @@
-import {userInfoStore} from "@/store/modules/userInfo";
+import {useUserInfoStoreWithOut} from "@/store/modules/userInfo";
+const userInfoStore = useUserInfoStoreWithOut()
 
 export function CheckPermission(value: any):boolean {
     if (value && value instanceof Array && value.length > 0) {

@@ -78,10 +78,12 @@ import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
 import {appInfoApi, loginApi, registerApi, resetPassApi} from "@/api/login";
 import LangSelect from "@/components/LangSelect/index.vue";
-import {appStore} from "@/store/modules/app";
+import { useAppStore } from "@/store/modules/app";
 import {respType} from "@/request/request";
 import config from "@/request/config";
 import {Message} from "@/components/Message";
+const appStore = useAppStore()
+
 const registerOk = ref<boolean>(false)
 // app版本
 let version = ref<string>("")
@@ -94,7 +96,7 @@ appInfoApi().then(res => {
   }
 })
 
-const showVersion = computed(() => appStore.showLanguage)
+const showVersion = computed(() => appStore.getShowLanguage)
 
 // d登录
 interface FormModule {

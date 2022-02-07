@@ -3,13 +3,14 @@ import router from "@/router";
 import NProgress from 'nprogress';
 
 import 'nprogress/nprogress.css'
-import {permissionStore} from "@/store/modules/permission";
+import {usePermissionStoreWithOut} from "@/store/modules/permission";
 import {RouteRecordRaw} from "vue-router";
 import wsCache, {cacheKey} from "@/cache";
-import {userInfoStore} from "@/store/modules/userInfo";
+import {useUserInfoStoreWithOut} from "@/store/modules/userInfo";
 
 NProgress.configure({ showSpinner: false })
-
+const permissionStore = usePermissionStoreWithOut()
+const userInfoStore = useUserInfoStoreWithOut()
 const whiteList: string[] = ['/login']
 router.beforeEach(async (to, from, next) => {
     NProgress.start()
@@ -17,7 +18,7 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === '/login') {
             next({path: '/'})
         } else {
-            if (permissionStore.isAddRouters) {
+            if (permissionStore.getIsAddRouters) {
                 next()
                 return
             } else {
@@ -27,8 +28,8 @@ router.beforeEach(async (to, from, next) => {
                         permissionIdList = permission_id as number[]
                     })
                     await permissionStore.GenerateRoutes(permissionIdList).then(() => {
-                        permissionStore.addRouters.forEach((route: RouteRecordRaw) => {
-                            router.addRoute(route)
+                        permissionStore.getAddRouters.forEach(async (route) => {
+                            await router.addRoute(route as RouteRecordRaw)
                         })
                         const redirectPath = (from.query.redirect || to.path) as string
                         const redirect = decodeURIComponent(redirectPath)

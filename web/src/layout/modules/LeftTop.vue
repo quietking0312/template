@@ -85,7 +85,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { appStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules/app'
 
 import AppMain from '../components/AppMain.vue'
 import TagsView from '@/components/TagsView/index.vue'
@@ -110,17 +110,18 @@ export default defineComponent({
     Logo
   },
   setup() {
-    const layout = computed(() => appStore.layout)
-    const collapsed = computed(() => appStore.collapsed)
-    const showLogo = computed(() => appStore.showLogo)
-    const showTags = computed(() => appStore.showTags)
-    const showBreadcrumb = computed(() => appStore.showBreadcrumb)
-    const showHamburger = computed(() => appStore.showHamburger)
-    const showScreenfull = computed(() => appStore.showScreenfull)
-    const showUserInfo = computed(() => appStore.showUserInfo)
-    const showNavbar = computed(() => appStore.showNavbar)
-    const fixedHeader = computed(() => appStore.fixedHeader)
-    const showLanguage = computed(() => appStore.showLanguage)
+    const appStore = useAppStore()
+    const layout = computed(() => appStore.getLayout)
+    const collapsed = computed(() => appStore.getCollapsed)
+    const showLogo = computed(() => appStore.getShowLogo)
+    const showTags = computed(() => appStore.getShowTags)
+    const showBreadcrumb = computed(() => appStore.getShowBreadcrumb)
+    const showHamburger = computed(() => appStore.getShowHamburger)
+    const showScreenfull = computed(() => appStore.getShowScreenfull)
+    const showUserInfo = computed(() => appStore.getShowUserInfo)
+    const showNavbar = computed(() => appStore.getShowNavbar)
+    const fixedHeader = computed(() => appStore.getFixedHeader)
+    const showLanguage = computed(() => appStore.getShowLanguage)
     const classObj = computed(() => {
       const obj = {}
       obj[`app__wrap--${layout.value}`] = true

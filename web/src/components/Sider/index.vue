@@ -20,10 +20,11 @@
 import {computed,  PropType} from "vue";
 import SiderItem from "./SiderItem.vue";
 import {RouteRecordRaw, useRouter} from "vue-router";
-import {permissionStore} from "@/store/modules/permission";
-import {appStore} from "@/store/modules/app";
+import {usePermissionStore} from "@/store/modules/permission";
+import {useAppStore} from "@/store/modules/app";
 import {isExternal} from "@/utils/validate";
-
+const appStore = useAppStore()
+const permissionStore = usePermissionStore()
 
 defineProps({
   layout: {
@@ -37,7 +38,7 @@ defineProps({
 })
 
 const { currentRoute, push } = useRouter()
-const routers = computed(() => permissionStore.routers )
+const routers = computed(() => permissionStore.getRouters)
 const activeMenu = computed(() => {
   const { meta, path } = currentRoute.value
   // 如果设置路径，侧边栏将突出显示您设置的路径
@@ -46,8 +47,8 @@ const activeMenu = computed(() => {
   }
   return path
 })
-const collapsed = computed(() => appStore.collapsed)
-const showLogo = computed(() => appStore.showLogo)
+const collapsed = computed(() => appStore.getCollapsed)
+const showLogo = computed(() => appStore.getShowLogo)
 
 function selectMenu(path: string) {
   if (currentRoute.value.fullPath === path) return

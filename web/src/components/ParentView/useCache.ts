@@ -1,8 +1,10 @@
 import { computed, ref, unref, ComponentInternalInstance, getCurrentInstance } from 'vue'
 
-import { tagsViewStore, PAGE_LAYOUT_KEY } from '@/store/modules/tagsView'
+import { useTagsViewStore, PAGE_LAYOUT_KEY } from '@/store/modules/tagsView'
 
 import { useRouter } from 'vue-router'
+
+const tagsViewStore = useTagsViewStore()
 
 function tryTsxEmit<T extends any = ComponentInternalInstance>(
     fn: (_instance: T) => Promise<void> | void
@@ -29,7 +31,7 @@ export function useCache(isPage: boolean) {
     })
 
     const getCaches = computed((): string[] => {
-        const cached = tagsViewStore.cachedViews
+        const cached = tagsViewStore.getCachedViews
 
         if (isPage) {
             //  page Layout

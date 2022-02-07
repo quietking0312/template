@@ -22,13 +22,16 @@ import {defineComponent} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "../../cache";
 import {resetRouter} from "@/router";
-import {tagsViewStore} from "@/store/modules/tagsView";
+import {useTagsViewStore} from "@/store/modules/tagsView";
 import { generateTitle } from "@/utils/i18n";
-import {permissionStore} from "@/store/modules/permission";
+import {usePermissionStore} from "@/store/modules/permission";
 
 export default defineComponent({
   name: "UserInfo",
   setup() {
+    const tagsViewStore = useTagsViewStore()
+    const permissionStore = usePermissionStore()
+
     const { replace, push } = useRouter()
     async function loginOut(): Promise<void> {
       wsCache.delete(cacheKey.userInfo)
