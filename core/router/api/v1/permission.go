@@ -123,12 +123,25 @@ func PutUserApi(c *gin.Context) {
 		resp.JSON(c, resp.ErrArgs, err.Error(), nil)
 		return
 	}
-	userLogin := new(logic.UserLogic)
-	if err := userLogin.UpdateUser(uid, reqData.Name, reqData.Email, reqData.State); err != nil {
+	userLogic := new(logic.UserLogic)
+	if reqData.State != define.UserStateOn {
+		pidList, err := userLogic.GetPidAllByUid(uid)
+		if err != nil {
+			resp.JSON(c, resp.ErrServer, err.Error(), nil)
+			return
+		}
+		for _, pid := range pidList {
+			if pid == define.AdminPid {
+				resp.JSON(c, resp.ErrServer, fmt.Sprintf("管理员状态禁止修改"), nil)
+				return
+			}
+		}
+	}
+	if err := userLogic.UpdateUser(uid, reqData.Name, reqData.Email, reqData.State); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
-	if err := userLogin.UpdateRole(uid, reqData.Rids); err != nil {
+	if err := userLogic.UpdateRole(uid, reqData.Rids); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return
 	}
@@ -158,6 +171,17 @@ func DeletePassApi(c *gin.Context) {
 		return
 	}
 	userLogic := new(logic.UserLogic)
+	pidList, err := userLogic.GetPidAllByUid(uid)
+	if err != nil {
+		resp.JSON(c, resp.ErrServer, err.Error(), nil)
+		return
+	}
+	for _, pid := range pidList {
+		if pid == define.AdminPid {
+			resp.JSON(c, resp.ErrServer, fmt.Sprintf("管理员密码禁止初始化"), nil)
+			return
+		}
+	}
 	if err := userLogic.ResetUserPass(uid, ""); err != nil {
 		resp.JSON(c, resp.ErrServer, err.Error(), nil)
 		return

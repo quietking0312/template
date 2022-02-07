@@ -47,7 +47,7 @@ func initTable() error {
 		return err
 	}
 	if string(sqlBytes) != "" {
-		if _, err := dao.sqlDB.Exec(string(sqlBytes)); err != nil {
+		if _, err := dao.sqlDB.SqlxExec(string(sqlBytes)); err != nil {
 			return err
 		}
 	}

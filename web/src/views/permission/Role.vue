@@ -36,8 +36,8 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="dialogVisible=false">cancel</el-button>
-      <el-button v-if="dialogTitleKey === 'setPid'? CheckPermission([102003]): true" type="primary" @click="handleConfirm">confirm</el-button>
+      <el-button @click="dialogVisible=false">{{ $t("common.cancel") }}</el-button>
+      <el-button v-if="dialogTitleKey === 'setPid'? CheckPermission([102003]): true" type="primary" @click="handleConfirm">{{ $t("common.confirm") }}</el-button>
     </template>
   </el-dialog>
 </template>

@@ -57,10 +57,10 @@
           <el-input v-model.trim="dialogFormData.oldPassword" show-password :minlength="3" :maxlength="18" ></el-input>
         </el-form-item>
         <el-form-item :label="dialogTitleKey === 'resetPass'? '新密码': '密码'" prop="password">
-          <el-input v-model.trim="dialogFormData.password" show-password :minlength="3" :maxlength="18" ></el-input>
+          <el-input v-model.trim="dialogFormData.password" show-password :minlength="6" :maxlength="18" ></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="newPassword">
-          <el-input v-model.trim="dialogFormData.newPassword" show-password :minlength="3" :maxlength="18" ></el-input>
+          <el-input v-model.trim="dialogFormData.newPassword" show-password :minlength="6" :maxlength="18" ></el-input>
         </el-form-item>
 
       </el-form>
@@ -167,13 +167,30 @@ function resetDialogForm() {
   dialogFormData.newPassword = ""
 }
 
+const Password = (rule: any, value: any, callback: any): void => {
+  const regs = /^(?=.*[0-9])(?=.*[a-zA-Z]).{5,18}$/
+  if (regs.test(value)) {
+    callback()
+  } else {
+    callback('密码必须包含字母、数字, 长度为6-18位')
+  }
+}
+
+const NewPassword = (rule: any, value: any, callback: any): void => {
+  if (value == dialogFormData.password) {
+    callback()
+  } else {
+    callback('密码不相同')
+  }
+}
+
 const dialogFormRules = reactive({
   name: [{min: 2, max:8, trigger: 'blur'}, {required: true, trigger: 'blur'}],
   email: [{required: true, trigger: 'blur'}],
   username: [{min: 3, max:18, trigger: 'blur'}, {required: true, trigger: 'blur'}],
   oldPassword: [{required: true, trigger: 'blur'}],
-  password: [{min: 6, max:18, trigger: 'blur'}, {required: true, trigger: 'blur'}],
-  newPassword: [{required: true, trigger: 'blur'}],
+  password: [{min: 6, max:18, trigger: 'blur'}, {required: true, trigger: 'blur'}, {validator: Password, trigger: 'blur'}],
+  newPassword: [{required: true, trigger: 'blur'}, {validator: NewPassword, trigger: 'blur'}],
 })
 
 function HandleResetPass() {
@@ -186,16 +203,20 @@ function ResetPass() {
   const formWrap = unref(dialogForm) as any
   if (!formWrap) return
   try {
-    let data = {
-      username: dialogFormData.username,
-      oldPassword: dialogFormData.oldPassword,
-      password: dialogFormData.password,
-    }
-    resetPassApi(data).then(res => {
-      const {code} = res as any
-      if (code === 0) {
-        Message.success("修改成功")
-        dialogVisible.value = false
+    formWrap.validate(async (valid:boolean) => {
+      if (valid) {
+        let data = {
+          username: dialogFormData.username,
+          oldPassword: dialogFormData.oldPassword,
+          password: dialogFormData.password,
+        }
+        resetPassApi(data).then(res => {
+          const {code} = res as any
+          if (code === 0) {
+            Message.success("修改成功")
+            dialogVisible.value = false
+          }
+        })
       }
     })
   } catch (err) {
@@ -214,18 +235,22 @@ function register() {
   const formWrap = unref(dialogForm) as any
   if (!formWrap) return
   try {
-    let data = {
-      name: dialogFormData.name,
-      email: dialogFormData.email,
-      username: dialogFormData.username,
-      password: dialogFormData.password,
-    }
-    registerApi(data).then(res => {
-      const {code, data} = res as any
-      if (code === 0) {
-        registerOk.value = data?.register
-        Message.success("注册成功")
-        dialogVisible.value = false
+    formWrap.validate((valid :boolean) => {
+      if (valid) {
+        let data = {
+          name: dialogFormData.name,
+          email: dialogFormData.email,
+          username: dialogFormData.username,
+          password: dialogFormData.password,
+        }
+        registerApi(data).then(res => {
+          const {code, data} = res as any
+          if (code === 0) {
+            registerOk.value = data?.register
+            Message.success("注册成功")
+            dialogVisible.value = false
+          }
+        })
       }
     })
   } catch (err) {

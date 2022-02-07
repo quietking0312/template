@@ -81,9 +81,11 @@ service.interceptors.response.use(
                 Message.error((response.data as respType).message)
                 if ((response.data as respType).code >= 600) {
                     return response.data
-                } else {
+                } else if ((response.data as respType).code == 501) {
                     const userInfoStore = useUserInfoStoreWithOut()
                     userInfoStore.resetToken().then()
+                }else {
+                    return response.data
                 }
             }
         }
