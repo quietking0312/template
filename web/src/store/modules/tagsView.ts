@@ -1,6 +1,5 @@
 import { store } from '@/store'
 import router from '@/router'
-import { VuexModule, getModule, Module, Mutation, Action } from 'vuex-module-decorators'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { getRoute } from '@/router/utils'
 import {defineStore} from "pinia";

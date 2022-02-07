@@ -53,7 +53,7 @@ export const useAppStore = defineStore({
             return this.showLogo
         },
         getShowTags(): boolean {
-            return this.getShowTags
+            return this.showTags
         },
         getShowNavbar(): boolean {
             return this.showNavbar

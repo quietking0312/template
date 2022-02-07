@@ -1,5 +1,4 @@
 import {AppRouteRecordRaw} from "@/router/types";
-import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import { store } from "@/store";
 import {asyncRouterMap, constantRouterMap} from "@/router";
 import {deepClone} from "@/utils";
@@ -62,48 +61,6 @@ export function usePermissionStoreWithOut() {
     return usePermissionStore(store)
 }
 
-// @Module({dynamic: true, namespaced: true, store, name: 'permission'})
-// class Permission extends VuexModule implements PermissionState {
-//     public routers = [] as any[]
-//     public addRouters = [] as any[]
-//     public isAddRouters = false
-//
-//     @Mutation
-//     private SET_ROUTERS(routers: AppRouteRecordRaw[]): void {
-//         // 动态路由，404一定要放到最后面
-//         this.addRouters = routers.concat([{
-//             path: '/:path(.*)*',
-//             redirect: '/404',
-//             name: '404',
-//             meta: {
-//                 hidden: true,
-//                 breadcrumb: false
-//             }
-//         }])
-//         // 渲染菜单的所有路由
-//         this.routers = deepClone(constantRouterMap, ['component']).concat(routers)
-//     }
-//     @Mutation
-//     private SET_ISADDROUTERS(state: boolean): void {
-//         this.isAddRouters = state
-//     }
-//
-//     @Action
-//     public GenerateRoutes(permissionIdList: number[] = []): Promise<unknown> {
-//         return new Promise<void>(resolve => {
-//             // 路由权限控制
-//             const routerMap: AppRouteRecordRaw[] = generateRoutes(deepClone(asyncRouterMap, ['component']), permissionIdList)
-//             this.SET_ROUTERS(routerMap)
-//             resolve()
-//         })
-//     }
-//     @Action
-//     public SetIsAddRouters(state: boolean): void {
-//         this.SET_ISADDROUTERS(state)
-//     }
-// }
-
-
 function hasPermission(permissionIdList: number[], route: AppRouteRecordRaw):boolean{
     if (route.meta && route.meta.permission) {
         return permissionIdList.some(permissionId => {
@@ -147,5 +104,3 @@ function generateRoutes(routes: AppRouteRecordRaw[], permissionIdList: number[] 
     }
     return res
 }
-
-// export const permissionStore = getModule<Permission>(Permission)
