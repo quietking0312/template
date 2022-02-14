@@ -10,6 +10,7 @@ var v1RouteGroup = define.RouteGroup{
 	Path: "v1",
 	Routes: []*define.Route{
 		{Path: "helloworld", Method: http.MethodGet, Handler: v1.GetHelloWorld, Title: "helloWorld"},
+		{Path: "download", Method: http.MethodGet, Handler: v1.DownloadDemo, Title: "下载demo"},
 		{Path: "appinfo", Method: http.MethodGet, Handler: v1.GetAppInfo, Title: "应用信息"},
 		{Path: "notice", Method: http.MethodGet, Handler: v1.Notice, Title: "公告"},
 		{Path: "login", Method: http.MethodPost, Handler: v1.Login, Title: "login"},
