@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType, ref, watch} from "vue";
-import {appStore} from "@/store/modules/app";
+import {useAppStore} from "@/store/modules/app";
 
 export default defineComponent({
   name: "Logo",
@@ -18,9 +18,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const appStore = useAppStore()
     const show = ref<boolean>(true)
-    const title = computed(() => appStore.logoTitle)
-    const layout = computed(() => appStore.layout)
+    const title = computed(() => appStore.getLogoTitle)
+    const layout = computed(() => appStore.getLayout)
     watch(() => props.collapsed, (collapsed: boolean) => {
       if (layout.value !== 'Classic') {
         show.value = true

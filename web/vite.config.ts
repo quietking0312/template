@@ -4,6 +4,7 @@ import Components from 'unplugin-vue-components/vite'
 import viteSvgIcons from 'vite-plugin-svg-icons'
 import {ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { resolve } from 'path'
+import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,6 +28,7 @@ export default defineConfig({
     },
     plugins: [
       vue(),
+      vueSetupExtend(),
       Components({
           dts: true,
           deep: true,

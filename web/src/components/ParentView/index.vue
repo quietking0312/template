@@ -10,18 +10,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-import {useCache} from "./useCache";
+<script lang="ts" setup name="ParentView">
+import {useCache} from "./useCache"
 
-export default defineComponent({
-  setup() {
-    const { getCaches } = useCache(false)
-    return {
-      getCaches
-    }
-  }
-})
+const { getCaches } = useCache(false)
+
 </script>
 
 <style scoped>

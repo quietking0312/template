@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/core/logic"
 	"server/core/utils/define"
 	"server/core/utils/resp"
 )
@@ -31,7 +31,23 @@ func (a *authMiddleWare) Auth() gin.HandlerFunc {
 					c.Abort()
 					return
 				}
-				fmt.Println(token)
+				info, err := logic.LoginLogicObj.GetLoginUserInfo(token)
+				if err != nil {
+					resp.JSON(c, resp.ErrTokenExpire, err.Error(), nil)
+					c.Abort()
+					return
+				}
+				for _, pid := range info.PermissionIds {
+					if pid == define.AdminPid {
+						c.Next()
+						return
+					} else if pid == r.PermissionId {
+						c.Next()
+						return
+					}
+				}
+				resp.JSON(c, resp.ErrPermission, "", nil)
+				return
 			}
 		}
 		c.Next()

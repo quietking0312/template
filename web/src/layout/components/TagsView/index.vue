@@ -39,15 +39,17 @@
 
 <script lang="ts">
 import {computed, defineComponent, nextTick, onMounted, ref, unref, watch} from "vue";
-import {permissionStore} from "@/store/modules/permission";
+import {usePermissionStore} from "@/store/modules/permission";
 import {RouteLocationNormalizedLoaded, RouteRecordRaw, useRouter} from "vue-router";
-import {tagsViewStore} from "@/store/modules/tagsView";
+import {useTagsViewStore} from "@/store/modules/tagsView";
 import ScrollPane from "@/components/TagsView/ScrollPane.vue";
 import {generateTitle} from "@/utils/i18n";
 export default defineComponent({
   name: "TagsView",
   components: {ScrollPane},
   setup() {
+    const tagsViewStore = useTagsViewStore()
+    const permissionStore = usePermissionStore()
     const { currentRoute, push, replace } = useRouter()
     const wrapper = ref<HTMLElement | null>(null)
     const scrollPane = ref<HTMLElement | null>(null)
@@ -56,8 +58,8 @@ export default defineComponent({
     const left = ref<number>(0)
     const selectedTag = ref<any>({})
     const affixTags = ref<any[]>([])
-    const visitedViews = computed(() => tagsViewStore.visitedViews)
-    const routers = computed(() => permissionStore.routers)
+    const visitedViews = computed(() => tagsViewStore.getVisitedViews)
+    const routers = computed(() => permissionStore.getRouters)
 
     const tagRefs = ref<any[]>([])
 
@@ -91,7 +93,7 @@ export default defineComponent({
     }
 
     function initTags(): void {
-      affixTags.value = filterAffixTags(routers.value)
+      affixTags.value = filterAffixTags(routers.value as RouteRecordRaw[])
       const affixTagArr: any[] = affixTags.value
       for (const tag of affixTagArr) {
         // Must have tag name

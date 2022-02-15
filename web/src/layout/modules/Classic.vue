@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import {appStore} from "@/store/modules/app";
+import { useAppStore } from "@/store/modules/app";
 import AppMain from "@/layout/components/AppMain.vue";
 import Sider from "@/components/Sider/index.vue";
 import BreadcrumbWrap from "@/components/Breadcrumb/index.vue";
@@ -42,18 +42,19 @@ import Logo from "@/components/Logo/index.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import TagsView from "@/components/TagsView/index.vue";
 import LangSelect from "@/components/LangSelect/index.vue";
+const appStore = useAppStore()
 
-const layout = computed(() => appStore.layout)
-const collapsed = computed(() => appStore.collapsed)
-const showLogo = computed(() => appStore.showLogo)
-const showTags = computed(() => appStore.showTags)
-const showBreadcrumb = computed(() => appStore.showBreadcrumb)
-const showHamburger = computed(() => appStore.showHamburger)
-const showScreenfull = computed(() => appStore.showScreenfull)
-const showUserInfo = computed(() => appStore.showUserInfo)
-const showNavbar = computed(() => appStore.showNavbar)
-const showLanguage = computed(() => appStore.showLanguage)
-const fixedHeader = computed(() => appStore.fixedHeader)
+const layout = computed(() => appStore.getLayout)
+const collapsed = computed(() => appStore.getCollapsed)
+const showLogo = computed(() => appStore.getShowLogo)
+const showTags = computed(() => appStore.getShowTags)
+const showBreadcrumb = computed(() => appStore.getShowBreadcrumb)
+const showHamburger = computed(() => appStore.getShowHamburger)
+const showScreenfull = computed(() => appStore.getShowScreenfull)
+const showUserInfo = computed(() => appStore.getShowUserInfo)
+const showNavbar = computed(() => appStore.getShowNavbar)
+const showLanguage = computed(() => appStore.getShowLanguage)
+const fixedHeader = computed(() => appStore.getFixedHeader)
 const classObj = computed(() => {
   const obj = {}
   obj[`app__wrap--${layout.value}`] = true

@@ -16,12 +16,13 @@
 <script lang="ts">
 import {computed, defineComponent} from "vue";
 import {LangDict} from "@/lang";
-import {appStore} from "@/store/modules/app";
+import {useAppStore} from "@/store/modules/app";
 
 export default defineComponent({
   name: "LangSelect",
   setup() {
-    const lang = computed(() => appStore.lang)
+    const appStore = useAppStore()
+    const lang = computed(() => appStore.getLang)
     function setLanguage(lang: string) {
       appStore.SetLanguage(lang)
     }

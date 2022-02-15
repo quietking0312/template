@@ -8,9 +8,10 @@ import (
 
 // language=sql
 const (
-	mUserPermissionInsertSql = "insert ignore into m_user_permission_relation(uid, pid) values (:uid, :pid)"
-	mUserPermissionSelectSql = "select pid from m_user_permission_relation"
-	mUserPermissionDeleteSql = "delete from m_user_permission_relation where uid = ?"
+	mUserPermissionInsertSql     = "insert ignore into m_user_permission_relation(uid, pid) values (:uid, :pid)"
+	mUserPermissionSelectSql     = "select pid from m_user_permission_relation"
+	mUserPermissionDeleteSql     = "delete from m_user_permission_relation where uid = ?"
+	mPermissionAllSelectByUidSql = "select pid from m_user_permission_relation where uid=? union select pid from m_role_permission_relation where rid in (select rid from m_user_role_relation where uid = ?)"
 )
 
 type UserPermissionModel struct {
@@ -57,6 +58,14 @@ func (up UserPermissionModel) Insert(uid int64, pIdS []uint32) error {
 
 func (up UserPermissionModel) SelectListByUid(uid int64, pidS *[]uint32) error {
 	if err := dao.sqlDB.SqlxSelect(pidS, fmt.Sprintf("%s where uid=?", mUserPermissionSelectSql), uid); err != nil {
+		log.Error("", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (up UserPermissionModel) SelectAllByUid(uid int64, pids *[]uint32) error {
+	if err := dao.sqlDB.SqlxSelect(pids, mPermissionAllSelectByUidSql, uid, uid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

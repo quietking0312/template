@@ -9,9 +9,9 @@ import (
 
 // language=SQL
 const (
-	mUserSelectTotalSql     = `select count(*) from m_user where state != ?`
-	mUserInsertSql          = `insert into m_user(uid, username, password, name, email, create_time, last_login_time, state) values (:uid, :username, :password, :name, :email, :create_time, :last_login_time, :state)`
-	mUserSelectSql          = `select uid, username, password, name, email, create_time, last_login_time, state from m_user`
+	mUserSelectTotalSql     = "select count(*) from m_user where state != ?"
+	mUserInsertSql          = "insert into m_user(uid, username, password, name, email, create_time, last_login_time, state) values (:uid, :username, :password, :name, :email, :create_time, :last_login_time, :state)"
+	mUserSelectSql          = "select uid, username, password, name, email, create_time, last_login_time, state from m_user"
 	mUserUpdateSql          = "update m_user set name=:name, email=:email, state=:state where uid=:uid"
 	mUserUpdatePassByUidSql = "update m_user set password=? where uid=?"
 	mUserSelectByPidSql     = "select uid, username, password, name, email, create_time, last_login_time, state from m_user where uid in (select uid from m_user_permission_relation where pid=?)"
@@ -21,7 +21,7 @@ type UserModel struct {
 }
 
 func (u UserModel) InsertOne(user MUserTable) error {
-	if _, err := dao.sqlDB.SqlxExec(mUserInsertSql, user); err != nil {
+	if _, err := dao.sqlDB.SqlxNameExec(mUserInsertSql, user); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

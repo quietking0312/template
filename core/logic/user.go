@@ -49,6 +49,7 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 	}
 	var userPidList []UserPidItem
 	userPermissionModel := new(dao.UserPermissionModel)
+	roleUserModel := new(dao.UserRoleModel)
 	for _, userItem := range dest {
 		var userPid = UserPidItem{
 			Uid:           userItem.Uid,
@@ -64,6 +65,11 @@ func (u UserLogic) GetUserList(page, limit int) ([]UserPidItem, error) {
 			return nil, err
 		}
 		userPid.PermissionIds = pIds
+		var rids []int64
+		if err := roleUserModel.SelectRidByUid(userItem.Uid, &rids); err != nil {
+			return nil, err
+		}
+		userPid.Rids = rids
 		userPidList = append(userPidList, userPid)
 	}
 	return userPidList, nil
@@ -170,7 +176,12 @@ func (u UserLogic) UpdatePermission(uid int64, pidS []uint32) error {
 
 // GetPidAllByUid 获取用户及用户所拥有角色权限
 func (u UserLogic) GetPidAllByUid(uid int64) ([]uint32, error) {
-	return nil, nil
+	var pids []uint32
+	userPermissionModel := new(dao.UserPermissionModel)
+	if err := userPermissionModel.SelectAllByUid(uid, &pids); err != nil {
+		return nil, err
+	}
+	return pids, nil
 }
 
 func (u UserLogic) UpdateRole(uid int64, rids []int64) error {

@@ -3,7 +3,7 @@
     <div id="user-container">
       <div class="avatar-wrapper">
         <img :src="getUserImg()" class="user-avatar">
-        <span class="name-item">管理员</span>
+        <span class="name-item">{{ uName }}</span>
       </div>
     </div>
     <template #dropdown>
@@ -18,17 +18,21 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {computed, defineComponent} from "vue";
 import {useRouter} from "vue-router";
 import wsCache, {cacheKey} from "../../cache";
 import {resetRouter} from "@/router";
-import {tagsViewStore} from "@/store/modules/tagsView";
+import {useTagsViewStore} from "@/store/modules/tagsView";
 import { generateTitle } from "@/utils/i18n";
-import {permissionStore} from "@/store/modules/permission";
+import {usePermissionStore} from "@/store/modules/permission";
+import { useUserInfoStore } from "@/store/modules/userInfo";
 
 export default defineComponent({
   name: "UserInfo",
   setup() {
+    const tagsViewStore = useTagsViewStore()
+    const permissionStore = usePermissionStore()
+    const userInfoStore = useUserInfoStore()
     const { replace, push } = useRouter()
     async function loginOut(): Promise<void> {
       wsCache.delete(cacheKey.userInfo)
@@ -43,11 +47,13 @@ export default defineComponent({
     function getUserImg() {
       return new URL('../../assets/avatar.png', import.meta.url).href
     }
+    const uName = computed(() => userInfoStore.name)
     return {
       loginOut,
       toHome,
       getUserImg,
-      generateTitle
+      generateTitle,
+      uName,
     }
   }
 })
