@@ -34,13 +34,13 @@
 import { computed } from "vue";
 import { useAppStore } from "@/store/modules/app";
 import AppMain from "@/layout/components/AppMain.vue";
-import Sider from "@/components/Sider/index.vue";
-import BreadcrumbWrap from "@/components/Breadcrumb/index.vue";
-import Hamburger from '@/components/Hamburger/index.vue';
-import Screenfull from "@/components/Screenfull/index.vue";
-import Logo from "@/components/Logo/index.vue";
-import UserInfo from "@/components/UserInfo/index.vue";
-import TagsView from "@/components/TagsView/index.vue";
+import Sider from "../components/Sider/index.vue";
+import BreadcrumbWrap from "../components/Breadcrumb/index.vue";
+import Hamburger from '../components/Hamburger/index.vue';
+import Screenfull from "../components/Screenfull/index.vue";
+import Logo from "../components/Logo/index.vue";
+import UserInfo from "../components/UserInfo/index.vue";
+import TagsView from "../components/TagsView/index.vue";
 import LangSelect from "@/components/LangSelect/index.vue";
 const appStore = useAppStore()
 

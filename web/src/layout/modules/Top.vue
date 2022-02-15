@@ -37,12 +37,12 @@
 <script lang="ts">
 import {computed, defineComponent} from "vue";
 import {useAppStore} from "@/store/modules/app";
-import Logo from "@/components/Logo/index.vue";
-import Sider from "@/components/Sider/index.vue";
-import TagsView from "@/components/TagsView/index.vue";
-import AppMain from "@/layout/components/AppMain.vue";
-import Screenfull from "@/components/Screenfull/index.vue";
-import UserInfo from '@/components/UserInfo/index.vue'
+import Logo from "../components/Logo/index.vue";
+import Sider from "../components/Sider/index.vue";
+import TagsView from "../components/TagsView/index.vue";
+import AppMain from "../components/AppMain.vue";
+import Screenfull from "../components/Screenfull/index.vue";
+import UserInfo from '../components/UserInfo/index.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 export default defineComponent({
   name: "Top",

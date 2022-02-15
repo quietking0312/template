@@ -20,7 +20,7 @@
 <script lang="ts">
 import {computed, defineComponent} from "vue";
 import {useRouter} from "vue-router";
-import wsCache, {cacheKey} from "../../cache";
+import wsCache, {cacheKey} from "@/cache";
 import {resetRouter} from "@/router";
 import {useTagsViewStore} from "@/store/modules/tagsView";
 import { generateTitle } from "@/utils/i18n";

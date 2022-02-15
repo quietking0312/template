@@ -30,7 +30,7 @@ export default {
 import {computed, PropType, ref} from "vue";
 import type {RouteRecordRaw} from "vue-router";
 import {isExternal} from "@/utils/validate";
-import Item from "@/components/Sider/Item.vue";
+import Item from "./Item.vue";
 import {generateTitle} from "@/utils/i18n";
 
 const props =  defineProps({

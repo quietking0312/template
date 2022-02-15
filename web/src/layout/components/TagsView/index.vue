@@ -42,7 +42,7 @@ import {computed, defineComponent, nextTick, onMounted, ref, unref, watch} from 
 import {usePermissionStore} from "@/store/modules/permission";
 import {RouteLocationNormalizedLoaded, RouteRecordRaw, useRouter} from "vue-router";
 import {useTagsViewStore} from "@/store/modules/tagsView";
-import ScrollPane from "@/components/TagsView/ScrollPane.vue";
+import ScrollPane from "./ScrollPane.vue";
 import {generateTitle} from "@/utils/i18n";
 export default defineComponent({
   name: "TagsView",
