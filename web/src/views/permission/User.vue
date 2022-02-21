@@ -72,7 +72,7 @@
       <el-form-item  v-if="dialogTitleKey === 'setPid'">
         <el-tree ref="treeRef"
             :data="permissionTreeData"
-            :default-checked-keys="defaultCheckedKeys"
+
             :check-strictly="true"
             :show-checkbox="CheckPermission([102003])"
             check-on-click-node
@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref, unref} from "vue";
+import {nextTick, reactive, ref, unref} from "vue";
 import {Array2Object, formatTime} from "@/utils";
 import {
   deleteUserPassApi,
@@ -110,8 +110,10 @@ import {CheckPermission, PermissionListToTree} from "@/utils/permission";
 import {Message} from "@/components/Message";
 import config from "@/request/config";
 import {ElTree} from "element-plus";
+import type { ElForm} from "element-plus/es";
 
-const formRef = ref<HTMLElement | null>(null)
+type FormInstance = InstanceType<typeof ElForm>
+const formRef = ref<FormInstance | null>(null)
 const userTableList = ref([])
 const dialogVisible = ref(false)
 
@@ -281,8 +283,11 @@ function handleSetUserPermission(row: any) {
       dialogForm[key] = row[key]
     }
   })
-  defaultCheckedKeys.value = row?.permission_ids
   dialogVisible.value = true
+  nextTick(() => {
+    formRef.value?.clearValidate()
+    treeRef.value?.setCheckedKeys(row?.permission_ids? row.permission_ids: [], false)
+  })
 }
 
 function GetPermissionList() {

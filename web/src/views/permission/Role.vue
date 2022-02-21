@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref, unref} from "vue";
+import {nextTick, reactive, ref, unref} from "vue";
 import {
   getPermissionListApi,
   getRoleListApi,
@@ -54,8 +54,10 @@ import config from "@/request/config";
 import {Message} from "@/components/Message";
 import {CheckPermission, PermissionListToTree} from "@/utils/permission";
 import {ElTree} from "element-plus/es";
+import type { ElForm} from "element-plus/es";
 
-const formRef = ref<HTMLElement | null>(null)
+type FormInstance = InstanceType<typeof ElForm>
+const formRef = ref<FormInstance | null>(null)
 const roleTableList = ref([])
 const dialogVisible = ref(false)
 
@@ -186,8 +188,12 @@ function handleSetRolePermission(row: any) {
   Object.keys(dialogForm).map(key => {
     dialogForm[key] = row[key]
   })
-  defaultCheckedKeys.value = row?.permission_ids
+  // defaultCheckedKeys.value = row?.permission_ids? row.permission_ids: []
   dialogVisible.value = true
+  nextTick(() => {
+    formRef.value?.clearValidate()
+    treeRef.value?.setCheckedKeys(row?.permission_ids? row.permission_ids: [], false)
+  })
 }
 
 if (CheckPermission([102001])){

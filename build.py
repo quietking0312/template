@@ -14,7 +14,7 @@ LDFLAGS = f"-X 'main.buildTime={time.strftime('%Y-%m-%d %H:%M:%S', time.localtim
           f"-X 'main.version=1.1.{time.strftime('%Y%m%d', time.localtime(time.time()))}'" \
           f"-X 'main.commit={has.read()}'"
 
-os.system(f"go build -ldflags \"{LDFLAGS}\"")
+os.system(f"go build -ldflags \"-w -s {LDFLAGS}\"")
 
 if not os.path.isdir("bin"):
     os.makedirs("bin")
