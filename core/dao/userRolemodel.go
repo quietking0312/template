@@ -32,23 +32,23 @@ func (ur UserRoleModel) InsertByUid(uid int64, rids []int64) error {
 			}
 			urTables = append(urTables, urTable)
 		}
-		if _, err := dao.sqlDB.SqlxNameExec(mUserRoleInsertSql, urTables); err != nil {
+		if _, err := dao.SqlxNameExec(mUserRoleInsertSql, urTables); err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
-		sqlStr, args, err = dao.sqlDB.In(fmt.Sprintf("%s and rid not in (?)", mUserRoleDeleteByUidSql), uid, rids)
+		sqlStr, args, err = dao.In(fmt.Sprintf("%s and rid not in (?)", mUserRoleDeleteByUidSql), uid, rids)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	} else {
-		sqlStr, args, err = dao.sqlDB.In(mUserRoleDeleteByUidSql, uid)
+		sqlStr, args, err = dao.In(mUserRoleDeleteByUidSql, uid)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	}
-	if _, err := dao.sqlDB.Exec(sqlStr, args...); err != nil {
+	if _, err := dao.Exec(sqlStr, args...); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -56,7 +56,7 @@ func (ur UserRoleModel) InsertByUid(uid int64, rids []int64) error {
 }
 
 func (ur UserRoleModel) SelectRoleListByUid(uid int64, dest *[]MRoleTable) error {
-	if err := dao.sqlDB.SqlxSelect(dest, mRoleSelectByUidSql, uid); err != nil {
+	if err := dao.SqlxSelect(dest, mRoleSelectByUidSql, uid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -64,7 +64,7 @@ func (ur UserRoleModel) SelectRoleListByUid(uid int64, dest *[]MRoleTable) error
 }
 
 func (ur UserRoleModel) SelectRidByUid(uid int64, rid *[]int64) error {
-	if err := dao.sqlDB.SqlxSelect(rid, mRidSelectByUidSql, uid); err != nil {
+	if err := dao.SqlxSelect(rid, mRidSelectByUidSql, uid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

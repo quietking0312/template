@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"github.com/jmoiron/sqlx"
 	"io/ioutil"
 	"server/common/msql"
 	"server/core/config"
@@ -11,12 +10,7 @@ const (
 	ErrSqlNoRows = "sql: no rows in result set"
 )
 
-var dao Dao
-
-type Dao struct {
-	sqlxDB *sqlx.DB
-	sqlDB  *msql.DB
-}
+var dao *msql.DB
 
 // InitDB 初始化db
 func InitDB() error {
@@ -33,10 +27,7 @@ func InitDB() error {
 	if err != nil {
 		return err
 	}
-	dao = Dao{
-		sqlDB:  _db,
-		sqlxDB: _db.GetSqlxConn(),
-	}
+	dao = _db
 	return initTable()
 }
 
@@ -47,7 +38,7 @@ func initTable() error {
 		return err
 	}
 	if string(sqlBytes) != "" {
-		if _, err := dao.sqlDB.SqlxExec(string(sqlBytes)); err != nil {
+		if _, err := dao.SqlxExec(string(sqlBytes)); err != nil {
 			return err
 		}
 	}

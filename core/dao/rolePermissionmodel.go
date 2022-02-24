@@ -26,7 +26,7 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 		rpTables = append(rpTables, rpTable)
 	}
 	if len(rpTables) > 0 {
-		_, err := dao.sqlDB.SqlxNameExec(mRolePermissionInsertSql, rpTables)
+		_, err := dao.SqlxNameExec(mRolePermissionInsertSql, rpTables)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
@@ -38,19 +38,19 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 		err    error
 	)
 	if len(pidS) > 0 {
-		sqlStr, args, err = dao.sqlDB.In(fmt.Sprintf("%s and pid not in (?)", mRolePermissionDeleteSql), rid, pidS)
+		sqlStr, args, err = dao.In(fmt.Sprintf("%s and pid not in (?)", mRolePermissionDeleteSql), rid, pidS)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	} else {
-		sqlStr, args, err = dao.sqlDB.In(mRolePermissionDeleteSql, rid)
+		sqlStr, args, err = dao.In(mRolePermissionDeleteSql, rid)
 		if err != nil {
 			log.Error("", zap.Error(err))
 			return err
 		}
 	}
-	if _, err := dao.sqlDB.SqlxExec(sqlStr, args...); err != nil {
+	if _, err := dao.SqlxExec(sqlStr, args...); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -58,7 +58,7 @@ func (rp RolePermissionModel) Insert(rid int64, pidS []uint32) error {
 }
 
 func (rp RolePermissionModel) SelectListByRid(rid int64, pidS *[]uint32) error {
-	if err := dao.sqlDB.SqlxSelect(pidS, fmt.Sprintf("%s where rid=?", mRolePermissionSelectSql), rid); err != nil {
+	if err := dao.SqlxSelect(pidS, fmt.Sprintf("%s where rid=?", mRolePermissionSelectSql), rid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}

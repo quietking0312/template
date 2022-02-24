@@ -18,14 +18,14 @@ type RoleModel struct {
 }
 
 func (r RoleModel) InsertOne(role MRoleTable) error {
-	if _, err := dao.sqlDB.SqlxNameExec(mRoleInsertSql, role); err != nil {
+	if _, err := dao.SqlxNameExec(mRoleInsertSql, role); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (r RoleModel) SelectRoleList(index, limit int, dest *[]MRoleTable) error {
-	if err := dao.sqlDB.SqlxSelect(dest, fmt.Sprintf("%s limit %d, %d", mRoleSelectSql, index, limit)); err != nil {
+	if err := dao.SqlxSelect(dest, fmt.Sprintf("%s limit %d, %d", mRoleSelectSql, index, limit)); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -33,14 +33,14 @@ func (r RoleModel) SelectRoleList(index, limit int, dest *[]MRoleTable) error {
 }
 
 func (r RoleModel) SelectRoleTotal(total *int) error {
-	return dao.sqlDB.SqlxGet(total, mRoleSelectTotalSql)
+	return dao.SqlxGet(total, mRoleSelectTotalSql)
 }
 
 func (r RoleModel) UpdateRoleOne(role MRoleTable) error {
 	if role.Rid == 0 {
 		return nil
 	}
-	_, err := dao.sqlDB.SqlxNameExec(mRoleUpdateSql, role)
+	_, err := dao.SqlxNameExec(mRoleUpdateSql, role)
 	if err != nil {
 		log.Error("", zap.Error(err))
 	}

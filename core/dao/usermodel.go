@@ -21,7 +21,7 @@ type UserModel struct {
 }
 
 func (u UserModel) InsertOne(user MUserTable) error {
-	if _, err := dao.sqlDB.SqlxNameExec(mUserInsertSql, user); err != nil {
+	if _, err := dao.SqlxNameExec(mUserInsertSql, user); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -29,7 +29,7 @@ func (u UserModel) InsertOne(user MUserTable) error {
 }
 
 func (u UserModel) SelectOneByUsername(username string, user *MUserTable) error {
-	if err := dao.sqlDB.SqlxGet(user, fmt.Sprintf("%s where username=?", mUserSelectSql), username); err != nil {
+	if err := dao.SqlxGet(user, fmt.Sprintf("%s where username=?", mUserSelectSql), username); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -37,18 +37,18 @@ func (u UserModel) SelectOneByUsername(username string, user *MUserTable) error 
 }
 
 func (u UserModel) SelectUserList(index, limit int, dest *[]MUserTable) error {
-	return dao.sqlDB.SqlxSelect(dest, fmt.Sprintf("%s limit %d, %d", mUserSelectSql, index, limit))
+	return dao.SqlxSelect(dest, fmt.Sprintf("%s limit %d, %d", mUserSelectSql, index, limit))
 }
 
 func (u UserModel) SelectUserTotal(total *int) error {
-	return dao.sqlDB.SqlxGet(total, mUserSelectTotalSql, define.UserStateDelete)
+	return dao.SqlxGet(total, mUserSelectTotalSql, define.UserStateDelete)
 }
 
 func (u UserModel) UpdateUserOne(user MUserTable) error {
 	if user.Uid == 0 {
 		return nil
 	}
-	if _, err := dao.sqlDB.SqlxNameExec(mUserUpdateSql, user); err != nil {
+	if _, err := dao.SqlxNameExec(mUserUpdateSql, user); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -59,7 +59,7 @@ func (u UserModel) UpdateUserPass(uid int64, password string) error {
 	if uid == 0 {
 		return nil
 	}
-	if _, err := dao.sqlDB.Exec(mUserUpdatePassByUidSql, password, uid); err != nil {
+	if _, err := dao.Exec(mUserUpdatePassByUidSql, password, uid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
@@ -67,7 +67,7 @@ func (u UserModel) UpdateUserPass(uid int64, password string) error {
 }
 
 func (u UserModel) SelectUserByPid(pid uint32, user *[]MUserTable) error {
-	if err := dao.sqlDB.SqlxSelect(user, mUserSelectByPidSql, pid); err != nil {
+	if err := dao.SqlxSelect(user, mUserSelectByPidSql, pid); err != nil {
 		log.Error("", zap.Error(err))
 		return err
 	}
