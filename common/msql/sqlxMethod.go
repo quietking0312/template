@@ -69,6 +69,25 @@ func (_db *DB) SqlxNameQuery(format string, args interface{}, cb func(rows *sqlx
 	return err
 }
 
+func (_db *DB) SqlxQueryRow(format string, args []interface{}, cb func(row *sqlx.Row) error) error {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	row := _db.SqlxDB.QueryRowxContext(ctx, format, args...)
+	return cb(row)
+}
+
+func (_db *DB) SqlxQuery(format string, args []interface{}, cb func(rows *sqlx.Rows) error) error {
+	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
+	defer cancel()
+	rows, err := _db.SqlxDB.QueryxContext(ctx, format, args...)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	err = cb(rows)
+	return err
+}
+
 func (_db *DB) SqlxGet(dest interface{}, format string, args ...interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), _db.dbCfg.MaxQueryTime)
 	defer cancel()
