@@ -44,11 +44,12 @@
 
   <div class="pagination_wrap">
     <el-pagination
-        v-model="pageLimit.page"
+        v-model:current-page="pageLimit.page"
         style="text-align: right"
-        :page-size="pageLimit.limit"
+        v-model:page-size="pageLimit.limit"
         :total="tableTotal"
         :page-sizes="[10, 20, 30, 40, 50, 1000]"
+        @current-change="getUserList"
         layout="total, prev, pager, next"></el-pagination>
   </div>
 

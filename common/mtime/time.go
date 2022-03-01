@@ -54,6 +54,7 @@ func GetWeek(opt TimeOpts) int {
 	return int(timeObj.Weekday())
 }
 
+// IntToString 秒级时间戳转时间
 func IntToString(t int64, layout string) string {
 
 	return time.Unix(t, 0).Format(layout)

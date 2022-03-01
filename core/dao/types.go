@@ -34,3 +34,12 @@ type MUserRoleRelationTable struct {
 	Uid int64 `db:"uid"`
 	Rid int64 `db:"rid"`
 }
+
+// MLogsTable 日志表
+type MLogsTable struct {
+	Type       string `db:"type"`
+	Model      string `db:"model"`
+	Args       string `db:"args"`
+	CreateTime int64  `db:"create_time"`
+	Uid        int64  `db:"uid"`
+}
