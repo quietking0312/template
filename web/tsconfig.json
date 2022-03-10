@@ -22,12 +22,15 @@
     "lib": ["esnext", "dom"],
     "types": [
       "node",
-      "webpack-env"
+      "webpack-env",
+      "vite-plugin-svg-icons/client",
     ],
+    "typeRoots": ["./types", "./node_modules/@types/"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules"]
 }

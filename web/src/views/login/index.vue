@@ -11,7 +11,7 @@
             <el-input v-model="form.username" :placeholder="$t('login.placeholderUsername')" class="form--input">
               <template #prefix>
                 <span class="svg-container">
-                  <svg-icon icon-class="user" />
+                  <Icon icon="svg-icon:user" :size="16" />
                 </span>
               </template>
             </el-input>
@@ -22,7 +22,7 @@
                       :placeholder="$t('login.placeholderPassword')" class="form--input">
               <template #prefix>
                 <span class="svg-container">
-                  <svg-icon icon-class="password" />
+                  <Icon icon="svg-icon:password" :size="16" />
                 </span>
               </template>
             </el-input>
@@ -82,6 +82,7 @@ import { useAppStore } from "@/store/modules/app";
 import {respType} from "@/request/request";
 import config from "@/request/config";
 import {Message} from "@/components/Message";
+import {Icon} from "@/components/Icon";
 const appStore = useAppStore()
 
 const registerOk = ref<boolean>(false)

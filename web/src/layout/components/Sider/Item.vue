@@ -1,6 +1,6 @@
 <template>
   <i v-if="icon && icon.includes('el-icon')" :class="[icon, 'sub-el-icon', 'anticon']" />
-  <svg-icon v-else-if="icon" :icon-class="icon" class="anticon" />
+  <Icon v-else-if="icon" :icon="icon" class="anticon" />
   <slot name="title">
     <span class="anticon-item">{{ title }}</span>
   </slot>
@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import Icon from "@/components/Icon/Icon.vue";
 
 defineProps({
   icon: {
