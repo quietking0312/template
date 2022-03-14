@@ -1,153 +1,165 @@
-import { store } from "@/store";
-// import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
-import {getLanguage} from "@/lang";
-import wsCache, {cacheKey} from "@/cache";
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia'
+import { store } from '../index'
+import { useCache } from '@/hooks/web/useCache'
+import { appModules } from '@/config/app'
+import type { AppState, LayoutType, ThemeTypes } from '@/config/app'
+import { setCssVar, humpToUnderline } from '@/utils'
+import { ElMessage } from 'element-plus'
 
-export type LayoutType = 'Classic' | 'LeftTop' | 'Top'
-
-export interface AppState {
-    collapsed: boolean
-    showTags: boolean
-    showLogo: boolean
-    showNavbar: boolean
-    fixedHeader: boolean
-    layout: LayoutType
-    showBreadcrumb: boolean
-    showHamburger: boolean
-    showScreenfull: boolean
-    showUserInfo: boolean
-    title: string
-    logoTitle: string
-    greyMode: boolean
-    showBackTop: boolean
-    lang: string
-    showLanguage: boolean
-}
+const { wsCache } = useCache()
 
 export const useAppStore = defineStore({
-    id: "app",
-    state: (): AppState => ({
-        collapsed: false, //菜单栏是否缩放
-        showTags: false, // 是否显示标签栏
-        showLogo: true, // 是否显示logo
-        showNavbar: true, // 是否显示navbar
-        fixedHeader: true, // 是否固定header
-        layout: "Classic", // layout布局
-        showBreadcrumb: false, // 是否显示面包屑
-        showHamburger: true, // 是否显示侧边栏缩收按钮
-        showScreenfull: false, // 是否全屏按钮
-        showUserInfo: true, // 是否显示用户头像
-        title: "vue-admin", // 标题
-        logoTitle: "vue-admin", // logo标题
-        greyMode: false,  // 是否开始灰色模式，用于特殊悼念日
-        showBackTop: true, // 是否显示回到顶部
-        lang: getLanguage(),
-        showLanguage: false, // 是否显示选择语言
-    }),
-    getters: {
-        getCollapsed(): boolean {
-            return this.collapsed
-        },
-        getShowLogo(): boolean {
-            return this.showLogo
-        },
-        getShowTags(): boolean {
-            return this.showTags
-        },
-        getShowNavbar(): boolean {
-            return this.showNavbar
-        },
-        getFixedHeader(): boolean {
-            return this.fixedHeader
-        },
-        getShowBreadcrumb(): boolean {
-            return this.showBreadcrumb
-        },
-        getShowHamburger(): boolean {
-            return this.showHamburger
-        },
-        getShowScreenfull(): boolean {
-            return this.showScreenfull
-        },
-        getShowUserInfo(): boolean {
-            return this.showUserInfo
-        },
-        getTitle(): string {
-            return this.title
-        },
-        getLogoTitle(): string {
-            return this.logoTitle
-        },
-        getGreyMode(): boolean {
-            return this.getGreyMode
-        },
-        getLayout(): LayoutType {
-            return this.layout
-        },
-        getShowBackTop(): boolean {
-            return this.showBackTop
-        },
-        getShowLanguage(): boolean {
-            return this.showLanguage
-        },
-        getLang(): string {
-            return this.lang
-        }
+  id: 'app',
+  state: (): AppState => appModules,
+  persist: {
+    enabled: true
+  },
+  getters: {
+    getBreadcrumb(): boolean {
+      return this.breadcrumb
     },
-    actions: {
-        SetCollapsed(collapsed: boolean): void {
-            this.collapsed =collapsed
-        },
-        SetLanguage(lang: string): void {
-            wsCache.set(cacheKey.lang, lang)
-            this.lang = lang
-        }
+    getBreadcrumbIcon(): boolean {
+      return this.breadcrumbIcon
+    },
+    getCollapse(): boolean {
+      return this.collapse
+    },
+    getHamburger(): boolean {
+      return this.hamburger
+    },
+    getScreenfull(): boolean {
+      return this.screenfull
+    },
+    getSize(): boolean {
+      return this.size
+    },
+    getLocale(): boolean {
+      return this.locale
+    },
+    getTagsView(): boolean {
+      return this.tagsView
+    },
+    getLogo(): boolean {
+      return this.logo
+    },
+    getFixedHeader(): boolean {
+      return this.fixedHeader
+    },
+    getGreyMode(): boolean {
+      return this.greyMode
+    },
+    getPageLoading(): boolean {
+      return this.pageLoading
+    },
+    getLayout(): LayoutType {
+      return this.layout
+    },
+    getTitle(): string {
+      return this.title
+    },
+    getUserInfo(): string {
+      return this.userInfo
+    },
+    getIsDark(): boolean {
+      return this.isDark
+    },
+    getCurrentSize(): ElememtPlusSzie {
+      return this.currentSize
+    },
+    getSizeMap(): ElememtPlusSzie[] {
+      return this.sizeMap
+    },
+    getMobile(): boolean {
+      return this.mobile
+    },
+    getTheme(): ThemeTypes {
+      return this.theme
+    },
+    getFooter(): boolean {
+      return this.footer
     }
+  },
+  actions: {
+    setBreadcrumb(breadcrumb: boolean) {
+      this.breadcrumb = breadcrumb
+    },
+    setBreadcrumbIcon(breadcrumbIcon: boolean) {
+      this.breadcrumbIcon = breadcrumbIcon
+    },
+    setCollapse(collapse: boolean) {
+      this.collapse = collapse
+    },
+    setHamburger(hamburger: boolean) {
+      this.hamburger = hamburger
+    },
+    setScreenfull(screenfull: boolean) {
+      this.screenfull = screenfull
+    },
+    setSize(size: boolean) {
+      this.size = size
+    },
+    setLocale(locale: boolean) {
+      this.locale = locale
+    },
+    setTagsView(tagsView: boolean) {
+      this.tagsView = tagsView
+    },
+    setLogo(logo: boolean) {
+      this.logo = logo
+    },
+    setFixedHeader(fixedHeader: boolean) {
+      this.fixedHeader = fixedHeader
+    },
+    setGreyMode(greyMode: boolean) {
+      this.greyMode = greyMode
+    },
+    setPageLoading(pageLoading: boolean) {
+      this.pageLoading = pageLoading
+    },
+    setLayout(layout: LayoutType) {
+      if (this.mobile && layout !== 'classic') {
+        ElMessage.warning('移动端模式下不支持切换其他布局')
+        return
+      }
+      this.layout = layout
+      wsCache.set('layout', this.layout)
+    },
+    setTitle(title: string) {
+      this.title = title
+    },
+    setIsDark(isDark: boolean) {
+      this.isDark = isDark
+      if (this.isDark) {
+        document.documentElement.classList.add('dark')
+        document.documentElement.classList.remove('light')
+      } else {
+        document.documentElement.classList.add('light')
+        document.documentElement.classList.remove('dark')
+      }
+      wsCache.set('isDark', this.isDark)
+    },
+    setCurrentSize(currentSize: ElememtPlusSzie) {
+      this.currentSize = currentSize
+      wsCache.set('currentSize', this.currentSize)
+    },
+    setMobile(mobile: boolean) {
+      this.mobile = mobile
+    },
+    setTheme(theme: ThemeTypes) {
+      this.theme = Object.assign(this.theme, theme)
+      wsCache.set('theme', this.theme)
+    },
+    setCssVarTheme() {
+      for (const key in this.theme) {
+        setCssVar(`--${humpToUnderline(key)}`, this.theme[key])
+      }
+    },
+    setFooter(footer: boolean) {
+      this.footer = footer
+    }
+  }
 })
 
-// @Module({ dynamic: true, namespaced: true, store, name: 'app'})
-// class App extends VuexModule implements AppState {
-//     public collapsed = false //菜单栏是否缩放
-//     public showTags = false // 是否显示标签栏
-//     public showLogo = true // 是否显示logo
-//     public showNavbar = true // 是否显示navbar
-//     public fixedHeader = true // 是否固定header
-//     public layout = "Classic" // layout布局
-//     public showBreadcrumb = false // 是否显示面包屑
-//     public showHamburger = true // 是否显示侧边栏缩收按钮
-//     public showScreenfull = false // 是否全屏按钮
-//     public showUserInfo = true // 是否显示用户头像
-//     public title = "vue-admin" // 标题
-//     public logoTitle = "vue-admin" // logo标题
-//     public greyMode = false  // 是否开始灰色模式，用于特殊悼念日
-//     public showBackTop = true // 是否显示回到顶部
-//     public lang = getLanguage()
-//     public showLanguage = false // 是否显示选择语言
-//
-//     @Mutation
-//     private SET_COLLAPSED(collapsed: boolean): void {
-//         this.collapsed = collapsed
-//     }
-//
-//     @Mutation
-//     private SET_LANG(lang: string): void {
-//         this.lang = lang
-//     }
-//
-//     @Action
-//     public SetCollapsed(collapsed: boolean): void {
-//         this.SET_COLLAPSED(collapsed)
-//     }
-//
-//     @Action
-//     public SetLanguage(lang: string): void {
-//         wsCache.set(cacheKey.lang, lang)
-//         this.SET_LANG(lang)
-//     }
-// }
-//
-// export const appStore = getModule<App>(App)
-export function useAppStoreWithOut() {
-    return useAppStore(store)
+export const useAppStoreWithOut = () => {
+  return useAppStore(store)
 }

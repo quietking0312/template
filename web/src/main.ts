@@ -1,40 +1,50 @@
-/**
- * Options API形式的组件生命周期钩子和Composition API之间的实际对应关系
- * beforeCreate -> setup()
- * created -> setup()
- * beforeMount -> onBeforeMount
- * mounted -> onMounted
- * beforeUpdate -> onBeforeUpdate
- * updated -> onUpdated
- * beforeDestroy -> onBeforeUnmount
- * destroyed -> onUnmounted
- * errorCaptured -> onErrorCaptured
- */
+// 引入windi css
+import '@/plugins/windi.css'
 
-import '@/plugins/svgins'
-import { createApp } from 'vue';
-import App from './App.vue';
-import {setupStore} from "./store";
-import router, {setupRouter} from "./router";
-import {setupI18n} from "./lang";
-// import "element-plus/theme-chalk/index.css" // 部分模块使用了单独引入，ElementPlusResolver 插件无法检测，需要引入样式
-import "@/styles/reset.css";
-import "@/styles/index.less";
-import {setupGlobCom} from "@/components";
+// 导入全局的svg图标
+import '@/plugins/svgIcon'
+
+// 初始化多语言
+import { setupI18n } from '@/plugins/vueI18n'
+
+// 引入状态管理
+import { setupStore } from '@/store'
+
+// 全局组件
+import { setupGlobCom } from '@/components'
+
+// 引入element-plus
+import { setupElementPlus } from '@/plugins/elementPlus'
+
+// 引入全局样式
+import '@/styles/index.less'
+
+// 引入动画
+import '@/plugins/animate.css'
+
+// 路由
+import { setupRouter } from './router'
+
+import { createApp } from 'vue'
+
+import App from './App.vue'
+
 import './permission'
-import {setupDirective} from "@/directive";
 
 const setupAll = async () => {
-    const app = createApp(App)
-    setupRouter(app)
-    setupStore(app)
-    setupI18n(app)
-    setupGlobCom(app)
-    setupDirective(app)
-    router.isReady().then(() => {
-        app.mount('#app')
-    })
+  const app = createApp(App)
+
+  await setupI18n(app)
+
+  setupStore(app)
+
+  setupGlobCom(app)
+
+  setupElementPlus(app)
+
+  setupRouter(app)
+
+  app.mount('#app')
 }
+
 setupAll()
-
-

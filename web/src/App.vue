@@ -1,41 +1,60 @@
-<template>
-  <el-config-provider :locale="elementZHCNLocale">
-    <router-view class="app" :class="{ grey__mode: greyMode }" />
-  </el-config-provider>
-
-</template>
-
 <script setup lang="ts">
-import {computed} from "vue";
-import { useAppStore } from "@/store/modules/app";
-const appStore = useAppStore()
-import elementZHCNLocale from 'element-plus/lib/locale/lang/zh-cn'
+import { computed } from 'vue'
+import { useAppStore } from '@/store/modules/app'
+import { ConfigGlobal } from '@/components/ConfigGlobal'
+import { isDark } from '@/utils/is'
+import { useDesign } from '@/hooks/web/useDesign'
 
+const { getPrefixCls } = useDesign()
+
+const prefixCls = getPrefixCls('app')
+
+const appStore = useAppStore()
+
+const currentSize = computed(() => appStore.getCurrentSize)
 
 const greyMode = computed(() => appStore.getGreyMode)
+
+const initDark = () => {
+  const isDarkTheme = isDark()
+  appStore.setIsDark(isDarkTheme)
+}
+
+initDark()
 </script>
 
+<template>
+  <ConfigGlobal :size="currentSize">
+    <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
+  </ConfigGlobal>
+</template>
+
 <style lang="less">
+@prefix-cls: ~'@{namespace}-app';
+
 .size {
-  min-width: @minWidth;
-  width: 100;
+  width: 100%;
   height: 100%;
 }
-html,body {
+
+html,
+body {
+  padding: 0 !important;
+  margin: 0;
+  overflow: hidden;
   .size;
-    margin: 0;
-    padding: 0;
+
+  #app {
+    .size;
   }
-#app {
-  .size;
-    background: @appBg;
-  }
-.grey__mode {
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-    -ms-filter: grayscale(100%);
-    -o-filter: grayscale(100%);
-    filter: grayscale(100%);
-    filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
-  }
+}
+
+.@{prefix-cls}-grey-mode {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: progid:dximagetransform.microsoft.basicimage(grayscale=1);
+}
 </style>

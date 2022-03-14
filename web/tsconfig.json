@@ -1,36 +1,39 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "useDefineForClassFields": true,
     "module": "esnext",
+    "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "baseUrl": ".",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "strictFunctionTypes": false,
-    "allowJs": true,
-    "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "resolveJsonModule": true,
-    "lib": ["esnext", "dom"],
-    "types": [
-      "node",
-      "webpack-env",
-      "vite-plugin-svg-icons/client",
-    ],
-    "typeRoots": ["./types", "./node_modules/@types/"],
-    "baseUrl": ".",
+    "noImplicitAny": false,
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": [
+      "@intlify/vite-plugin-vue-i18n/client",
+      "vite/client",
+      "element-plus/global",
+      "@types/intro.js",
+      "@types/qrcode",
+      "vite-plugin-svg-icons/client",
+      "unplugin-vue-define-options"
+    ],
+    "typeRoots": ["./node_modules/@types/", "./types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "types/**/*.d.ts", "mock/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
 }

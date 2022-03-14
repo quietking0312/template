@@ -1,3 +1,3 @@
-import Icon from "@/components/Icon/Icon.vue";
+import Icon from './src/Icon.vue'
 
 export { Icon }
