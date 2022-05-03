@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive, ref, unref, watch } from 'vue'
-import { Form } from '@/components/Form'
+import { ref, unref, watch } from 'vue'
+// import { Form } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElButton, ElCheckbox, ElLink } from 'element-plus'
+import { ElForm, ElRow, ElCol, ElFormItem, ElInput, ElButton, ElCheckbox, ElLink } from 'element-plus'
+import {InputPassword} from "@/components/InputPassword"
 import { required } from '@/utils/formRules'
 import { useForm } from '@/hooks/web/useForm'
 import { loginApi, getTestRoleApi, getAdminRoleApi } from '@/api/login'
@@ -26,69 +27,69 @@ const rules = {
   password: [required]
 }
 
-const schema = reactive<FormSchema[]>([
-  {
-    field: 'title',
-    colProps: {
-      span: 24
-    }
-  },
-  {
-    field: 'username',
-    label: t('login.username'),
-    value: 'admin',
-    component: 'Input',
-    colProps: {
-      span: 24
-    },
-    componentProps: {
-      placeholder: t('login.usernamePlaceholder')
-    }
-  },
-  {
-    field: 'password',
-    label: t('login.password'),
-    value: 'admin',
-    component: 'InputPassword',
-    colProps: {
-      span: 24
-    },
-    componentProps: {
-      style: {
-        width: '100%'
-      },
-      placeholder: t('login.passwordPlaceholder')
-    }
-  },
-  {
-    field: 'tool',
-    colProps: {
-      span: 24
-    }
-  },
-  {
-    field: 'login',
-    colProps: {
-      span: 24
-    }
-  },
-  {
-    field: 'other',
-    component: 'Divider',
-    label: t('login.otherLogin'),
-    componentProps: {
-      contentPosition: 'center'
-    }
-  },
-  {
-    field: 'otherIcon',
-    colProps: {
-      span: 24
-    }
-  }
-])
+// const schema = reactive<FormSchema[]>([
+//   {
+//     field: 'title',
+//     colProps: {
+//       span: 24
+//     }
+//   },
+//   {
+//     field: 'username',
+//     label: t('login.username'),
+//     value: 'admin',
+//     component: 'Input',
+//     colProps: {
+//       span: 24
+//     },
+//     componentProps: {
+//       placeholder: t('login.usernamePlaceholder')
+//     }
+//   },
+//   {
+//     field: 'password',
+//     label: t('login.password'),
+//     value: 'admin',
+//     component: 'InputPassword',
+//     colProps: {
+//       span: 24
+//     },
+//     componentProps: {
+//       style: {
+//         width: '100%'
+//       },
+//       placeholder: t('login.passwordPlaceholder')
+//     }
+//   },
+//   {
+//     field: 'tool',
+//     colProps: {
+//       span: 24
+//     }
+//   },
+//   {
+//     field: 'login',
+//     colProps: {
+//       span: 24
+//     }
+//   },
+//   {
+//     field: 'other',
+//     component: 'Divider',
+//     label: t('login.otherLogin'),
+//     componentProps: {
+//       contentPosition: 'center'
+//     }
+//   },
+//   {
+//     field: 'otherIcon',
+//     colProps: {
+//       span: 24
+//     }
+//   }
+// ])
 
-const iconSize = 30
+// const iconSize = 30
 
 const remember = ref(false)
 
@@ -96,7 +97,7 @@ const { register, elFormRef, methods } = useForm()
 
 const loading = ref(false)
 
-const iconColor = '#999'
+// const iconColor = '#999'
 
 const redirect = ref<string>('')
 
@@ -165,60 +166,36 @@ const getRole = async () => {
 </script>
 
 <template>
-  <Form
-    :schema="schema"
-    :rules="rules"
-    label-position="top"
-    hide-required-asterisk
-    size="large"
-    @register="register"
-  >
-    <template #title>
-      <h2 class="text-2xl font-bold text-center w-[100%]">{{ t('login.login') }}</h2>
-    </template>
-
-    <template #tool>
-      <div class="flex justify-between items-center w-[100%]">
-        <ElCheckbox v-model="remember" :label="t('login.remember')" size="small" />
-        <ElLink type="primary" :underline="false">{{ t('login.forgetPassword') }}</ElLink>
-      </div>
-    </template>
-
-    <template #login>
-      <ElButton :loading="loading" type="primary" class="w-[100%]" @click="signIn">
-        {{ t('login.login') }}
-      </ElButton>
-    </template>
-
-    <template #otherIcon>
-      <div class="flex justify-between w-[100%]">
-        <Icon
-          icon="ant-design:github-filled"
-          :size="iconSize"
-          class="cursor-pointer anticon"
-          :color="iconColor"
-        />
-        <Icon
-          icon="ant-design:wechat-filled"
-          :size="iconSize"
-          class="cursor-pointer anticon"
-          :color="iconColor"
-        />
-        <Icon
-          icon="ant-design:alipay-circle-filled"
-          :size="iconSize"
-          :color="iconColor"
-          class="cursor-pointer anticon"
-        />
-        <Icon
-          icon="ant-design:weibo-circle-filled"
-          :size="iconSize"
-          :color="iconColor"
-          class="cursor-pointer anticon"
-        />
-      </div>
-    </template>
-  </Form>
+  <ElForm :rules="rules" label-position="top" :hide-required-asterisk="true" size="large">
+    <ElRow :gutter="20">
+      <ElCol :span="24">
+        <h2 class="text-2xl font-bold text-center w-[100%]">{{ t('login.login') }}</h2>
+      </ElCol>
+      <ElCol :span="24">
+        <ElFormItem :label="t('login.username')" prop="username">
+          <ElInput :placeholder="t('login.usernamePlaceholder')" />
+        </ElFormItem>
+      </ElCol>
+      <ElCol :span="24">
+        <ElFormItem :label="t(`login.password`)" size="large" prop="password">
+          <InputPassword style="width: 100%" :placeholder="t('login.passwordPlaceholder')" />
+        </ElFormItem>
+      </ElCol>
+      <ElCol :span="24">
+        <div class="flex justify-between items-center w-[100%]">
+          <ElCheckbox v-model="remember" :label="t('login.remember')" size="small" />
+          <ElLink type="primary" :underline="false" @click="register">
+            {{ t('login.forgetPassword') }}
+          </ElLink>
+        </div>
+      </ElCol>
+      <ElCol :span="24">
+        <ElButton :loading="loading" type="primary" class="w-[100%]" @click="signIn">
+          {{ t('login.login') }}
+        </ElButton>
+      </ElCol>
+    </ElRow>
+  </ElForm>
 </template>
 
 <style lang="less" scoped>

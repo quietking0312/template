@@ -14,7 +14,7 @@ const config: {
    */
   base_url: {
     // 开发环境接口前缀
-    base: '',
+    base: 'http://127.0.0.1:90001/api',
 
     // 打包开发环境接口前缀
     dev: '',

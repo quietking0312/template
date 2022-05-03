@@ -128,7 +128,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         overlay: false
       },
       host: '0.0.0.0',
-      port: 8000
+      port: 9000
     },
     optimizeDeps: {
       include: [

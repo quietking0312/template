@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { asyncRouterMap, constantRouterMap } from '@/router'
 import { generateRoutesFn1, generateRoutesFn2, flatMultiLevelRoutes } from '@/utils/routerHelper'
-import { store } from '../index'
+import { store } from '@/store'
 import { cloneDeep } from 'lodash-es'
 
 export interface PermissionState {
